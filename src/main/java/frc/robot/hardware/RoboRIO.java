@@ -3,7 +3,7 @@ package frc.robot.hardware;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.SPI;
 import com.kauailabs.navx.frc.AHRS;
-import frc.robot.software.RobotUtil;
+import frc.robot.software.Utils;
 import frc.robot.software.Statics;
 
 public class RoboRIO {
@@ -26,14 +26,10 @@ public class RoboRIO {
         navx = new AHRS(SPI.Port.kMXP);
         } catch(Exception e) {
             if(Statics.DEBUG_MODE) {
-                RobotUtil.report(e.toString());
+                Utils.report(e.toString());
             }
         }
     }
-
-   //public static ADXRS450_Gyro getGyro() {
-   //     return gyro;
-   //}
 
     public static BuiltInAccelerometer getAccelerometer() {
         return accel;

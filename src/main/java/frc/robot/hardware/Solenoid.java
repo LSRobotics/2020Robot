@@ -32,13 +32,21 @@ public class Solenoid {
         } // Ignore input if both buttons are held / released
         else if (forward) {
             solenoid.set(DoubleSolenoid.Value.kForward);
-            RobotUtil.report("Solenoid Forward");
+            Utils.report("Solenoid Forward");
             status = Status.FORWARD;
         } else {
             solenoid.set(DoubleSolenoid.Value.kReverse);
-            RobotUtil.report("Soleniod Reverse");
+            Utils.report("Soleniod Reverse");
             status = Status.REVERSE;
         }
+    }
+
+    public void actuate() {
+
+        //Flip whatever we have now
+        boolean isForward = !(status == Status.FORWARD);
+
+        move(isForward, !isForward);
     }
 
     public Status getStatus() {

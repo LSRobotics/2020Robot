@@ -19,17 +19,23 @@ public class Chassis {
         r2 = new Motor(Statics.CHASSIS_R2);
         r3 = new Motor(Statics.CHASSIS_R3);
 
-        shifter = new Solenoid(0, 0, 1);
+        shifter = new Solenoid(Statics.SHIFTER_PCM,
+                               Statics.SHIFTER_F,
+                               Statics.SHIFTER_R);
     }
 
     static public void setSpeedFactor(double factor) {
         speedFactor = factor; 
     }
 
+    static public void shift() {
+        shifter.actuate();
+    }
+
     static public void drive(double y, double x) {
 
-        final double left  = RobotUtil.clipValue(y + x, -1.0, 1.0) * speedFactor * (isFliped? -1 : 1);
-        final double right = RobotUtil.clipValue(y - x, -1.0, 1.0) * speedFactor * (isFliped? -1 : 1);
+        final double left  = Utils.clipValue(y + x, -1.0, 1.0) * speedFactor * (isFliped? -1 : 1);
+        final double right = Utils.clipValue(y - x, -1.0, 1.0) * speedFactor * (isFliped? -1 : 1);
 
         l1.setSpeed(left);
         l2.setSpeed(left);
@@ -38,6 +44,10 @@ public class Chassis {
         r2.setSpeed(right);
         r3.setSpeed(right);
         
+    }
+
+    static public void stop() {
+        drive(0,0);
     }
 
     static public void flip() {

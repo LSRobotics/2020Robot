@@ -2,6 +2,8 @@ package frc.robot.hardware;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
+//This class is intended to fix buggy behaviors of the PDP panel.
+
 public class PDP extends PowerDistributionPanel {
 
     final private static int DEFAULT_CHANEL = 0;

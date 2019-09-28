@@ -5,7 +5,7 @@ import java.util.Arrays;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.software.*;
 
-final public class XboxGp extends XboxController {
+final public class Gamepad extends XboxController {
 
     final private static int NUM_KEYS = 20;
     private Timer p = new Timer("Gamepad");
@@ -20,7 +20,7 @@ final public class XboxGp extends XboxController {
     public double[] values = new double[NUM_KEYS];
     final private static Key key_index[] = Key.values();
 
-    public XboxGp(int xboxPort) {
+    public Gamepad(int xboxPort) {
         super(xboxPort);
         // Initialize Arrays
         Arrays.fill(states, false);
@@ -125,7 +125,7 @@ final public class XboxGp extends XboxController {
 
         if (isDebug) {
             p.stop();
-            RobotUtil.report(p.toString());
+            Utils.report(p.toString());
         }
     }
 }

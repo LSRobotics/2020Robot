@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Robot;
 import frc.robot.hardware.*;
 
-public class RobotUtil {
+public class Utils {
 
     public enum BotLocation {
         LEFT, MIDDLE, RIGHT;
@@ -39,10 +39,10 @@ public class RobotUtil {
 
     }
 
-    public static boolean drive(double leftRight, double forwardBack,double sideMove, int millisecond) {
+    public static boolean drive(double leftRight, double forwardBack, int millisecond) {
         try {
             report("Moving at speed of (" + leftRight + ", " + forwardBack + ") for" + millisecond + " ms");
-            DriveTrain.drive(leftRight, forwardBack,sideMove);
+            Chassis.drive(forwardBack, leftRight);
             if (!takeABreak(millisecond))
                 return false;
             report("Moving done");
@@ -91,7 +91,7 @@ public class RobotUtil {
 
         double targetAngle = RoboRIO.getAngle() + angle;
 
-        DriveTrain.drive(power,0,0);
+        Chassis.drive(0, power);
 
         while(Math.abs(targetAngle - RoboRIO.getAngle()) > ANGLE_TOLERANCE) {
             if(Robot.gp1.isGamepadChanged() || Robot.gp2.isGamepadChanged()) {
@@ -99,7 +99,7 @@ public class RobotUtil {
             }
         }
 
-        DriveTrain.drive(0,0,0);
+        Chassis.stop();
 
         return true;
         
@@ -120,7 +120,7 @@ public class RobotUtil {
             power = Math.abs(power);
         }
 
-        DriveTrain.drive(0,power,0);
+        Chassis.drive(power,0);
 
         //Make everything positive for easier calculation (In my head lol)
         targetDistance = Math.abs(targetDistance);
@@ -144,7 +144,7 @@ public class RobotUtil {
         }
 
         //Stop robot
-        DriveTrain.drive(0,0,0);
+        Chassis.stop();
 
         return true;
     }
@@ -177,5 +177,22 @@ public class RobotUtil {
             return min;
         else
             return value;
+    }
+
+    public static double mapAnalog(double value, double absMin, double absMax) {
+        
+        boolean isNegative = (value < 0);
+        
+        value = Math.abs(value);
+
+        if(value < absMin) {
+            return 0;
+        }
+        else if(value > absMax || value == absMax) {
+            return isNegative ? -1 : 1;
+        }
+        else {
+            return (value - absMin) / absMax * (isNegative ? -1 : 1);
+        }
     }
 }

@@ -1,9 +1,8 @@
 package frc.robot.software;
 
 //import frc.robot.Robot;
-import frc.robot.hardware.DriveTrain;
-import frc.robot.hardware.RoboRIO;
-import frc.robot.software.RobotUtil.BotLocation;
+import frc.robot.hardware.*;
+import frc.robot.software.Utils.BotLocation;
 
 /**
  * Constraints: If start from middle station, we can only load in habs (which makes the code more robust instead of being off by a ton)
@@ -23,7 +22,7 @@ public class AutonSensorBasedA implements Runnable {
     }
 
     public void run() {
-        switch(RobotUtil.getLocation()) {
+        switch(Utils.getLocation()) {
             case LEFT:
             case RIGHT:
                 runSidePath();
@@ -38,7 +37,7 @@ public class AutonSensorBasedA implements Runnable {
     private void runStraightPath() {
 
         //Just go straight, how hard would that be
-        if(!RobotUtil.moveByDistance(AutonConstants.MID_STATION_TO_CARGO_DISTANCE, 0.5)) return;
+        if(!Utils.moveByDistance(AutonConstants.MID_STATION_TO_CARGO_DISTANCE, 0.5)) return;
 
     }
 
@@ -60,21 +59,21 @@ public class AutonSensorBasedA implements Runnable {
             break;
         }
      
-        if(!RobotUtil.moveByDistance(distance, 0.5));
+        if(!Utils.moveByDistance(distance, 0.5));
 
-        if(!RobotUtil.takeABreak()) return;
+        if(!Utils.takeABreak()) return;
 
         //Turn Left/Right (90 degrees)
-        double targetAngle = RobotUtil.getLocation() == BotLocation.LEFT ? 90 : -90;
+        double targetAngle = Utils.getLocation() == BotLocation.LEFT ? 90 : -90;
 
-        if(!RobotUtil.turnRobot(0.5, targetAngle)) return;
+        if(!Utils.turnRobot(0.5, targetAngle)) return;
 
-        if(!RobotUtil.takeABreak()) return;
+        if(!Utils.takeABreak()) return;
         
         //Now go straight forward for 400 miliseconds
-        if(!RobotUtil.drive(0, 0.3, 0, 400)) return;
+        if(!Utils.drive(0.3, 0, 400)) return;
 
-        DriveTrain.drive(0,0,0);
+        Chassis.stop();
 
         //Now the hatch panel is attached, so I don't know what to do next
     }
