@@ -4,6 +4,8 @@ import frc.robot.software.*;
 /**
  * Created by TylerLiu on 2018/01/22.
  */
+
+ @Deprecated
 public class DriveTrain {
 
     enum Chassis {
