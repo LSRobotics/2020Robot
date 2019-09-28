@@ -2,7 +2,7 @@ package frc.robot.hardware;
 
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.SPI;
-import frc.robot.hardware.navx.AHRS;
+import com.kauailabs.navx.frc.AHRS;
 import frc.robot.software.RobotUtil;
 import frc.robot.software.Statics;
 
