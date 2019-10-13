@@ -15,9 +15,9 @@ public class Chassis {
         l1 = new Motor(Statics.CHASSIS_L1);
         l2 = new Motor(Statics.CHASSIS_L2);
         l3 = new Motor(Statics.CHASSIS_L3);
-        r1 = new Motor(Statics.CHASSIS_R1);
-        r2 = new Motor(Statics.CHASSIS_R2);
-        r3 = new Motor(Statics.CHASSIS_R3);
+        r1 = new Motor(Statics.CHASSIS_R1,true);
+        r2 = new Motor(Statics.CHASSIS_R2,true);
+        r3 = new Motor(Statics.CHASSIS_R3,true);
 
         shifter = new Solenoid(Statics.SHIFTER_PCM,
                                Statics.SHIFTER_F,

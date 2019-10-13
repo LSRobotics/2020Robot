@@ -1,23 +1,31 @@
 package frc.robot.hardware;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.*;
 
 public class Motor {
 
     public enum Model {
-        TALON_SRX, VICTOR_SP, SPARK, VICTOR;
+        
+        //Phoenix
+        PWM_TALON_SRX, 
+        CAN_TALON_SRX, 
+        
+        //REV Robotics
+        CAN_SPARK_MAX,
+        PWM_SPARK,
+        
+        //Vex
+        PWM_VICTOR,
+        PWM_VICTOR_SP
     }
 
-    public enum WorkMode {
-        NORMAL_MODE,
-        SAFE_MODE,
-        SELF_DESTRUCT_MODE
-    }
-
-    private PWMSpeedController motor;
+    private SpeedController motor;
     private double speed = 1.0;
-    public static Model DEFAULT_MODEL = Model.VICTOR_SP;
-    private static WorkMode wMode = WorkMode.NORMAL_MODE;
+    public static Model DEFAULT_MODEL = Model.CAN_TALON_SRX;
     private boolean isReverse = false;
 
     public Motor(int port) {
@@ -34,17 +42,22 @@ public class Motor {
 
     public Motor(int port, Model model, boolean isReverse) {
         switch (model) {
-        case TALON_SRX:
+        case PWM_TALON_SRX:
             motor = new Talon(port);
             break;
-        case VICTOR:
+        case PWM_VICTOR:
             motor = new Victor(port);
             break;
-        case VICTOR_SP:
+        case PWM_VICTOR_SP:
             motor = new VictorSP(port);
             break;
-        case SPARK:
+        case PWM_SPARK:
             motor = new Spark(port);
+            break;
+        case CAN_TALON_SRX:
+            motor = new WPI_TalonSRX(port);
+        case CAN_SPARK_MAX:
+            motor = new CANSparkMax(port,MotorType.kBrushless);
         default:
             break;
         }
@@ -68,22 +81,8 @@ public class Motor {
         speed = newSpeed;
     }
 
-    public static void setMode(WorkMode workMode) {
-        wMode = workMode;
-    }
-
     public void move(double value) {
-
-        switch (wMode) {
-        case NORMAL_MODE:
-            motor.set(value * speed);
-            break;
-        case SAFE_MODE:
-            break;
-        case SELF_DESTRUCT_MODE:
-            motor.set(1);
-        }
-
+        motor.set(value * speed);
     }
 
     public void stop() {

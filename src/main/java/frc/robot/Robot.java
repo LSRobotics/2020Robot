@@ -7,8 +7,10 @@
 
 package frc.robot;
 
+
 //WPILib
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Compressor;
 
 //Internal
 import frc.robot.hardware.*;
@@ -19,16 +21,23 @@ public class Robot extends TimedRobot {
 
   //Shared
   public static Gamepad gp1, gp2;
+  public static Motor hook, roller;
+  public static Compressor compressor;
   
   //Private
-  static boolean isLowSpeed = false;
-
+  static boolean isLowSpeed = false,
+                 isHookPowered = false,
+                 isRollerPowered = false;
 
   @Override
   public void robotInit() {
     Chassis.init();
     gp1 = new Gamepad(0);
     gp2 = new Gamepad(1);
+    hook = new Motor(Statics.HOOK);
+    roller = new Motor(Statics.INTAKE_ROLLER);
+
+    compressor = new Compressor();
   }
   @Override
   public void robotPeriodic() {
@@ -50,12 +59,12 @@ public class Robot extends TimedRobot {
     gp1.fetchData();
     gp2.fetchData();
 
-    updateChassis();
-
+    updateBottom();
+    updateTop();
 
   }
 
-  public void updateChassis() {
+  public void updateBottom() {
     //Low speed mode
     if(gp1.isKeyToggled(Key.Y)) {
       isLowSpeed = !isLowSpeed;
@@ -73,19 +82,29 @@ public class Robot extends TimedRobot {
     }
 
     //Drive
-    if(gp1.isKeyChanged(Key.RT) || gp1.isKeyChanged(Key.LT) || gp1.isKeyChanged(Key.J_LEFT_X)) {
+    if(gp1.isKeysChanged(Key.J_LEFT_Y,Key.J_RIGHT_X)) {
 
-      double y = - Utils.mapAnalog(gp1.getValue(Key.RT),
-                                  Statics.OFFSET_MIN,
-                                  Statics.OFFSET_MAX)
-                                  + Utils.mapAnalog(gp1.getValue(Key.LT), Statics.OFFSET_MIN, Statics.OFFSET_MAX);
-
-      double x = Utils.mapAnalog(gp1.getValue(Key.J_LEFT_X), Statics.OFFSET_MIN, Statics.OFFSET_MAX);
+      double y = Utils.mapAnalog(-gp1.getValue(Key.J_LEFT_Y));
+      double x = Utils.mapAnalog(gp1.getValue(Key.J_RIGHT_X));
 
       Chassis.drive(y, x);
     }
+  }
 
+  public void updateTop() {
 
+    //BOSCH Seat Motor for Hatch Panel
+    if(gp2.isKeyToggled(Key.DPAD_UP)) {
+      isHookPowered = !isHookPowered;
+        hook.move(isHookPowered,false); //Running --> Not the same --> Run; Not Running --> Same --> Stop
+    }
+
+    //TODO: Use Ultrasonic sensor to stop the intake Roller
+    //Intake Roller
+    if(gp2.isKeyToggled(Key.X)) {
+      isRollerPowered = !isRollerPowered;
+      roller.move(isRollerPowered, false);
+    }
   }
 
   @Override

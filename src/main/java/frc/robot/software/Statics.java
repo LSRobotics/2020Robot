@@ -10,7 +10,7 @@ public class Statics {
 
 //Controller
     static final public double OFFSET_MIN = 0.1,
-                               OFFSET_MAX = 0.6;
+                               OFFSET_MAX = 0.7;
 
 //Chassis
     static final public int CHASSIS_L1 = 0,
@@ -23,4 +23,10 @@ public class Statics {
     static final public int SHIFTER_PCM = 0,
                             SHIFTER_F = 0,
                             SHIFTER_R = 1;
+
+//Other PWM Devices
+
+    //Intake Roller
+    static final public int INTAKE_ROLLER = 6,
+                            HOOK = 7;
 }

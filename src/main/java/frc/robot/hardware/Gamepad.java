@@ -73,13 +73,13 @@ final public class Gamepad extends XboxController {
         case J_RIGHT_DOWN:
             return getStickButton(Hand.kRight) ? 1 : 0;
         case DPAD_RIGHT:
-            return pov < 0 ? 0 : ((pov >= 45 && pov <= 135) ? 1 : 0);
+            return pov < 0 ? 0 : (pov == 90 ? 1 : 0);
         case DPAD_DOWN:
-            return pov < 0 ? 0 : ((pov >= 135 && pov <= 225) ? 1 : 0);
+            return pov < 0 ? 0 : (pov == 180 ? 1 : 0);
         case DPAD_LEFT:
-            return pov < 0 ? 0 : ((pov >= 225 && pov <= 315) ? 1 : 0);
+            return pov < 0 ? 0 : (pov == 270 ? 1 : 0);
         case DPAD_UP:
-            return pov < 0 ? 0 : ((pov == 315 && pov <= 45) ? 1 : 0);
+            return pov < 0 ? 0 : (pov == 0 ? 1 : 0);
         default:
             return 0;
         }
@@ -87,6 +87,14 @@ final public class Gamepad extends XboxController {
 
     public boolean isKeyChanged(Key key) {
         return states[key.ordinal()];
+    }
+
+    public boolean isKeysChanged(Key... keys) {
+        for (Key key : keys) {
+            if (states[key.ordinal()] == true)
+                return true;
+        }
+        return false;
     }
 
     public boolean isKeyHeld(Key key) {

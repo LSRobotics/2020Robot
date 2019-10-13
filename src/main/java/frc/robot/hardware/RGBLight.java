@@ -10,7 +10,7 @@ public class RGBLight {
     }
 
     public RGBLight(int port) {
-        ctrl = new Motor(port, Motor.Model.SPARK);
+        ctrl = new Motor(port, Motor.Model.PWM_SPARK);
     }
 
     private static double truncate(double value, int decimals) {

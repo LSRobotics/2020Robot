@@ -179,6 +179,10 @@ public class Utils {
             return value;
     }
 
+    public static double mapAnalog(double value) {
+        return mapAnalog(value, Statics.OFFSET_MIN, Statics.OFFSET_MAX);
+    }
+
     public static double mapAnalog(double value, double absMin, double absMax) {
         
         boolean isNegative = (value < 0);
