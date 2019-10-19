@@ -24,9 +24,14 @@ public class Statics {
                             SHIFTER_F = 0,
                             SHIFTER_R = 1;
 
+//Ultrasonic
+    static final public int ULTRASONIC_PING = 0,
+                            ULTRASONIC_ECHO = 1;
+
 //Other PWM Devices
 
     //Intake Roller
-    static final public int INTAKE_ROLLER = 6,
-                            HOOK = 7;
+    static final public int ROLLER_LOW = 6,
+                            ROLLER_HIGH = 7,
+                            HOOK = 8;
 }

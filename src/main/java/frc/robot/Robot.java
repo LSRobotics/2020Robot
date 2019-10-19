@@ -21,7 +21,7 @@ public class Robot extends TimedRobot {
 
   //Shared
   public static Gamepad gp1, gp2;
-  public static Motor hook, roller;
+  public static Motor hook;
   public static Compressor compressor;
   
   //Private
@@ -35,8 +35,9 @@ public class Robot extends TimedRobot {
     gp1 = new Gamepad(0);
     gp2 = new Gamepad(1);
     hook = new Motor(Statics.HOOK);
-    roller = new Motor(Statics.INTAKE_ROLLER);
 
+    Roller.initialize();
+    
     compressor = new Compressor();
   }
   @Override
@@ -58,6 +59,8 @@ public class Robot extends TimedRobot {
     
     gp1.fetchData();
     gp2.fetchData();
+
+    Roller.update();
 
     updateBottom();
     updateTop();
@@ -95,18 +98,24 @@ public class Robot extends TimedRobot {
 
     //BOSCH Seat Motor for Hatch Panel
     if(gp2.isKeyToggled(Key.DPAD_UP)) {
-      isHookPowered = !isHookPowered;
-        hook.move(isHookPowered,false); //Running --> Not the same --> Run; Not Running --> Same --> Stop
+        isHookPowered = !isHookPowered;
+        hook.move(isHookPowered,false);
+        //Running --> Not the same --> Run; Not Running --> Same --> Stop
     }
 
-    //TODO: Use Ultrasonic sensor to stop the intake Roller
-    //Intake Roller
-    if(gp2.isKeyToggled(Key.X)) {
-      isRollerPowered = !isRollerPowered;
-      roller.move(isRollerPowered, false);
+    
+    if(gp2.isKeyToggled(Key.LB)) {
+      Roller.setMode(Roller.Mode.IDLE);
     }
+    else if(gp2.isKeyToggled(Key.A)) {
+      Roller.setMode(Roller.Mode.INTAKE);
+    }
+    else if (gp2.isKeyToggled(Key.B)) {
+      Roller.setMode(Roller.Mode.OUTAKE);
+    }
+
   }
-
+  
   @Override
   public void testPeriodic() {
   }
