@@ -37,7 +37,8 @@ public class Robot extends TimedRobot {
     hook = new Motor(Statics.HOOK);
 
     Roller.initialize();
-    
+    Camera.initialize();
+
     compressor = new Compressor();
   }
   @Override
@@ -95,6 +96,10 @@ public class Robot extends TimedRobot {
   }
 
   public void updateTop() {
+
+    if(gp1.isKeyToggled(Key.Y)) {
+      Camera.changeCam();
+    }
 
     //BOSCH Seat Motor for Hatch Panel
     if(gp2.isKeyToggled(Key.DPAD_UP)) {

@@ -25,7 +25,7 @@ public class Motor {
 
     private SpeedController motor;
     private double speed = 1.0;
-    public static Model DEFAULT_MODEL = Model.CAN_TALON_SRX;
+    public static Model DEFAULT_MODEL = Model.PWM_VICTOR_SP;
     private boolean isReverse = false;
 
     public Motor(int port) {

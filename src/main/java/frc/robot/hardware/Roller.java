@@ -59,10 +59,10 @@ public class Roller {
 
                 //If human driver attempts to run intake when balls are in, ultrasonic sensor can stop it.
                 if(mode == Mode.INTAKE && sensor.getRangeInches() > 6) {
-                    low.move(true, false);
-                    high.move(true,false);
+                    low.move(0.2);
+                    high.move(0.2);
                 }
-                else {
+                else if(mode == Mode.OUTAKE) {
                     low.move(false, true);
                     high.move(false, true);
                 }
