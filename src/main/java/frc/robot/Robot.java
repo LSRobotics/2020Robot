@@ -34,10 +34,11 @@ public class Robot extends TimedRobot {
     Chassis.init();
     gp1 = new Gamepad(0);
     gp2 = new Gamepad(1);
-    hook = new Motor(Statics.HOOK);
+    hook = new Motor(Statics.HOOK,true);
 
     Roller.initialize();
     Camera.initialize();
+
 
     compressor = new Compressor();
   }
@@ -70,14 +71,9 @@ public class Robot extends TimedRobot {
 
   public void updateBottom() {
     //Low speed mode
-    if(gp1.isKeyToggled(Key.Y)) {
+    if(gp1.isKeyToggled(Key.RB)) {
       isLowSpeed = !isLowSpeed;
       Chassis.setSpeedFactor(isLowSpeed? Statics.LOW_SPD : 1.0);
-    }
-
-    //Reverse Mode
-    if(gp1.isKeyToggled(Key.RB)) {
-      Chassis.flip();
     }
 
     //Gearbox
@@ -102,12 +98,14 @@ public class Robot extends TimedRobot {
     }
 
     //BOSCH Seat Motor for Hatch Panel
-    if(gp2.isKeyToggled(Key.DPAD_UP)) {
-        isHookPowered = !isHookPowered;
-        hook.move(isHookPowered,false);
+    if(gp2.isKeyChanged(Key.DPAD_UP)) {
+        hook.move(gp2.isKeyHeld(Key.DPAD_UP),false);
         //Running --> Not the same --> Run; Not Running --> Same --> Stop
     }
 
+    if(gp2.isKeyChanged(Key.DPAD_DOWN)) {
+      hook.move(false, gp2.isKeyHeld(Key.DPAD_DOWN));
+    }
     
     if(gp2.isKeyToggled(Key.LB)) {
       Roller.setMode(Roller.Mode.IDLE);

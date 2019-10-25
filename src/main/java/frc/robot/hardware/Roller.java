@@ -8,6 +8,7 @@ public class Roller {
     public enum Mode {
         IDLE,
         INTAKE,
+        INTAKE_DELAY,
         OUTAKE
     }
 
@@ -21,9 +22,10 @@ public class Roller {
 
     public static void initialize() {
         //See I reversed it here
-        low = new Motor(Statics.ROLLER_LOW,true);
-        high = new Motor(Statics.ROLLER_HIGH);
-        sensor = new Ultrasonic(Statics.ULTRASONIC_PING, Statics.ULTRASONIC_ECHO);
+        low = new Motor(Statics.ROLLER_LOW);
+        high = new Motor(Statics.ROLLER_HIGH,true);
+        sensor = new Ultrasonic(Statics.ULTRASONIC_PING, Statics.ULTRASONIC_ECHO,Ultrasonic.Unit.kInches);
+        sensor.setAutomaticMode(true);
     }
 
     //Set working mode, call this method when new input from human driver is fed.
@@ -58,7 +60,7 @@ public class Roller {
                 isBusy = true;
 
                 //If human driver attempts to run intake when balls are in, ultrasonic sensor can stop it.
-                if(mode == Mode.INTAKE && sensor.getRangeInches() > 6) {
+                if(mode == Mode.INTAKE && sensor.getRangeInches() > 10) {
                     low.move(0.2);
                     high.move(0.2);
                 }
@@ -70,8 +72,12 @@ public class Roller {
         }
         else {
 
-            //Ultrasonic Sensor STOP for intake
-            if(mode == Mode.INTAKE && sensor.getRangeInches() < 6) {
+            //Ultrasonic Sensor Delay for intake
+            if(mode == Mode.INTAKE && sensor.getRangeInches() < 10) {
+                t.start();
+                mode = Mode.INTAKE_DELAY;
+            }
+            else if(mode == Mode.INTAKE_DELAY && t.getElaspedTimeInMs() > 200) {
                 free();
             }
             //Timeout STOP for outake

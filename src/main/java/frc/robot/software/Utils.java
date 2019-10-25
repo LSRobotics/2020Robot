@@ -12,7 +12,7 @@ public class Utils {
 
     private static String gameData;
     final public static int DEFAULT_BREAK_TIME = 1200;
-    public static boolean isOutputEnabled = false;
+    public static boolean isOutputEnabled = true;
 
     public static void fetchGameData() {
 

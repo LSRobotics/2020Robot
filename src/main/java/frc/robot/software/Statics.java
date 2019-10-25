@@ -25,8 +25,8 @@ public class Statics {
                             SHIFTER_R = 1;
 
 //Ultrasonic
-    static final public int ULTRASONIC_PING = 0,
-                            ULTRASONIC_ECHO = 1;
+    static final public int ULTRASONIC_PING = 1,
+                            ULTRASONIC_ECHO = 0;
 
 //Other PWM Devices
 

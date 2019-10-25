@@ -12,12 +12,12 @@ public class Chassis {
     static boolean isFliped = false;
 
     static public void init() {
-        l1 = new Motor(Statics.CHASSIS_L1);
-        l2 = new Motor(Statics.CHASSIS_L2);
-        l3 = new Motor(Statics.CHASSIS_L3);
-        r1 = new Motor(Statics.CHASSIS_R1,true);
-        r2 = new Motor(Statics.CHASSIS_R2,true);
-        r3 = new Motor(Statics.CHASSIS_R3,true);
+        l1 = new Motor(Statics.CHASSIS_L1,true);
+        l2 = new Motor(Statics.CHASSIS_L2,true);
+        l3 = new Motor(Statics.CHASSIS_L3,true);
+        r1 = new Motor(Statics.CHASSIS_R1);
+        r2 = new Motor(Statics.CHASSIS_R2);
+        r3 = new Motor(Statics.CHASSIS_R3);
 
         shifter = new Solenoid(Statics.SHIFTER_PCM,
                                Statics.SHIFTER_F,
@@ -37,12 +37,12 @@ public class Chassis {
         final double left  = Utils.clipValue(y + x, -1.0, 1.0) * speedFactor * (isFliped? -1 : 1);
         final double right = Utils.clipValue(y - x, -1.0, 1.0) * speedFactor * (isFliped? -1 : 1);
 
-        l1.setSpeed(left);
-        l2.setSpeed(left);
-        l3.setSpeed(left);
-        r1.setSpeed(right);
-        r2.setSpeed(right);
-        r3.setSpeed(right);
+        l1.move(left);
+        l2.move(left);
+        l3.move(left);
+        r1.move(right);
+        r2.move(right);
+        r3.move(right);
         
     }
 

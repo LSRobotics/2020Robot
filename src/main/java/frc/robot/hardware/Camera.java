@@ -15,8 +15,8 @@ public class Camera {
         cam0 = CameraServer.getInstance().startAutomaticCapture(0);
         cam1 = CameraServer.getInstance().startAutomaticCapture(1);
 
-        cam0.setResolution(320, 180);
-        cam1.setResolution(320, 180);
+        //cam0.setResolution(320, 180);
+        //cam1.setResolution(320, 180);
         server = CameraServer.getInstance().getServer();
         server.setSource(cam0);
     }
