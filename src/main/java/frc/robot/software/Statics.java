@@ -13,10 +13,10 @@ public class Statics {
                                OFFSET_MAX = 0.7;
 
 //Chassis
-    static final public int CHASSIS_L1 = 0,
-                            CHASSIS_L2 = 1,
-                            CHASSIS_L3 = 2,
-                            CHASSIS_R1 = 3,
+    static final public int CHASSIS_L1 = 3,
+                            CHASSIS_L2 = 7,
+                            CHASSIS_L3 = 8,
+                            CHASSIS_R1 = 0,
                             CHASSIS_R2 = 4,
                             CHASSIS_R3 = 5;
     //Shifting Gearbox's Pneumatics
@@ -31,7 +31,7 @@ public class Statics {
 //Other PWM Devices
 
     //Intake Roller
-    static final public int ROLLER_LOW = 6,
-                            ROLLER_HIGH = 7,
-                            HOOK = 8;
+    static final public int ROLLER_LOW = 2,
+                            ROLLER_HIGH = 1,
+                            HOOK = 6;
 }
