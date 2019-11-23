@@ -20,12 +20,12 @@ import frc.robot.software.*;
 public class Robot extends TimedRobot {
 
   //Shared
-  public static Gamepad gp1, gp2;
-  public static Motor hook;
-  public static Compressor compressor;
+  public Gamepad gp1, gp2;
+  public Motor hook;
+  public Compressor compressor;
   
   //Private
-  static boolean isLowSpeed = false,
+  boolean isLowSpeed = false,
                  isHookPowered = false,
                  isRollerPowered = false;
 

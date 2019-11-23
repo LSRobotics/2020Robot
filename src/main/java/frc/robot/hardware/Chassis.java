@@ -5,19 +5,19 @@ import frc.robot.software.*;
 
 public class Chassis {
 
-    static Motor l1,l2,l3,r1,r2,r3;
+    static MotorNG l1,l2,l3,r1,r2,r3;
     static Solenoid shifter;
 
     static double speedFactor = 1;
     static boolean isFliped = false;
 
     static public void init() {
-        l1 = new Motor(Statics.CHASSIS_L1,true);
-        l2 = new Motor(Statics.CHASSIS_L2,true);
-        l3 = new Motor(Statics.CHASSIS_L3,true);
-        r1 = new Motor(Statics.CHASSIS_R1);
-        r2 = new Motor(Statics.CHASSIS_R2);
-        r3 = new Motor(Statics.CHASSIS_R3);
+        l1 = new MotorNG(Statics.CHASSIS_L1,true);
+        l2 = new MotorNG(Statics.CHASSIS_L2,true);
+        l3 = new MotorNG(Statics.CHASSIS_L3,true);
+        r1 = new MotorNG(Statics.CHASSIS_R1);
+        r2 = new MotorNG(Statics.CHASSIS_R2);
+        r3 = new MotorNG(Statics.CHASSIS_R3);
 
         shifter = new Solenoid(Statics.SHIFTER_PCM,
                                Statics.SHIFTER_F,
