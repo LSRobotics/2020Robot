@@ -11,6 +11,10 @@ public class Timer {
         startTime = System.currentTimeMillis();
     }   
 
+    public Timer() {
+        this("DEFAULT TIMER");
+    }
+
     public void start() {
         startTime = System.currentTimeMillis();
         isBusy = true;

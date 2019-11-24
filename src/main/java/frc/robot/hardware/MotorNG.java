@@ -76,10 +76,10 @@ public class MotorNG {
     public void move(double value) {
 
         if(model == Model.FALCON_500 || model == Model.TALON_SRX) {
-            srx.set(value);
+            srx.set(value * speed);
         }
         else {
-            max.set(value);
+            max.set(value * speed);
         }
     }
 

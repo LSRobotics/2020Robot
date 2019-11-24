@@ -8,6 +8,7 @@ public class NavX {
     static AHRS navx;
 
     public static void initialize() {
+
         try {
             navx = new AHRS(SPI.Port.kMXP);
         } catch (Exception e) {
@@ -25,6 +26,20 @@ public class NavX {
         }
         else {
             return navx.getVelocityZ();
+        }
+
+    }
+
+    public static double getDisplacement (Axis axis) {
+        
+        if(axis == Axis.X) {
+            return navx.getDisplacementX();
+        }
+        else if(axis == Axis.Y) {
+            return navx.getDisplacementY();
+        }
+        else {
+            return navx.getDisplacementZ();
         }
 
     }

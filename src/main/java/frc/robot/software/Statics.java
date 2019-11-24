@@ -19,10 +19,6 @@ public class Statics {
                             CHASSIS_R1 = 0,
                             CHASSIS_R2 = 4,
                             CHASSIS_R3 = 5;
-    //Shifting Gearbox's Pneumatics
-    static final public int SHIFTER_PCM = 0,
-                            SHIFTER_F = 0,
-                            SHIFTER_R = 1;
 
 //Ultrasonic
     static final public int ULTRASONIC_PING = 1,
