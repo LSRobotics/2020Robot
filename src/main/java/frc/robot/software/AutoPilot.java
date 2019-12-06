@@ -6,8 +6,6 @@ import frc.robot.constants.*;
 public class AutoPilot {
     public static boolean driveForwardByNavX(double meters) {
         
-        final double MAX_POWER = 0.7;
-        
         double integral = 0;
 
         final Gamepad gp1 = Core.robot.gp1,
@@ -26,7 +24,7 @@ public class AutoPilot {
                 //Y = 1 / 2000 x + 0.2 where 0 <= x <= 1000
                 //So the Chassis would "constantly" accelerate in the first second, ranging motor output from 0.2 to 0.7
                 //Hopefully this reduces the error rate from NavX
-                Chassis.drive( 1 / 2000 * runtime + 0.2 , 0);
+                Chassis.driveRaw( 1 / 2000 * runtime + 0.2 , 0);
             }
             
             integral += NavX.getDisplacement(Axis.X);
@@ -54,7 +52,7 @@ public class AutoPilot {
 
         final double power = 0.5 * (angle < 0 ? -1 : 1);
 
-        Chassis.drive(0, power);
+        Chassis.driveRaw(0, power);
 
         while(NavX.getAngle() < target) {
             if(gp1.isGamepadChanged() || gp2.isGamepadChanged()) {

@@ -1,9 +1,6 @@
 package frc.robot.hardware;
 
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
-import edu.wpi.first.wpilibj.SPI;
-import frc.robot.software.Utils;
-import frc.robot.software.Statics;
 import frc.robot.constants.*;
 
 public class RoboRIO {

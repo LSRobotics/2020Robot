@@ -1,8 +1,6 @@
 package frc.robot.software;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.Robot;
-import frc.robot.hardware.*;
 
 public class Utils {
 
@@ -79,5 +77,20 @@ public class Utils {
         else {
             return (value - absMin) / absMax * (isNegative ? -1 : 1);
         }
+    }
+
+    public static boolean isDataInRange(double value, double min, double max) {
+
+        if (min > max) {
+            double temp = max;
+            max = min;
+            min = temp;
+        }
+
+        return (value == min || value > min) && (value < max || value == max);
+    }
+
+    public static boolean isDataClose(double value, double expected, double tolerance) {
+        return Math.abs(value - expected) < tolerance || (Math.abs(value - expected)) == tolerance || Math.abs(value - expected) == 0;
     }
 }

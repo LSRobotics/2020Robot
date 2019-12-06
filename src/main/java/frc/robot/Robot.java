@@ -30,7 +30,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    Chassis.init();
+    Chassis.initialize();
     gp1 = new Gamepad(0);
     gp2 = new Gamepad(1);
 
