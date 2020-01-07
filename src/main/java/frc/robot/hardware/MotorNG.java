@@ -16,7 +16,7 @@ public class MotorNG {
     private CANSparkMax max;
     
     private double speed = 1.0;
-    public static Model DEFAULT_MODEL = Model.TALON_SRX;
+    public static Model DEFAULT_MODEL = Model.FALCON_500;
     private Model model = DEFAULT_MODEL;
     private boolean isReverse = false;
 

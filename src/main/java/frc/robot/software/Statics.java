@@ -13,21 +13,13 @@ public class Statics {
                                OFFSET_MAX = 0.7;
 
 //Chassis
-    static final public int CHASSIS_L1 = 3,
-                            CHASSIS_L2 = 7,
-                            CHASSIS_L3 = 8,
-                            CHASSIS_R1 = 0,
-                            CHASSIS_R2 = 4,
-                            CHASSIS_R3 = 5;
+    static final public int CHASSIS_L1 = 0,
+                            CHASSIS_L2 = 1,
+                            CHASSIS_R1 = 2,
+                            CHASSIS_R2 = 3;
 
-//Ultrasonic
-    static final public int ULTRASONIC_PING = 1,
-                            ULTRASONIC_ECHO = 0;
+//Other Motors
+    static final public int HIGH_SHOOTER_LOWER = 4,
+                            HIGH_SHOOTER_UPPER = 5;
 
-//Other PWM Devices
-
-    //Intake Roller
-    static final public int ROLLER_LOW = 2,
-                            ROLLER_HIGH = 1,
-                            HOOK = 6;
 }

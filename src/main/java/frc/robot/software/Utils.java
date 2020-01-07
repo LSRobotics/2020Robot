@@ -1,6 +1,7 @@
 package frc.robot.software;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.constants.SpeedCurve;
 
 public class Utils {
 
@@ -10,7 +11,19 @@ public class Utils {
 
     private static String gameData;
     final public static int DEFAULT_BREAK_TIME = 1200;
-    public static boolean isOutputEnabled = true;
+    public static boolean isOutputEnabled = Statics.DEBUG_MODE;
+
+    static public double getCurvedValue(SpeedCurve curve, double value) {
+        if(curve == SpeedCurve.LINEAR) return value;
+        else if(curve == SpeedCurve.SQUARED) {
+            boolean isNegative = value < 0;
+
+            return Math.pow(value, 2) * (isNegative? -1 : 1);
+        }
+        else {
+            return Math.pow(value, 3);
+        }
+    }
 
     public static void fetchGameData() {
 
