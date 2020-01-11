@@ -4,6 +4,10 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.software.Utils;
+
 public class MotorNG {
 
     public enum Model {
@@ -43,6 +47,7 @@ public class MotorNG {
         }
         else {
             max = new CANSparkMax(port, MotorType.kBrushless);   
+            max.getEncoder();
             setReverse(isReverse);
         }
     }

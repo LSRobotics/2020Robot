@@ -9,10 +9,8 @@ package frc.robot;
 
 //WPILib
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
-import frc.robot.constants.SpeedCurve;
 //Internal
 import frc.robot.hardware.*;
 import frc.robot.hardware.Gamepad.Key;
@@ -22,7 +20,7 @@ import frc.robot.software.*;
 public class Robot extends TimedRobot {
 
   //Shared (Make sure these are "public" so that Core can take them in, which allows global access to happen)
-  public Gamepad gp1, gp2;
+  public Gamepad gp1,gp2;
   public MotorNG highShooterUp, highShooterDown;
   public Compressor compressor;
   public double highShooterSpeed = 1.0;
@@ -47,7 +45,7 @@ public class Robot extends TimedRobot {
     //compressor = new Compressor();
   
     highShooterUp = new MotorNG(Statics.HIGH_SHOOTER_UPPER, Model.SPARK_MAX,true);
-    highShooterDown = new MotorNG(Statics.HIGH_SHOOTER_LOWER, Model.SPARK_MAX);
+    //highShooterDown = new MotorNG(Statics.HIGH_SHOOTER_LOWER, Model.SPARK_MAX);
   }
   @Override
   public void robotPeriodic() {
@@ -77,23 +75,7 @@ public class Robot extends TimedRobot {
   }
 
   public void updateBottom() {
-    //Low speed mode
-    if(gp1.isKeyToggled(Key.RB)) {
-      isLowSpeed = !isLowSpeed;
-      Chassis.setSpeedFactor(isLowSpeed? Statics.LOW_SPD : 1.0);
-    }
-
-    //Drive
-    Chassis.drive(gp1.getY(Hand.kLeft), gp1.getY(Hand.kRight));
-
-    /*Pats Drive
-      if(gp1.isKeysChanged(Key.RT,Key.LT,Key.J_RIGHT_X)) {
-
-        double y = gp1.getValue(Key.RT) - gp1.getValue(Key.LT);
-        double x = Utils.getCurvedValue(SpeedCurve.SQUARED, Utils.mapAnalog(gp1.getValue(Key.J_RIGHT_X)));
-
-      Chassis.drive(y, x);
-    */
+    //TODO: FILL THIS PART OUT
   }
 
   public void updateTop() {
@@ -104,7 +86,7 @@ public class Robot extends TimedRobot {
         highShooterSpeed -= SPD_TWEAK_INTERVAL;
 
         highShooterUp.setSpeed(highShooterSpeed);
-        highShooterDown.setSpeed(highShooterSpeed);
+        //highShooterDown.setSpeed(highShooterSpeed);
 
         Utils.report("New Motor Speed: " + highShooterSpeed);
       }
@@ -115,7 +97,7 @@ public class Robot extends TimedRobot {
           highShooterSpeed += SPD_TWEAK_INTERVAL;
   
           highShooterUp.setSpeed(highShooterSpeed);
-          highShooterDown.setSpeed(highShooterSpeed);
+          //highShooterDown.setSpeed(highShooterSpeed);
 
          
         }   
@@ -123,15 +105,15 @@ public class Robot extends TimedRobot {
 
     //Shooter Actuation
     if(gp1.isKeyChanged(Key.A)) {
-      highShooterUp.move(gp2.isKeyHeld(Key.A), false);
-      highShooterDown.move(gp2.isKeyHeld(Key.A), false);
+      highShooterUp.move(gp1.isKeyHeld(Key.A), false);
+      //highShooterDown.move(gp2.isKeyHeld(Key.A), false);
     }
 
     if(gp1.isKeysChanged(Key.LT,Key.RT)) {
       double speed = gp1.getValue(Key.RT) - gp1.getValue(Key.LT);
 
       highShooterUp.move(speed);
-      highShooterDown.move(speed);
+      //highShooterDown.move(speed);
     }
 
   }
