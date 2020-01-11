@@ -7,9 +7,10 @@
 
 package frc.robot;
 
-
 //WPILib
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
 import frc.robot.constants.SpeedCurve;
 //Internal
@@ -37,13 +38,13 @@ public class Robot extends TimedRobot {
 
     Core.initialize(this);
 
-    Chassis.initialize();
+    //Chassis.initialize();
     gp1 = new Gamepad(0);
-    gp2 = new Gamepad(1);
+    //gp2 = new Gamepad(1);
 
     Camera.initialize();
 
-    compressor = new Compressor();
+    //compressor = new Compressor();
   
     highShooterUp = new MotorNG(Statics.HIGH_SHOOTER_UPPER, Model.FALCON_500,true);
     highShooterDown = new MotorNG(Statics.HIGH_SHOOTER_LOWER, Model.FALCON_500);
@@ -66,10 +67,12 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     
     gp1.fetchData();
-    gp2.fetchData();
+    //gp2.fetchData();
 
-    updateBottom();
+    //updateBottom();
     updateTop();
+
+    postData();
 
   }
 
@@ -96,7 +99,7 @@ public class Robot extends TimedRobot {
   public void updateTop() {
 
     //Shooter Speed Ajust (For tweaking)
-    if(gp2.isKeyToggled(Key.LB)) {
+    if(gp1.isKeyToggled(Key.LB)) {
       if(highShooterSpeed - SPD_TWEAK_INTERVAL >= 0) {
         highShooterSpeed -= SPD_TWEAK_INTERVAL;
 
@@ -107,25 +110,37 @@ public class Robot extends TimedRobot {
       }
     }
 
-      if(gp2.isKeyToggled(Key.RB)) {
+      if(gp1.isKeyToggled(Key.RB)) {
         if(highShooterSpeed + SPD_TWEAK_INTERVAL <= 1) {
           highShooterSpeed += SPD_TWEAK_INTERVAL;
   
           highShooterUp.setSpeed(highShooterSpeed);
           highShooterDown.setSpeed(highShooterSpeed);
-  
-          Utils.report("New Motor Speed: " + highShooterSpeed);
+
+         
         }   
     }
 
     //Shooter Actuation
-    if(gp2.isKeyChanged(Key.A)) {
+    if(gp1.isKeyChanged(Key.A)) {
       highShooterUp.move(gp2.isKeyHeld(Key.A), false);
       highShooterDown.move(gp2.isKeyHeld(Key.A), false);
     }
 
+    if(gp1.isKeysChanged(Key.LT,Key.RT)) {
+      double speed = gp1.getValue(Key.RT) - gp1.getValue(Key.LT);
+
+      highShooterUp.move(speed);
+      highShooterDown.move(speed);
+    }
+
   }
   
+  public void postData() {
+    SmartDashboard.putNumber("High Shooter Speed Level (Fixed)", highShooterSpeed);
+    SmartDashboard.putNumber("High Shooter Absolute speed", highShooterUp.getCurrentPower());
+  }
+
   @Override
   public void testPeriodic() {
   }

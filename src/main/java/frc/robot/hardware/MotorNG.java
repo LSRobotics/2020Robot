@@ -16,6 +16,7 @@ public class MotorNG {
     private CANSparkMax max;
     
     private double speed = 1.0;
+    private double lastPower = 0;
     public static Model DEFAULT_MODEL = Model.FALCON_500;
     private Model model = DEFAULT_MODEL;
     private boolean isReverse = false;
@@ -72,6 +73,10 @@ public class MotorNG {
 
     public void move(double value) {
 
+        if(value == lastPower) return;
+
+        lastPower = value;
+
         if(model == Model.FALCON_500 || model == Model.TALON_SRX) {
             srx.set(value * speed);
         }
@@ -82,6 +87,10 @@ public class MotorNG {
 
     public void stop() {
         move(0);
+    }
+
+    public double getCurrentPower() {
+        return lastPower;
     }
 
     public double getEncoderReading() {
