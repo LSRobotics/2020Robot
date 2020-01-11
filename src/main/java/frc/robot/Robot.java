@@ -81,13 +81,16 @@ public class Robot extends TimedRobot {
     }
 
     //Drive
-    if(gp1.isKeysChanged(Key.RT,Key.LT,Key.J_RIGHT_X)) {
+    Chassis.drive(gp1.getY(Hand.kLeft), gp1.getY(Hand.kRight));
 
-      double y = gp1.getValue(Key.RT) - gp1.getValue(Key.LT);
-      double x = Utils.getCurvedValue(SpeedCurve.SQUARED, Utils.mapAnalog(gp1.getValue(Key.J_RIGHT_X)));
+    /*Pats Drive
+      if(gp1.isKeysChanged(Key.RT,Key.LT,Key.J_RIGHT_X)) {
+
+        double y = gp1.getValue(Key.RT) - gp1.getValue(Key.LT);
+        double x = Utils.getCurvedValue(SpeedCurve.SQUARED, Utils.mapAnalog(gp1.getValue(Key.J_RIGHT_X)));
 
       Chassis.drive(y, x);
-    }
+    */
   }
 
   public void updateTop() {
