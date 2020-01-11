@@ -46,8 +46,8 @@ public class Robot extends TimedRobot {
 
     //compressor = new Compressor();
   
-    highShooterUp = new MotorNG(Statics.HIGH_SHOOTER_UPPER, Model.FALCON_500,true);
-    highShooterDown = new MotorNG(Statics.HIGH_SHOOTER_LOWER, Model.FALCON_500);
+    highShooterUp = new MotorNG(Statics.HIGH_SHOOTER_UPPER, Model.SPARK_MAX,true);
+    highShooterDown = new MotorNG(Statics.HIGH_SHOOTER_LOWER, Model.SPARK_MAX);
   }
   @Override
   public void robotPeriodic() {
