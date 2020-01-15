@@ -21,10 +21,11 @@ public class Robot extends TimedRobot {
 
   //Shared (Make sure these are "public" so that Core can take them in, which allows global access to happen)
   public Gamepad gp1,gp2;
-  public MotorNG highShooterUp, highShooterDown;
+  public MotorNG sparkMax1, sparkMax2, falcon;
   public Compressor compressor;
-  public double highShooterSpeed = 1.0;
+  public double motorSpeed = 1.0;
   public final double SPD_TWEAK_INTERVAL = 0.2;
+  public boolean isFirstSparkMax = true;
 
   //Private
   boolean isLowSpeed = false,
@@ -44,7 +45,9 @@ public class Robot extends TimedRobot {
 
     //compressor = new Compressor();
   
-    highShooterUp = new MotorNG(Statics.HIGH_SHOOTER_UPPER, Model.SPARK_MAX,true);
+    sparkMax1 = new MotorNG(Statics.SPARK_MAX_1, Model.SPARK_MAX);
+    sparkMax2 = new MotorNG(Statics.SPARK_MAX_2, Model.SPARK_MAX,true);
+    falcon    = new MotorNG(Statics.FALCON, Model.FALCON_500);
     //highShooterDown = new MotorNG(Statics.HIGH_SHOOTER_LOWER, Model.SPARK_MAX);
   }
   @Override
@@ -65,9 +68,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     
     gp1.fetchData();
-    //gp2.fetchData();
 
-    //updateBottom();
     updateTop();
 
     postData();
@@ -80,47 +81,55 @@ public class Robot extends TimedRobot {
 
   public void updateTop() {
 
-    //Shooter Speed Ajust (For tweaking)
+
+    //Toggle SparkMax Motors
+    if(gp1.isKeyToggled(Key.Y)) {
+        isFirstSparkMax = !isFirstSparkMax;
+    }
+
+    //SparkMax Speed Ajust (For tweaking)
     if(gp1.isKeyToggled(Key.LB)) {
-      if(highShooterSpeed - SPD_TWEAK_INTERVAL >= 0) {
-        highShooterSpeed -= SPD_TWEAK_INTERVAL;
+      if(motorSpeed - SPD_TWEAK_INTERVAL >= 0) {
+        motorSpeed -= SPD_TWEAK_INTERVAL;
 
-        highShooterUp.setSpeed(highShooterSpeed);
-        //highShooterDown.setSpeed(highShooterSpeed);
+        sparkMax1.setSpeed(motorSpeed);
+        sparkMax2.setSpeed(motorSpeed);
 
-        Utils.report("New Motor Speed: " + highShooterSpeed);
+        Utils.report("New Motor Speed: " + motorSpeed);
       }
     }
 
       if(gp1.isKeyToggled(Key.RB)) {
-        if(highShooterSpeed + SPD_TWEAK_INTERVAL <= 1) {
-          highShooterSpeed += SPD_TWEAK_INTERVAL;
+        if(motorSpeed + SPD_TWEAK_INTERVAL <= 1) {
+          motorSpeed += SPD_TWEAK_INTERVAL;
   
-          highShooterUp.setSpeed(highShooterSpeed);
-          //highShooterDown.setSpeed(highShooterSpeed);
-
+          sparkMax1.setSpeed(motorSpeed);
+          sparkMax2.setSpeed(motorSpeed);
          
+          Utils.report("New Motor Speed: " + motorSpeed);
         }   
     }
 
-    //Shooter Actuation
+    //SparkMax Actuation
     if(gp1.isKeyChanged(Key.A)) {
-      highShooterUp.move(gp1.isKeyHeld(Key.A), false);
-      //highShooterDown.move(gp2.isKeyHeld(Key.A), false);
+
+
+      (isFirstSparkMax?sparkMax1 : sparkMax2).move(gp1.isKeyHeld(Key.A), false);
+
     }
 
+    //Falcon Actuation
     if(gp1.isKeysChanged(Key.LT,Key.RT)) {
       double speed = gp1.getValue(Key.RT) - gp1.getValue(Key.LT);
-
-      highShooterUp.move(speed);
-      //highShooterDown.move(speed);
+      falcon.move(speed);
     }
 
   }
   
   public void postData() {
-    SmartDashboard.putNumber("High Shooter Speed Level (Fixed)", highShooterSpeed);
-    SmartDashboard.putNumber("High Shooter Absolute speed", highShooterUp.getCurrentPower());
+    SmartDashboard.putNumber("SparkMax Speed Level (Fixed)", motorSpeed);
+    SmartDashboard.putNumber("SparkMax ABS Power", (isFirstSparkMax? sparkMax1 : sparkMax2).getCurrentPower());
+    SmartDashboard.putNumber("Falcon Power", falcon.getCurrentPower());
   }
 
   @Override

@@ -21,7 +21,8 @@ public class Statics {
 
 
 //Other Motors
-    static final public int HIGH_SHOOTER_LOWER = 3,
-                            HIGH_SHOOTER_UPPER = 4;
+    static final public int SPARK_MAX_1 = 1,
+                            SPARK_MAX_2 = 2,
+                            FALCON      = 4;
 
 }
