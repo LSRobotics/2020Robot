@@ -80,7 +80,7 @@ public class MotorNG {
 
         if(value == lastPower) return;
 
-        lastPower = value;
+        lastPower = value * speed;
 
         if(model == Model.FALCON_500 || model == Model.TALON_SRX) {
             srx.set(value * speed);
