@@ -5,13 +5,15 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-
 package frc.robot;
 
 //WPILib
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.I2C;
 //Internal
 import frc.robot.hardware.*;
 import frc.robot.hardware.Gamepad.Key;
@@ -23,6 +25,8 @@ public class Robot extends TimedRobot {
   //Shared (Make sure these are "public" so that Core can take them in, which allows global access to happen)
   public Gamepad gp1,gp2;
   public MotorNG sparkMax1, sparkMax2, falcon,shooterUp,shooterDown;
+  public ColorSensorV3 colorSensor;
+  public Ultrasonic us;
   public Compressor compressor;
   public double motorSpeed = 1.0,
                 shooterSpeed = 1.0;
@@ -53,6 +57,10 @@ public class Robot extends TimedRobot {
     shooterUp = new MotorNG(Statics.FALCON_SHOOTER_UP, Model.FALCON_500);
     shooterDown = new MotorNG(Statics.FALCON_SHOOTER_DOWN, Model.FALCON_500);
 
+    colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
+
+    us = new Ultrasonic(Statics.US_PING, Statics.US_ECHO, Ultrasonic.Unit.kMillimeters);
+    us.setAutomaticMode(true);
   }
   @Override
   public void robotPeriodic() {
@@ -193,6 +201,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("SparkMax Power", (isFirstSparkMax? sparkMax1 : sparkMax2).getCurrentPower());
     SmartDashboard.putNumber("Falcon Power", falcon.getCurrentPower());
     SmartDashboard.putNumber("Shooter speed level", shooterSpeed);
+    SmartDashboard.putNumber("Ultrasonic",us.getRangeMM());
+    SmartDashboard.putString("Color Sensor (R,G,B)",colorSensor.getRed() + ", " + colorSensor.getGreen() + ", " + colorSensor.getBlue());
   }
 
   @Override

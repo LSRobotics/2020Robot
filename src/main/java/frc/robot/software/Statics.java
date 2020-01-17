@@ -27,4 +27,7 @@ public class Statics {
                             FALCON_SHOOTER_UP = 5, //Needs change
                             FALCON_SHOOTER_DOWN = 6; //Needs change
 
+//Ultrasonic
+    static final public int US_PING = 0,
+                            US_ECHO = 1;
 }
