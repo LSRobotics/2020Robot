@@ -144,10 +144,18 @@ public class Robot extends TimedRobot {
   }
 
   //Falcon Actuation
+  /*
   if(gp1.isKeysChanged(Key.LT,Key.RT)) {
     double speed = gp1.getValue(Key.RT) - gp1.getValue(Key.LT);
     falcon.move(speed);
+    */
   }
+
+  if (gp1.isKeysChanged(Key.LT)) {
+    leftMotor.set(gp.getTriggerAxis(Hand.kLeft));
+    rightMotor.set(gp.getTriggerAxis(Hand.kLeft));
+  }
+
   }
 
 
