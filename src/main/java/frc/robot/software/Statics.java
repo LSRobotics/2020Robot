@@ -30,4 +30,12 @@ public class Statics {
 //Ultrasonic
     static final public int US_PING = 0,
                             US_ECHO = 1;
+
+//Shifting Gearbox
+    static final public int SHIFTER_PCM = 0,
+                            SHIFTER_F = 0,
+                            SHIFTER_R = 1;
+
+//TODO: Update this
+    static final public int TIME_PER_360 = 1800;
 }

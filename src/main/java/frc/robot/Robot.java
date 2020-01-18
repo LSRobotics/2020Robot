@@ -27,7 +27,7 @@ public class Robot extends TimedRobot {
   //Shared (Make sure these are "public" so that Core can take them in, which allows global access to happen)
   public Gamepad gp1,gp2;
 
-  public MotorNG sparkMax1, sparkMax2, falcon,shooterUp,shooterDown;
+  public MotorNG shooterUp,shooterDown;
 
   public ColorSensorV3 colorSensor;
   public Ultrasonic us;
@@ -72,10 +72,7 @@ public class Robot extends TimedRobot {
     Camera.initialize();
 
     compressor = new Compressor();
-  
-    sparkMax1 = new MotorNG(Statics.SPARK_MAX_1, Model.SPARK_MAX);
-    sparkMax2 = new MotorNG(Statics.SPARK_MAX_2, Model.SPARK_MAX,true);
-    falcon    = new MotorNG(Statics.FALCON, Model.FALCON_500);
+
     shooterUp = new MotorNG(Statics.FALCON_SHOOTER_UP, Model.FALCON_500);
     shooterDown = new MotorNG(Statics.FALCON_SHOOTER_DOWN, Model.FALCON_500);
 
@@ -111,9 +108,6 @@ public class Robot extends TimedRobot {
     
     gp1.fetchData();
 
-    updateShooters();
-    updateTestMotors();
-
     updateBottom();
     updateTop();
 
@@ -121,17 +115,19 @@ public class Robot extends TimedRobot {
 
   }
 
-
-  
    //All code for driving
    public void updateBottom() {
+
+    //Gearbox
+    if(gp1.isKeyToggled(Key.Y)) {
+      Chassis.shift();
+    }
 
     //raise drive speed
     if(gp1.isKeyToggled(Key.RB)) {
       if(driveSpeed + 0.25 <= 1.0) {
         driveSpeed += 0.25;
         Chassis.setSpeedFactor(driveSpeed);
-        SmartDashboard.putNumber("Speed", driveSpeed);
       }
     }
     //lower drive speed
@@ -139,9 +135,9 @@ public class Robot extends TimedRobot {
       if(driveSpeed - 0.25 >= 0) {
         driveSpeed -= 0.25;
         Chassis.setSpeedFactor(driveSpeed);
-        SmartDashboard.putNumber("Speed", driveSpeed);
       }
     }
+
 
     // Assistive Autonomous
     if (gp1.isKeyToggled(Key.DPAD_LEFT)) {
@@ -150,9 +146,6 @@ public class Robot extends TimedRobot {
     else if (gp1.isKeyToggled(Key.DPAD_RIGHT)) {
       AutoPilot.turnRobotByTime(false);
     }
-
-
-    
     // Drive control 
     else {
       double x = 0,y = 0;
@@ -183,75 +176,13 @@ public class Robot extends TimedRobot {
     }
   }
 
-
-  private void updateTestMotors() {
-    
-    boolean isSpeedChanged = false;
-
-    //Toggle SparkMax Motors
-    if(gp1.isKeyToggled(Key.Y)) {
-      isFirstSparkMax = !isFirstSparkMax;
-  }
-
-  //SparkMax Speed Ajust (For tweaking)
-  if(gp1.isKeyToggled(Key.LB)) {
-    if(motorSpeed - SPD_TWEAK_INTERVAL >= 0) {
-      motorSpeed -= SPD_TWEAK_INTERVAL;
-
-      isSpeedChanged = true;
-    }
-  }
-
-    if(gp1.isKeyToggled(Key.RB)) {
-      if(motorSpeed + SPD_TWEAK_INTERVAL <= 1) {
-        motorSpeed += SPD_TWEAK_INTERVAL;
-
-        isSpeedChanged = true;
-      }   
-  }
-
-  if(isSpeedChanged) {
-    sparkMax1.setSpeed(motorSpeed);
-    sparkMax2.setSpeed(motorSpeed);
-
-    if(sparkMax1.getCurrentPower() > 0) sparkMax1.move(true,false);
-    
-    if(sparkMax2.getCurrentPower() > 0) sparkMax2.move(true,false);
-
-    Utils.report("New Motor Speed: " + motorSpeed);
-  }
-
-  //SparkMax Actuation
-  if(gp1.isKeyChanged(Key.A)) {
-
-
-    (isFirstSparkMax?sparkMax1 : sparkMax2).move(gp1.isKeyHeld(Key.A), false);
-
-  }
-
-  //Falcon Actuation
-  /*
-  if(gp1.isKeysChanged(Key.LT,Key.RT)) {
-    double speed = gp1.getValue(Key.RT) - gp1.getValue(Key.LT);
-    falcon.move(speed);
-  }
-  */
-
-  if (gp1.isKeysChanged(Key.LT)) {
-    leftMotor.set(gp1.getValue(Key.J_RIGHT_Y));
-    rightMotor.set(gp1.getTriggerAxis(Hand.kLeft));
-  }
-
-  }
-
-
   public void updateShooters() {
 
     boolean isSpeedChanged = false;
 
     //Shooter Speed Ajust (For tweaking)
 
-    if(gp1.isKeyToggled(Key.DPAD_LEFT)) {
+    if(gp1.isKeyToggled(Key.DPAD_UP)) {
 
       if(shooterSpeed - SPD_TWEAK_INTERVAL >= 0) {
         shooterSpeed -= SPD_TWEAK_INTERVAL;
@@ -259,8 +190,8 @@ public class Robot extends TimedRobot {
         isSpeedChanged = true;
       }
     }
-    else if(gp1.isKeyToggled(Key.DPAD_RIGHT)) {
-        if(motorSpeed + SPD_TWEAK_INTERVAL <= 1) {
+    else if(gp1.isKeyToggled(Key.DPAD_DOWN)) {
+        if(shooterSpeed + SPD_TWEAK_INTERVAL <= 1) {
           shooterSpeed += SPD_TWEAK_INTERVAL;
   
           isSpeedChanged = true;
@@ -268,8 +199,8 @@ public class Robot extends TimedRobot {
     }
 
     if(isSpeedChanged) {
-      shooterUp.setSpeed(motorSpeed);
-      shooterDown.setSpeed(motorSpeed);
+      shooterUp.setSpeed(shooterSpeed);
+      shooterDown.setSpeed(shooterSpeed);
     
       if(shooterUp.getCurrentPower() > 0) {
         shooterUp.move(true,false);
@@ -280,23 +211,21 @@ public class Robot extends TimedRobot {
     }
 
     //Shooter Actuation
-    if(gp1.isKeyChanged(Key.B)) {
-      shooterUp.move(gp1.isKeyHeld(Key.B),false);
-      shooterDown.move(gp1.isKeyHeld(Key.B),false);
+    if(gp1.isKeyChanged(Key.A)) {
+      shooterUp.move(gp1.isKeyHeld(Key.A),false);
+      shooterDown.move(gp1.isKeyHeld(Key.A),false);
     }
   }
 
   public void updateTop() {
-
+    updateShooters();
   }
   
   public void postData() {
-    SmartDashboard.putNumber("SparkMax Speed Level (Fixed)", motorSpeed);
-    SmartDashboard.putNumber("SparkMax Power", (isFirstSparkMax? sparkMax1 : sparkMax2).getCurrentPower());
-    SmartDashboard.putNumber("Falcon Power", falcon.getCurrentPower());
     SmartDashboard.putNumber("Shooter speed level", shooterSpeed);
     SmartDashboard.putNumber("Ultrasonic",us.getRangeMM());
     SmartDashboard.putString("Color Sensor (R,G,B)",colorSensor.getRed() + ", " + colorSensor.getGreen() + ", " + colorSensor.getBlue());
+    SmartDashboard.putNumber("Chassis Speed", driveSpeed);
   }
 
   @Override

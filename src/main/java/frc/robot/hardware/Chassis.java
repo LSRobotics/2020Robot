@@ -1,6 +1,7 @@
 package frc.robot.hardware;
 
 import frc.robot.software.*;
+import edu.wpi.first.wpilibj.Compressor;
 import frc.robot.constants.*;
 import frc.robot.hardware.MotorNG.Model;
 
@@ -8,6 +9,8 @@ public class Chassis {
 
     static MotorNG l1,l2,r1,r2;
     static double speedFactor = 1;
+    static Compressor compressor;
+    static Solenoid shifter;
 
     static SpeedCurve curve = SpeedCurve.LINEAR;
 
@@ -16,6 +19,16 @@ public class Chassis {
         l2 = new MotorNG(Statics.CHASSIS_L2,Model.FALCON_500);
         r1 = new MotorNG(Statics.CHASSIS_R1,Model.FALCON_500,true);
         r2 = new MotorNG(Statics.CHASSIS_R2,Model.FALCON_500,true);
+
+        compressor = new Compressor();
+
+        shifter = new Solenoid(Statics.SHIFTER_PCM,
+                               Statics.SHIFTER_F,
+                               Statics.SHIFTER_R);
+    }
+
+    static public void shift() {
+        shifter.actuate();
     }
 
     static public void setSpeedCurve(SpeedCurve newCurve) {
