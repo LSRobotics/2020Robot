@@ -11,12 +11,14 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.I2C;
 //Internal
 import frc.robot.hardware.*;
 import frc.robot.hardware.Gamepad.Key;
+import frc.robot.constants.SpeedCurve;
 import frc.robot.hardware.MotorNG.Model;
 import frc.robot.software.*;
 
@@ -24,32 +26,52 @@ public class Robot extends TimedRobot {
 
   //Shared (Make sure these are "public" so that Core can take them in, which allows global access to happen)
   public Gamepad gp1,gp2;
+
   public MotorNG sparkMax1, sparkMax2, falcon,shooterUp,shooterDown;
+
   public ColorSensorV3 colorSensor;
   public Ultrasonic us;
   public Compressor compressor;
+
   public double motorSpeed = 1.0,
                 shooterSpeed = 1.0;
   public final double SPD_TWEAK_INTERVAL = 0.2;
   public boolean isFirstSparkMax = true;
+  public static double driveSpeed = 1.0;
 
   //Private
   boolean isLowSpeed = false,
                  isHookPowered = false,
                  isRollerPowered = false;
 
+  //Drive mode GUI variables and setup
+  public static final String kDefaultDrive = "Default";
+  public static final String kCustomDrive = "Right Stick Drive";
+  public static final String kCustomDrive1 = "Left Stick Drive";
+  public static final String kCustomDrive2 = "Both Stick Drive";
+  public String m_driveSelected;
+  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+
   @Override
   public void robotInit() {
 
+    //Drive mode GUI setup
+    m_chooser.setDefaultOption("Default", kDefaultDrive);
+    m_chooser.addOption("Right Stick Drive", kCustomDrive);
+    m_chooser.addOption("Left Strick Drive", kCustomDrive1);
+    m_chooser.addOption("Both Strick Drive", kCustomDrive2);
+    SmartDashboard.putData("Drive choices", m_chooser);
+    System.out.println("Drive Selected: " + m_driveSelected);
+
     Core.initialize(this);
 
-    //Chassis.initialize();
+    Chassis.initialize();
     gp1 = new Gamepad(0);
     //gp2 = new Gamepad(1);
 
     Camera.initialize();
 
-    //compressor = new Compressor();
+    compressor = new Compressor();
   
     sparkMax1 = new MotorNG(Statics.SPARK_MAX_1, Model.SPARK_MAX);
     sparkMax2 = new MotorNG(Statics.SPARK_MAX_2, Model.SPARK_MAX,true);
@@ -62,11 +84,19 @@ public class Robot extends TimedRobot {
     us = new Ultrasonic(Statics.US_PING, Statics.US_ECHO, Ultrasonic.Unit.kMillimeters);
     us.setAutomaticMode(true);
   }
+
   @Override
   public void robotPeriodic() {
   }
+
   @Override
   public void autonomousInit() {
+    m_driveSelected = m_chooser.getSelected();
+  }
+
+  @Override
+  public void teleopInit() {
+    m_driveSelected = m_chooser.getSelected();
   }
 
   @Override
@@ -93,8 +123,64 @@ public class Robot extends TimedRobot {
 
 
   
-  public void updateBottom() {
-    //TODO: FILL THIS PART OUT
+   //All code for driving
+   public void updateBottom() {
+
+    //raise drive speed
+    if(gp1.isKeyToggled(Key.RB)) {
+      if(driveSpeed + 0.25 <= 1.0) {
+        driveSpeed += 0.25;
+        Chassis.setSpeedFactor(driveSpeed);
+        SmartDashboard.putNumber("Speed", driveSpeed);
+      }
+    }
+    //lower drive speed
+    else if(gp1.isKeyToggled(Key.LB)) {
+      if(driveSpeed - 0.25 >= 0) {
+        driveSpeed -= 0.25;
+        Chassis.setSpeedFactor(driveSpeed);
+        SmartDashboard.putNumber("Speed", driveSpeed);
+      }
+    }
+
+    // Assistive Autonomous
+    if (gp1.isKeyToggled(Key.DPAD_LEFT)) {
+      AutoPilot.turnRobotByTime(true);
+    } 
+    else if (gp1.isKeyToggled(Key.DPAD_RIGHT)) {
+      AutoPilot.turnRobotByTime(false);
+    }
+
+
+    
+    // Drive control 
+    else {
+      double x = 0,y = 0;
+      switch(m_driveSelected){
+        //Right Stick Drive
+        case kCustomDrive:
+           y = Utils.mapAnalog(gp1.getValue(Key.J_RIGHT_Y));
+           x = Utils.mapAnalog(gp1.getValue(Key.J_RIGHT_X));
+          break;
+        //Left Stick Drive
+        case kCustomDrive1:
+           y = Utils.mapAnalog(gp1.getValue(Key.J_LEFT_Y));
+           x = Utils.mapAnalog(gp1.getValue(Key.J_LEFT_X));
+          break;
+        //Both Stick Drive
+        case kCustomDrive2:
+           y = Utils.mapAnalog(gp1.getValue(Key.J_LEFT_Y));
+           x = Utils.mapAnalog(gp1.getValue(Key.J_RIGHT_X));
+          break;
+        //Default is right stick drive
+        case kDefaultDrive:
+          y = Utils.mapAnalog(gp1.getValue(Key.J_RIGHT_Y));
+          x = Utils.mapAnalog(gp1.getValue(Key.J_RIGHT_X));
+          break;
+
+      }
+      Chassis.drive(y,x);
+    }
   }
 
 
@@ -148,12 +234,12 @@ public class Robot extends TimedRobot {
   if(gp1.isKeysChanged(Key.LT,Key.RT)) {
     double speed = gp1.getValue(Key.RT) - gp1.getValue(Key.LT);
     falcon.move(speed);
-    */
   }
+  */
 
   if (gp1.isKeysChanged(Key.LT)) {
-    leftMotor.set(gp.getTriggerAxis(Hand.kLeft));
-    rightMotor.set(gp.getTriggerAxis(Hand.kLeft));
+    leftMotor.set(gp1.getValue(Key.J_RIGHT_Y));
+    rightMotor.set(gp1.getTriggerAxis(Hand.kLeft));
   }
 
   }
