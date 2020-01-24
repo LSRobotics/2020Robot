@@ -2,6 +2,8 @@ package frc.robot.hardware;
 
 import frc.robot.software.*;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.Ultrasonic.Unit;
 import frc.robot.constants.*;
 import frc.robot.hardware.MotorNG.Model;
 
@@ -11,6 +13,7 @@ public class Chassis {
     static double speedFactor = 1;
     static Compressor compressor;
     static Solenoid shifter;
+    static Ultrasonic frontAligner, backAligner;
 
     static SpeedCurve curve = SpeedCurve.LINEAR;
 
@@ -25,6 +28,9 @@ public class Chassis {
         shifter = new Solenoid(Statics.SHIFTER_PCM,
                                Statics.SHIFTER_F,
                                Statics.SHIFTER_R);
+
+        frontAligner = new Ultrasonic(Statics.US_ALIGNER_F_PING,Statics.US_ALIGNER_F_ECHO,Unit.kMillimeters);
+        backAligner = new Ultrasonic(Statics.US_ALIGNER_B_PING,Statics.US_ALIGNER_B_ECHO,Unit.kMillimeters);
     }
 
     static public void shift() {
@@ -50,6 +56,36 @@ public class Chassis {
         else {
             return Math.pow(speed, 3);
         }
+    }
+
+    static public boolean align() {
+        
+        while(true) {
+
+            double front = frontAligner.getRangeMM();
+            double back  = frontAligner.getRangeMM();
+            
+            Core.robot.gp1.fetchData();
+            
+            if(Core.robot.gp1.isKeyHeld(Gamepad.Key.LB)) {
+                stop();
+                return false;
+            }
+
+            if(Math.abs(front - back) < 50) {
+                stop();
+                break;
+            }
+            else if (front > back) {
+                driveRaw(0,0.5);
+            }
+            else {
+                driveRaw(0,-0.5);
+            }
+
+        }
+        
+        return true;
     }
 
     static public void drive(double y, double x) {

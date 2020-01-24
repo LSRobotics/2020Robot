@@ -31,6 +31,12 @@ public class Statics {
     static final public int US_PING = 0,
                             US_ECHO = 1;
 
+//TODO: UPDATE THIS
+    static final public int US_ALIGNER_F_PING  = 2,
+                            US_ALIGNER_F_ECHO  = 3,
+                            US_ALIGNER_B_PING  = 4,
+                            US_ALIGNER_B_ECHO  = 5;
+
 //Shifting Gearbox
     static final public int SHIFTER_PCM = 0,
                             SHIFTER_F = 0,

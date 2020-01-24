@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj.I2C;
 //Internal
 import frc.robot.hardware.*;
 import frc.robot.hardware.Gamepad.Key;
-import frc.robot.constants.SpeedCurve;
 import frc.robot.hardware.MotorNG.Model;
 import frc.robot.software.*;
 
