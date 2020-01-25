@@ -55,7 +55,7 @@ public class Robot extends TimedRobot {
     sparkMax2 = new MotorNG(Statics.SPARK_MAX_2, Model.SPARK_MAX,true);
     falcon    = new MotorNG(Statics.FALCON, Model.FALCON_500);
     shooterUp = new MotorNG(Statics.FALCON_SHOOTER_UP, Model.FALCON_500);
-    shooterDown = new MotorNG(Statics.FALCON_SHOOTER_DOWN, Model.FALCON_500);
+    shooterDown = new MotorNG(Statics.FALCON_SHOOTER_DOWN, Model.FALCON_500,true);
     srxIntake = new MotorNG(Statics.SRX_INTAKE, Model.TALON_SRX);
     srxLift   = new MotorNG(Statics.SRX_LIFT, Model.TALON_SRX);
     srxLift.setSpeed(0.3);
@@ -175,7 +175,7 @@ public class Robot extends TimedRobot {
         isSpeedChanged = true;
       }
     }
-    else if(gp1.isKeyToggled(Key.DPAD_RIGHT)) {
+    if(gp1.isKeyToggled(Key.DPAD_RIGHT)) {
         if(motorSpeed + SPD_TWEAK_INTERVAL <= 1) {
           shooterSpeed += SPD_TWEAK_INTERVAL;
   
@@ -184,8 +184,8 @@ public class Robot extends TimedRobot {
     }
 
     if(isSpeedChanged) {
-      shooterUp.setSpeed(motorSpeed);
-      shooterDown.setSpeed(motorSpeed);
+      shooterUp.setSpeed(shooterSpeed);
+      shooterDown.setSpeed(shooterSpeed);
     
       if(shooterUp.getCurrentPower() > 0) {
         shooterUp.move(true,false);
