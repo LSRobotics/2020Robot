@@ -21,13 +21,13 @@ public class Statics {
 
 
 //Other Motors
-    static final public int SPARK_MAX_1 = 3,
+    static final public int FALCON_LONE_SHOOTER = 13,
                             SPARK_MAX_2 = 4,
                             FALCON      = 2,
                             FALCON_SHOOTER_UP = 9, //Needs change
                             FALCON_SHOOTER_DOWN = 10, //Needs change
-                            SRX_LIFT = 7,
-                            SRX_INTAKE = 8;
+                            SRX_LIFT = 8,
+                            SRX_INTAKE = 7;
 
 //Ultrasonic
     static final public int US_PING = 0,

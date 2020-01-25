@@ -24,7 +24,7 @@ public class Robot extends TimedRobot {
 
   //Shared (Make sure these are "public" so that Core can take them in, which allows global access to happen)
   public Gamepad gp1,gp2;
-  public MotorNG sparkMax1, sparkMax2, falcon,shooterUp,shooterDown,srxIntake, srxLift;
+  public MotorNG loneShooter, sparkMax2, falcon,shooterUp,shooterDown,srxIntake, srxLift;
   public ColorSensorV3 colorSensor;
   public Ultrasonic us;
   public Compressor compressor;
@@ -51,7 +51,7 @@ public class Robot extends TimedRobot {
 
     //compressor = new Compressor();
   
-    sparkMax1 = new MotorNG(Statics.SPARK_MAX_1, Model.SPARK_MAX,true);
+    loneShooter = new MotorNG(Statics.FALCON_LONE_SHOOTER, Model.FALCON_500,true);
     sparkMax2 = new MotorNG(Statics.SPARK_MAX_2, Model.SPARK_MAX,true);
     falcon    = new MotorNG(Statics.FALCON, Model.FALCON_500);
     shooterUp = new MotorNG(Statics.FALCON_SHOOTER_UP, Model.FALCON_500);
@@ -135,10 +135,10 @@ public class Robot extends TimedRobot {
   }
 
   if(isSpeedChanged) {
-    sparkMax1.setSpeed(motorSpeed);
+    loneShooter.setSpeed(motorSpeed);
     sparkMax2.setSpeed(motorSpeed);
 
-    if(sparkMax1.getCurrentPower() > 0) sparkMax1.move(true,false);
+    if(loneShooter.getCurrentPower() > 0) loneShooter.move(true,false);
     
     if(sparkMax2.getCurrentPower() > 0) sparkMax2.move(true,false);
 
@@ -149,7 +149,7 @@ public class Robot extends TimedRobot {
   if(gp1.isKeyChanged(Key.A)) {
 
 
-    (isFirstSparkMax?sparkMax1 : sparkMax2).move(gp1.isKeyHeld(Key.A), false);
+    (isFirstSparkMax?loneShooter : sparkMax2).move(gp1.isKeyHeld(Key.A), false);
 
   }
 
@@ -209,7 +209,7 @@ public class Robot extends TimedRobot {
   
   public void postData() {
     SmartDashboard.putNumber("SparkMax Speed Level (Fixed)", motorSpeed);
-    SmartDashboard.putNumber("SparkMax Power", (isFirstSparkMax? sparkMax1 : sparkMax2).getCurrentPower());
+    SmartDashboard.putNumber("SparkMax Power", (isFirstSparkMax? loneShooter : sparkMax2).getCurrentPower());
     SmartDashboard.putNumber("Falcon Power", falcon.getCurrentPower());
     SmartDashboard.putNumber("Shooter speed level", shooterSpeed);
     SmartDashboard.putNumber("Ultrasonic",us.getRangeMM());
