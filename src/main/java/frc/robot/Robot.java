@@ -24,7 +24,7 @@ public class Robot extends TimedRobot {
 
   //Shared (Make sure these are "public" so that Core can take them in, which allows global access to happen)
   public Gamepad gp1,gp2;
-  public MotorNG sparkMax1, sparkMax2, falcon,shooterUp,shooterDown;
+  public MotorNG sparkMax1, sparkMax2, falcon,shooterUp,shooterDown,srxIntake, srxLift;
   public ColorSensorV3 colorSensor;
   public Ultrasonic us;
   public Compressor compressor;
@@ -51,11 +51,14 @@ public class Robot extends TimedRobot {
 
     //compressor = new Compressor();
   
-    sparkMax1 = new MotorNG(Statics.SPARK_MAX_1, Model.SPARK_MAX);
+    sparkMax1 = new MotorNG(Statics.SPARK_MAX_1, Model.SPARK_MAX,true);
     sparkMax2 = new MotorNG(Statics.SPARK_MAX_2, Model.SPARK_MAX,true);
     falcon    = new MotorNG(Statics.FALCON, Model.FALCON_500);
     shooterUp = new MotorNG(Statics.FALCON_SHOOTER_UP, Model.FALCON_500);
     shooterDown = new MotorNG(Statics.FALCON_SHOOTER_DOWN, Model.FALCON_500);
+    srxIntake = new MotorNG(Statics.SRX_INTAKE, Model.TALON_SRX);
+    srxLift   = new MotorNG(Statics.SRX_LIFT, Model.TALON_SRX);
+    srxLift.setSpeed(0.3);
 
     colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
 
@@ -81,7 +84,6 @@ public class Robot extends TimedRobot {
     
     gp1.fetchData();
 
-    updateShooters();
     updateTestMotors();
 
     updateBottom();
@@ -98,14 +100,22 @@ public class Robot extends TimedRobot {
   }
 
 
+
+
+  public void updateTop() {
+    updateShooters();
+    updateIntake();
+  }
+
   private void updateTestMotors() {
     
     boolean isSpeedChanged = false;
-
+/*
     //Toggle SparkMax Motors
     if(gp1.isKeyToggled(Key.Y)) {
       isFirstSparkMax = !isFirstSparkMax;
   }
+  */
 
   //SparkMax Speed Ajust (For tweaking)
   if(gp1.isKeyToggled(Key.LB)) {
@@ -192,8 +202,9 @@ public class Robot extends TimedRobot {
     }
   }
 
-  public void updateTop() {
-
+  public void updateIntake() {
+    srxIntake.move(gp1.isKeyHeld(Key.X),false);
+    srxLift.move(gp1.isKeyHeld(Key.DPAD_UP),gp1.isKeyHeld(Key.DPAD_DOWN));
   }
   
   public void postData() {
