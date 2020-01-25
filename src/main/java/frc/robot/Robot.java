@@ -24,7 +24,7 @@ public class Robot extends TimedRobot {
 
   //Shared (Make sure these are "public" so that Core can take them in, which allows global access to happen)
   public Gamepad gp1,gp2;
-  public MotorNG sparkMax1, sparkMax2, falcon,shooterUp,shooterDown,srxIntake, srxLift;
+  public MotorNG sparkMax1, sparkMax2, falcon,shooterUp,shooterDown,srxArm, srxDeploy, srxLift;
   public ColorSensorV3 colorSensor;
   public Ultrasonic us;
   public Compressor compressor;
@@ -56,9 +56,15 @@ public class Robot extends TimedRobot {
     falcon    = new MotorNG(Statics.FALCON, Model.FALCON_500);
     shooterUp = new MotorNG(Statics.FALCON_SHOOTER_UP, Model.FALCON_500);
     shooterDown = new MotorNG(Statics.FALCON_SHOOTER_DOWN, Model.FALCON_500,true);
-    srxIntake = new MotorNG(Statics.SRX_INTAKE, Model.TALON_SRX);
-    srxLift   = new MotorNG(Statics.SRX_LIFT, Model.TALON_SRX);
-    srxLift.setSpeed(0.3);
+    
+    srxArm = new MotorNG(Statics.SRX_INTAKE, Model.VICTOR_SPX); 
+    srxDeploy   = new MotorNG(Statics.SRX_LIFT, Model.TALON_SRX);
+    srxLift   = new MotorNG(Statics.SRX_HOOK,Model.TALON_SRX);
+
+    srxDeploy.setSpeed(0.3);
+    srxArm.setSpeed(0.3);
+    srxLift.setSpeed(0.6);
+  
 
     colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
 
@@ -104,7 +110,7 @@ public class Robot extends TimedRobot {
 
   public void updateTop() {
     updateShooters();
-    updateIntake();
+    updateClimb();
   }
 
   private void updateTestMotors() {
@@ -202,9 +208,10 @@ public class Robot extends TimedRobot {
     }
   }
 
-  public void updateIntake() {
-    srxIntake.move(gp1.isKeyHeld(Key.X),false);
-    srxLift.move(gp1.isKeyHeld(Key.DPAD_UP),gp1.isKeyHeld(Key.DPAD_DOWN));
+  public void updateClimb() {
+    srxArm.move(-gp1.getValue(Key.J_LEFT_Y));
+    srxDeploy.move(gp1.isKeyHeld(Key.DPAD_UP),gp1.isKeyHeld(Key.DPAD_DOWN));
+    srxLift.move(-gp1.getValue(Key.J_RIGHT_Y));
   }
   
   public void postData() {

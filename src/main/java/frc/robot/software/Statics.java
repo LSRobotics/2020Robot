@@ -26,8 +26,9 @@ public class Statics {
                             FALCON      = 2,
                             FALCON_SHOOTER_UP = 9, //Needs change
                             FALCON_SHOOTER_DOWN = 10, //Needs change
-                            SRX_LIFT = 7,
-                            SRX_INTAKE = 8;
+                            SRX_LIFT = 8,
+                            SRX_INTAKE = 11,
+                            SRX_HOOK   = 7;
 
 //Ultrasonic
     static final public int US_PING = 0,

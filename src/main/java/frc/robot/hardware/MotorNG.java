@@ -1,10 +1,13 @@
 package frc.robot.hardware;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.software.Utils;
 
@@ -13,10 +16,11 @@ public class MotorNG {
     public enum Model {
         SPARK_MAX,
         FALCON_500,
-        TALON_SRX
+        TALON_SRX,
+        VICTOR_SPX;
     }
 
-    private WPI_TalonSRX srx;
+    private SpeedController phoenix;
     private CANSparkMax max;
     
     private double speed = 1.0;
@@ -41,22 +45,29 @@ public class MotorNG {
 
         this.model = model;
 
-        if(model == Model.FALCON_500 || model == Model.TALON_SRX) {
-            srx = new WPI_TalonSRX(port);
-            setReverse(isReverse);
+        switch(model) {
+            case FALCON_500:
+                phoenix = new WPI_TalonFX(port);
+                break;
+            case VICTOR_SPX:
+                phoenix = new WPI_VictorSPX(port);
+                break;
+            case TALON_SRX:
+                phoenix = new WPI_TalonSRX(port);
+                break;
+            case SPARK_MAX:
+                max = new CANSparkMax(port,MotorType.kBrushless);
+                max.getEncoder();
+                break;
         }
-        else {
-            max = new CANSparkMax(port, MotorType.kBrushless);   
-            max.getEncoder();
-            setReverse(isReverse);
-        }
+        setReverse(isReverse);
     }
 
     public void setReverse(boolean isReverse) {
         this.isReverse = isReverse;
     
-        if(model == Model.FALCON_500 || model == Model.TALON_SRX) {
-            srx.setInverted(isReverse);
+        if(model == Model.FALCON_500 || model == Model.TALON_SRX || model ==Model.VICTOR_SPX) {
+            phoenix.setInverted(isReverse);
         }
         else {
             max.setInverted(isReverse);
@@ -78,12 +89,12 @@ public class MotorNG {
 
     public void move(double value) {
 
-        if(value == lastPower) return;
+        if(value * speed == lastPower) return;
 
         lastPower = value * speed;
 
-        if(model == Model.FALCON_500 || model == Model.TALON_SRX) {
-            srx.set(value * speed);
+        if(model == Model.FALCON_500 || model == Model.TALON_SRX || model == Model.VICTOR_SPX) {
+            phoenix.set(value * speed);
         }
         else {
             max.set(value * speed);
@@ -100,12 +111,13 @@ public class MotorNG {
 
     public double getEncoderReading() {
 
-        if(model == Model.FALCON_500 || model == Model.TALON_SRX) {
-            return srx.getSelectedSensorPosition(0);
+        if(model == Model.FALCON_500 || model == Model.TALON_SRX || model == Model.VICTOR_SPX) {
+            return ((WPI_TalonFX)phoenix).getSelectedSensorPosition(0);
         }
         else {
             return max.getEncoder().getPosition();
         }
+        
     }
 
     public void move(boolean forward, boolean reverse) {
