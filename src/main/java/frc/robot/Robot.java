@@ -26,6 +26,8 @@ public class Robot extends TimedRobot {
 
   public MotorNG index1, index2, index3, shooter, intake, feeder;
 
+  boolean isShooting = false;
+
   Compressor compressor;
 
   Solenoid arm;
@@ -83,6 +85,7 @@ public class Robot extends TimedRobot {
     gp1.fetchData();
 
     if(shooter.getVelocity() < 20300) {
+      isShooting = false;
       feeder.stop();
       if(!gp1.isKeyHeld(Key.A)) {
         index1.move(0);
@@ -91,6 +94,7 @@ public class Robot extends TimedRobot {
       }
     }
     else {
+      isShooting = true;
       feeder.move(1);
       index1.move(1);
       index2.move(1);
@@ -101,10 +105,12 @@ public class Robot extends TimedRobot {
     //Intake
     intake.move(gp1.isKeyHeld(Key.A),false);
     
+    if(!isShooting) {
     //Index
     index1.move(gp1.isKeyHeld(Key.A),false);
     index2.move(gp1.isKeyHeld(Key.A),false);
     index3.move(gp1.isKeyHeld(Key.A),false);
+    }
 
     //Shooter
     shooter.move(gp1.isKeyHeld(Key.RT),false);
