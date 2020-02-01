@@ -10,6 +10,7 @@ package frc.robot;
 //WPILib
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.Compressor;
@@ -24,6 +25,17 @@ public class Robot extends TimedRobot {
 
   public Gamepad gp1,gp2;
 
+  public static double driveSpeed = 1.0;
+
+  // Drive mode GUI variables and setup
+  public static final String kDefaultDrive = "Default (Right Stick)";
+  public static final String kCustomDrive = "Right Stick Drive";
+  public static final String kCustomDrive1 = "Left Stick Drive";
+  public static final String kCustomDrive2 = "Both Stick Drive";
+  
+  public String m_driveSelected;
+  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+
   public MotorNG index1, index2, index3, shooter, intake, feeder;
 
   boolean isShooting = false;
@@ -36,6 +48,14 @@ public class Robot extends TimedRobot {
   public void robotInit() {
 
     compressor = new Compressor();
+
+    // Drive mode GUI setup
+    m_chooser.setDefaultOption("Default (Right Stick)", kDefaultDrive);
+    m_chooser.addOption("Right Stick Drive", kCustomDrive);
+    m_chooser.addOption("Left Strick Drive", kCustomDrive1);
+    m_chooser.addOption("Both Strick Drive", kCustomDrive2);
+    SmartDashboard.putData("Drive choices", m_chooser);
+    System.out.println("Drive Selected: " + m_driveSelected);
 
     index1 = new MotorNG(Statics.INDEX_1, Model.VICTOR_SPX,true);
     index2 = new MotorNG(Statics.INDEX_2, Model.TALON_SRX);
@@ -71,6 +91,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    m_driveSelected = m_chooser.getSelected();
   }
 
   @Override
@@ -83,6 +104,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     
     gp1.fetchData();
+
 
     if(shooter.getVelocity() < 20300) {
       isShooting = false;
@@ -126,8 +148,63 @@ public class Robot extends TimedRobot {
 
   }
 
+  // All code for driving
+  public void updateBottom() {
+
+    // Gearbox
+    if (gp1.isKeyToggled(Key.DPAD_UP)) {
+      Chassis.shift();
+    }
+
+    // raise drive speed
+    if (gp1.isKeyToggled(Key.RB)) {
+      if (driveSpeed + 0.25 <= 1.0) {
+        driveSpeed += 0.25;
+        Chassis.setSpeedFactor(driveSpeed);
+      }
+    }
+    // lower drive speed
+    else if (gp1.isKeyToggled(Key.LB)) {
+      if (driveSpeed - 0.25 >= 0) {
+        driveSpeed -= 0.25;
+        Chassis.setSpeedFactor(driveSpeed);
+      }
+    }
+    // Drive control
+    else {
+      Gamepad.Key yKey = Key.J_RIGHT_Y;
+      Gamepad.Key xKey = Key.J_RIGHT_X;
+
+      switch (m_driveSelected) {
+      // Right Stick Drive
+      case kCustomDrive:
+        yKey = Key.J_RIGHT_Y;
+        xKey = Key.J_RIGHT_X;
+        break;
+      // Left Stick Drive
+      case kCustomDrive1:
+        yKey = Key.J_LEFT_Y;
+        xKey = Key.J_LEFT_X;
+        break;
+      // Both Stick Drive
+      case kCustomDrive2:
+        yKey = Key.J_LEFT_Y;
+        xKey = Key.J_RIGHT_X;
+        break;
+      // Default is right stick drive
+      case kDefaultDrive:
+        yKey = Key.J_RIGHT_Y;
+        xKey = Key.J_RIGHT_X;
+        break;
+
+      }
+      Chassis.drive(Utils.mapAnalog(gp1.getValue(yKey)), -gp1.getValue(xKey));
+    }
+  }
+
   public void postData() {
     SmartDashboard.putNumber("FALCON SPEED", shooter.getVelocity());
+    //SmartDashboard.putString("Current Gear", (Chassis.shifter.status == Status.FORWARD ? "Low" : "High"));
   }
 
   @Override

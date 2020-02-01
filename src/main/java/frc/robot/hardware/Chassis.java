@@ -12,34 +12,31 @@ public class Chassis {
     static Compressor compressor;
     public static Solenoid shifter;
 
-    /*
     public static UltrasonicSensor frontAligner = new UltrasonicSensor(Statics.US_ALIGNER_F_PING, Statics.US_ALIGNER_F_ECHO),
                                    sideAligner  = new UltrasonicSensor(Statics.US_ALIGNER_S_PING, Statics.US_ALIGNER_S_ECHO);
-    */
 
     static SpeedCurve curve = SpeedCurve.LINEAR;
 
     static public void initialize() {
 
 
-        //frontAligner.initialize();
-        //sideAligner.initialize();
-        //shifter = new Solenoid(Statics.SHIFTER_PCM, Statics.SHIFTER_F, Statics.SHIFTER_R);
+        frontAligner.initialize();
+        sideAligner.initialize();
+        shifter = new Solenoid(Statics.SHIFTER_PCM, Statics.SHIFTER_F, Statics.SHIFTER_R);
 
-        l1 = new MotorNG(Statics.CHASSIS_L1, Model.TALON_SRX);
-        l2 = new MotorNG(Statics.CHASSIS_L2, Model.TALON_SRX);
-        r1 = new MotorNG(Statics.CHASSIS_R1, Model.TALON_SRX, true);
-        r2 = new MotorNG(Statics.CHASSIS_R2, Model.TALON_SRX, true);
+        l1 = new MotorNG(Statics.CHASSIS_L1, Model.FALCON_500);
+        l2 = new MotorNG(Statics.CHASSIS_L2, Model.FALCON_500);
+        r1 = new MotorNG(Statics.CHASSIS_R1, Model.FALCON_500, true);
+        r2 = new MotorNG(Statics.CHASSIS_R2, Model.FALCON_500, true);
 
-        //compressor = new Compressor();
+        compressor = new Compressor();
 
     }
 
-    /*
     static public void shift() {
         shifter.actuate();
     }
-    */
+    
 
     static public void setSpeedCurve(SpeedCurve newCurve) {
         curve = newCurve;
@@ -61,35 +58,6 @@ public class Chassis {
         }
     }
 
-    /*
-    static public boolean align() {
-
-        while (true) {
-
-            double front = frontAligner.getRangeMM();
-            double back = sideAligner.getRangeMM();
-
-            Core.robot.gp1.fetchData();
-
-            if (Core.robot.gp1.isKeyHeld(Gamepad.Key.LB)) {
-                stop();
-                return false;
-            }
-
-            if (Math.abs(front - back) < 50) {
-                stop();
-                break;
-            } else if (front > back) {
-                driveRaw(0, 0.5);
-            } else {
-                driveRaw(0, -0.5);
-            }
-
-        }
-
-        return true;
-    }
-    */
 
     static public void drive(double y, double x) {
 

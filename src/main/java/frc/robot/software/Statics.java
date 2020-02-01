@@ -16,7 +16,10 @@ public class Statics {
    static final public int CHASSIS_L1 = 4,
                             CHASSIS_L2 = 5,
                             CHASSIS_R1 = 6,
-                            CHASSIS_R2 = 7;
+                            CHASSIS_R2 = 7,
+                            SHIFTER_PCM = 1,
+                            SHIFTER_F = 0,
+                            SHIFTER_R = 1;
 
 //Motors
     static final public int INDEX_1 = 0,
@@ -29,4 +32,9 @@ public class Statics {
     static final public int ARM_PCM = 0,
                             ARM_FORWARD = 0,
                             ARM_REVERSE = 1;
+	public static final int US_ALIGNER_S_PING = 0;
+	public static final int US_ALIGNER_F_PING = 1;
+	public static final int US_ALIGNER_F_ECHO = 2;
+	public static final int US_ALIGNER_S_ECHO = 3;
+                        
 }
