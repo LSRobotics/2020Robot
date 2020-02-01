@@ -6,10 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.software.Utils;
 
 public class MotorNG {
 
@@ -21,6 +18,7 @@ public class MotorNG {
     }
 
     private SpeedController phoenix;
+    private WPI_TalonFX falcon;
     private CANSparkMax max;
     
     private double speed = 1.0;
@@ -47,7 +45,7 @@ public class MotorNG {
 
         switch(model) {
             case FALCON_500:
-                phoenix = new WPI_TalonFX(port);
+                falcon = new WPI_TalonFX(port);
                 break;
             case VICTOR_SPX:
                 phoenix = new WPI_VictorSPX(port);
@@ -66,7 +64,10 @@ public class MotorNG {
     public void setReverse(boolean isReverse) {
         this.isReverse = isReverse;
     
-        if(model == Model.FALCON_500 || model == Model.TALON_SRX || model ==Model.VICTOR_SPX) {
+        if(model == Model.FALCON_500) {
+            falcon.setInverted(isReverse);
+        }
+        else if(model == Model.TALON_SRX || model ==Model.VICTOR_SPX) {
             phoenix.setInverted(isReverse);
         }
         else {
@@ -93,7 +94,10 @@ public class MotorNG {
 
         lastPower = value * speed;
 
-        if(model == Model.FALCON_500 || model == Model.TALON_SRX || model == Model.VICTOR_SPX) {
+        if (model == Model.FALCON_500) {
+            falcon.set(value * speed);
+        }
+        else if(model == Model.TALON_SRX || model == Model.VICTOR_SPX) {
             phoenix.set(value * speed);
         }
         else {
@@ -111,13 +115,26 @@ public class MotorNG {
 
     public double getEncoderReading() {
 
-        if(model == Model.FALCON_500 || model == Model.TALON_SRX || model == Model.VICTOR_SPX) {
-            return ((WPI_TalonFX)phoenix).getSelectedSensorPosition(0);
+        if(model == Model.FALCON_500) {
+            return falcon.getSelectedSensorPosition(0);
         }
-        else {
+        else if(model == Model.SPARK_MAX) {
             return max.getEncoder().getPosition();
         }
-        
+        return 0;  
+    }
+
+    public double getVelocity() {
+        switch(model) {
+            case SPARK_MAX:
+            case TALON_SRX:
+            case VICTOR_SPX:
+                break;
+            case FALCON_500:
+                return falcon.getSelectedSensorVelocity();
+        }
+
+        return 0;
     }
 
     public void move(boolean forward, boolean reverse) {

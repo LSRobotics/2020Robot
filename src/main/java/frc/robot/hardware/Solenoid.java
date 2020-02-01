@@ -14,13 +14,14 @@ public class Solenoid {
 
     private Compressor compressor;
     private DoubleSolenoid solenoid;
-    private Status status = Status.DISABLED;
+    public Status status = Status.DISABLED;
 
     public Solenoid(int fPort, int rPort) {
         this(0,fPort,rPort);
     }
 
     public Solenoid(int deviceId, int fPort, int rPort) {
+        
         compressor = new Compressor();
         solenoid = new DoubleSolenoid(deviceId, fPort, rPort);
         solenoid.set(DoubleSolenoid.Value.kOff);

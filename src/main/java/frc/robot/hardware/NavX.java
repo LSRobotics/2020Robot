@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.SPI;
 import frc.robot.constants.*;
 
 public class NavX {
-    static AHRS navx;
+    public static AHRS navx;
 
     public static void initialize() {
 

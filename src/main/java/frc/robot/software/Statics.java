@@ -13,23 +13,20 @@ public class Statics {
                                OFFSET_MAX = 0.7;
 
 //Chassis
-
    static final public int CHASSIS_L1 = 4,
                             CHASSIS_L2 = 5,
                             CHASSIS_R1 = 6,
                             CHASSIS_R2 = 7;
 
+//Motors
+    static final public int INDEX_1 = 0,
+                            INDEX_2 = 2,
+                            INDEX_3 = 3,
+                            INTAKE  = 4,
+                            SHOOTER = 5,
+                            FEEDER  = 6;
 
-//Other Motors
-    static final public int FALCON_LONE_SHOOTER = 13,
-                            SPARK_MAX_2 = 4,
-                            FALCON      = 2,
-                            FALCON_SHOOTER_UP = 9, //Needs change
-                            FALCON_SHOOTER_DOWN = 10, //Needs change
-                            SRX_LIFT = 8,
-                            SRX_INTAKE = 7;
-
-//Ultrasonic
-    static final public int US_PING = 0,
-                            US_ECHO = 1;
+    static final public int ARM_PCM = 0,
+                            ARM_FORWARD = 0,
+                            ARM_REVERSE = 1;
 }
