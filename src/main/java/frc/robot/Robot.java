@@ -1,42 +1,29 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot;
 
-//WPILib
+//FIRST
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import com.revrobotics.ColorSensorV3;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.I2C;
+
 //Internal
 import frc.robot.hardware.*;
 import frc.robot.hardware.Gamepad.Key;
 import frc.robot.hardware.MotorNG.Model;
 import frc.robot.software.*;
+import frc.robot.constants.*;
+import frc.robot.autonomous.*;
 
 public class Robot extends TimedRobot {
 
   public Gamepad gp1,gp2;
-
-  public static double driveSpeed = 1.0;
-
-  // Drive mode GUI variables and setup
-  public static final String kDefaultDrive = "Default (Right Stick)";
-  public static final String kCustomDrive = "Right Stick Drive";
-  public static final String kCustomDrive1 = "Left Stick Drive";
-  public static final String kCustomDrive2 = "Both Stick Drive";
-  
-  public String m_driveSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
-
+  public double driveSpeed = 1.0;
+  public DriveMethod driveMethod = DriveMethod.R_STICK;
+  public SendableChooser<DriveMethod> m_chooser = new SendableChooser<>();
   public MotorNG index1, index2, index3, shooter, intake, feeder;
+  public RGBSensor colorSensor = new RGBSensor();
+  public PIDController gyroPID;
 
   boolean isShooting = false;
 
@@ -47,38 +34,52 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
-    compressor = new Compressor();
-
     // Drive mode GUI setup
-    m_chooser.setDefaultOption("Default (Right Stick)", kDefaultDrive);
-    m_chooser.addOption("Right Stick Drive", kCustomDrive);
-    m_chooser.addOption("Left Strick Drive", kCustomDrive1);
-    m_chooser.addOption("Both Strick Drive", kCustomDrive2);
-    SmartDashboard.putData("Drive choices", m_chooser);
-    System.out.println("Drive Selected: " + m_driveSelected);
+    m_chooser.setDefaultOption("Right Stick Drive (Default)",DriveMethod.R_STICK);
+    m_chooser.addOption(       "Left Strick Drive",          DriveMethod.L_STICK);
+    m_chooser.addOption(       "Both Strick Drive",          DriveMethod.BOTH_STICKS);
 
+    SmartDashboard.putData("Drive Choices",m_chooser);
+
+    //Index Motors
     index1 = new MotorNG(Statics.INDEX_1, Model.VICTOR_SPX,true);
     index2 = new MotorNG(Statics.INDEX_2, Model.TALON_SRX);
     index3 = new MotorNG(Statics.INDEX_3, Model.VICTOR_SPX);
 
+    //Shooting Motors
     feeder = new MotorNG(Statics.FEEDER, Model.VICTOR_SPX,true);
     shooter = new MotorNG(Statics.SHOOTER, Model.FALCON_500,true);
 
+    //Intake Mechanism
     intake  = new MotorNG(Statics.INTAKE, Model.TALON_SRX);
     arm = new Solenoid(Statics.ARM_PCM, Statics.ARM_FORWARD, Statics.ARM_REVERSE);
 
+    //Setting up motor speeds
     index1.setSpeed(0.4);
     index2.setSpeed(0.4);
     index3.setSpeed(0.4);
-    
     feeder.setSpeed(0.4);
-
     intake.setSpeed(0.6);
 
+    //Gamepads
     gp1 = new Gamepad(0);
     gp2 = new Gamepad(1);
 
+    //Framework Core initialize (Allowing global access to everything in this class -- not safe in real world, but hey this is Robotics)
     Core.initialize(this);
+
+    //Compressor (For Solenoid)
+    compressor = new Compressor();
+
+    //NavX
+    NavX.initialize();
+    NavX.navx.zeroYaw();
+
+    //Chassis
+    Chassis.initialize();
+
+    //PID
+    gyroPID = new PIDController(.045, .85, .005); // variables you test
 
     Camera.initialize();
 
@@ -90,12 +91,15 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void autonomousInit() {
-    m_driveSelected = m_chooser.getSelected();
+  public void teleopInit() {
+    driveMethod = m_chooser.getSelected();
+    System.out.println("Drive Selected: " + driveMethod);
   }
 
   @Override
   public void autonomousPeriodic() {
+
+    //TODO: Complete this part
     teleopPeriodic();
   }
 
@@ -104,45 +108,10 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     
     gp1.fetchData();
+    gp2.fetchData();
 
-
-    if(shooter.getVelocity() < 20300) {
-      isShooting = false;
-      feeder.stop();
-      if(!gp1.isKeyHeld(Key.A)) {
-        index1.move(0);
-        index2.move(0);
-        index3.move(0);
-      }
-    }
-    else {
-      isShooting = true;
-      feeder.move(1);
-      index1.move(1);
-      index2.move(1);
-      index3.move(1);
-
-    }
-
-    //Intake
-    intake.move(gp1.isKeyHeld(Key.A),false);
-    
-    if(!isShooting) {
-    //Index
-    index1.move(gp1.isKeyHeld(Key.A),false);
-    index2.move(gp1.isKeyHeld(Key.A),false);
-    index3.move(gp1.isKeyHeld(Key.A),false);
-    }
-
-    //Shooter
-    shooter.move(gp1.isKeyHeld(Key.RT),false);
-
-    //Feeder
-    //feeder.move(gp1.isKeyHeld(Key.DPAD_UP),false);
-
-    if(gp1.isKeyToggled(Key.Y)) {
-      arm.actuate();
-    }
+    updateBottom();
+    updateTop();
     
     postData();
 
@@ -150,6 +119,16 @@ public class Robot extends TimedRobot {
 
   // All code for driving
   public void updateBottom() {
+
+    //Autonomous Shooter (Experimental)
+    if(gp1.isKeyToggled(Key.A)) {
+      new AutonBall(gp1, Key.DPAD_DOWN).run();
+    }
+
+    //Autonomous Rotation (Experimental)
+    if(gp1.isKeyToggled(Key.B)) {
+      new AutonGyroTurn(90, gp1, Key.DPAD_DOWN).run();
+    }
 
     // Gearbox
     if (gp1.isKeyToggled(Key.DPAD_UP)) {
@@ -175,30 +154,61 @@ public class Robot extends TimedRobot {
       Gamepad.Key yKey = Key.J_RIGHT_Y;
       Gamepad.Key xKey = Key.J_RIGHT_X;
 
-      switch (m_driveSelected) {
-      // Right Stick Drive
-      case kCustomDrive:
-        yKey = Key.J_RIGHT_Y;
-        xKey = Key.J_RIGHT_X;
-        break;
-      // Left Stick Drive
-      case kCustomDrive1:
+      switch (driveMethod) {
+      case L_STICK: // Left Stick Drive
         yKey = Key.J_LEFT_Y;
         xKey = Key.J_LEFT_X;
         break;
-      // Both Stick Drive
-      case kCustomDrive2:
+
+      case BOTH_STICKS: // Both Stick Drive
         yKey = Key.J_LEFT_Y;
         xKey = Key.J_RIGHT_X;
         break;
-      // Default is right stick drive
-      case kDefaultDrive:
+
+      case R_STICK: // Right Stick Drive
         yKey = Key.J_RIGHT_Y;
         xKey = Key.J_RIGHT_X;
         break;
-
       }
       Chassis.drive(Utils.mapAnalog(gp1.getValue(yKey)), -gp1.getValue(xKey));
+    }
+  }
+
+  public void updateTop() {
+    if(shooter.getVelocity() < 20300) {
+      isShooting = false;
+      feeder.stop();
+      if(!gp2.isKeyHeld(Key.A)) {
+        index1.move(0);
+        index2.move(0);
+        index3.move(0);
+      }
+    }
+    else {
+      isShooting = true;
+      feeder.move(1);
+      index1.move(1);
+      index2.move(1);
+      index3.move(1);
+
+    }
+
+    //Intake
+    intake.move(gp2.isKeyHeld(Key.A),false);
+    
+    if(!isShooting) {
+    //Index
+    index1.move(gp2.isKeyHeld(Key.A),false);
+    index2.move(gp2.isKeyHeld(Key.A),false);
+    index3.move(gp2.isKeyHeld(Key.A),false);
+    }
+
+    //Shooter
+    shooter.move(gp2.isKeyHeld(Key.RT),false);
+
+    //Intake Arm
+    if(gp2.isKeyToggled(Key.Y)) {
+      arm.actuate();
     }
   }
 
