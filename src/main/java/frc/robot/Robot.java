@@ -214,6 +214,15 @@ public class Robot extends TimedRobot {
 
   public void postData() {
     SmartDashboard.putNumber("FALCON SPEED", shooter.getVelocity());
+    //SmartDashboard.putNumber("Front Ultrasonic", Chassis.frontAligner.getRangeInches());
+    //SmartDashboard.putNumber("Side Ultrasonic", Chassis.sideAligner.getRangeInches());
+    //SmartDashboard.putString("Current Gear", (Chassis.shifter.status == Status.FORWARD ? "Low" : "High"));
+    SmartDashboard.putNumber("Angle", NavX.navx.getYaw());
+    //SmartDashboard.putString("Color Sensor (R,G,B)", color[0] + ", " + color[1] + ", " + color[2]);
+    //SmartDashboard.putBoolean("Is Blue Line Detected", isBlueLine);
+    //SmartDashboard.putBoolean("Is Red Line Detected", isRedLine);
+    //SmartDashboard.putBoolean("Is White Line Detected", isWhiteLine);
+    //SmartDashboard.putNumber("target Angle", lastTargetAngle)
     //SmartDashboard.putString("Current Gear", (Chassis.shifter.status == Status.FORWARD ? "Low" : "High"));
   }
 
