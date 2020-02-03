@@ -35,6 +35,11 @@ public class Statics {
 	public static final int US_ALIGNER_S_PING = 0;
 	public static final int US_ALIGNER_F_PING = 1;
 	public static final int US_ALIGNER_F_ECHO = 2;
-	public static final int US_ALIGNER_S_ECHO = 3;
+    public static final int US_ALIGNER_S_ECHO = 3;
+
+//Intake Ultrasonic
+    public static final int US_INTAKE_PING = 2,
+                            US_INTAKE_ECHO = 3;
+                        
                         
 }

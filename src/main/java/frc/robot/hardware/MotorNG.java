@@ -1,5 +1,6 @@
 package frc.robot.hardware;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
@@ -88,21 +89,25 @@ public class MotorNG {
         speed = newSpeed;
     }
 
+    public void moveRaw(double value) {
+        if (model == Model.FALCON_500) {
+            falcon.set(value);
+        }
+        else if(model == Model.TALON_SRX || model == Model.VICTOR_SPX) {
+            phoenix.set(value);
+        }
+        else {
+            max.set(value);
+        }
+    }
+
     public void move(double value) {
 
         if(value * speed == lastPower) return;
 
         lastPower = value * speed;
 
-        if (model == Model.FALCON_500) {
-            falcon.set(value * speed);
-        }
-        else if(model == Model.TALON_SRX || model == Model.VICTOR_SPX) {
-            phoenix.set(value * speed);
-        }
-        else {
-            max.set(value * speed);
-        }
+        moveRaw(lastPower);
     }
 
     public void stop() {
@@ -140,7 +145,7 @@ public class MotorNG {
     public void move(boolean forward, boolean reverse) {
 
         if (forward == reverse)
-            move(0);
+            stop();
         else if (forward)
             move(1);
         else

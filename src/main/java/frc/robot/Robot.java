@@ -24,11 +24,11 @@ public class Robot extends TimedRobot {
   public MotorNG index1, index2, index3, shooter, intake, feeder;
   public RGBSensor colorSensor = new RGBSensor();
   public PIDController gyroPID;
+  public UltrasonicSensor usIntake;
+
+  public Timer intakeTimer = new Timer("Intake Timer");
 
   boolean isShooting = false;
-
-  Compressor compressor;
-
   Solenoid arm;
 
   @Override
@@ -54,9 +54,12 @@ public class Robot extends TimedRobot {
     intake  = new MotorNG(Statics.INTAKE, Model.TALON_SRX);
     arm = new Solenoid(Statics.ARM_PCM, Statics.ARM_FORWARD, Statics.ARM_REVERSE);
 
+    usIntake = new UltrasonicSensor(Statics.US_INTAKE_PING, Statics.US_INTAKE_ECHO);
+    usIntake.initialize();
+
     //Setting up motor speeds
-    index1.setSpeed(0.4);
-    index2.setSpeed(0.4);
+    index1.setSpeed(0.5);
+    index2.setSpeed(0.5);
     index3.setSpeed(0.4);
     feeder.setSpeed(0.4);
     intake.setSpeed(0.6);
@@ -68,15 +71,12 @@ public class Robot extends TimedRobot {
     //Framework Core initialize (Allowing global access to everything in this class -- not safe in real world, but hey this is Robotics)
     Core.initialize(this);
 
-    //Compressor (For Solenoid)
-    compressor = new Compressor();
-
     //NavX
     NavX.initialize();
     NavX.navx.zeroYaw();
 
     //Chassis
-    Chassis.initialize();
+    //Chassis.initialize();
 
     //PID
     gyroPID = new PIDController(.045, .85, .005); // variables you test
@@ -110,7 +110,7 @@ public class Robot extends TimedRobot {
     gp1.fetchData();
     gp2.fetchData();
 
-    updateBottom();
+    //updateBottom();
     updateTop();
     
     postData();
@@ -119,11 +119,6 @@ public class Robot extends TimedRobot {
 
   // All code for driving
   public void updateBottom() {
-
-    //Autonomous Shooter (Experimental)
-    if(gp1.isKeyToggled(Key.A)) {
-      new AutonBall(gp1, Key.DPAD_DOWN).run();
-    }
 
     //Autonomous Rotation (Experimental)
     if(gp1.isKeyToggled(Key.B)) {
@@ -175,14 +170,37 @@ public class Robot extends TimedRobot {
   }
 
   public void updateTop() {
+
+    //Ball is in
+    if(usIntake.getRangeInches() < 3) {
+      
+      if(!intakeTimer.isBusy()) {
+        
+          intakeTimer.start();
+          index1.move(1);
+          index2.move(1);
+          index3.move(1);
+      }
+    }
+
+    if(intakeTimer.getElaspedTimeInMs() > 50) {
+      index1.stop();
+      index2.stop();
+      index3.stop();
+      intakeTimer.stop();
+      intakeTimer.zero();
+    }
+
+
+    //Autonomous Shooter (Experimental)
+    if(gp1.isKeyToggled(Key.B)) {
+      new AutonBall(gp1, Key.DPAD_DOWN).run();
+    }
+
     if(shooter.getVelocity() < 20300) {
       isShooting = false;
       feeder.stop();
-      if(!gp2.isKeyHeld(Key.A)) {
-        index1.move(0);
-        index2.move(0);
-        index3.move(0);
-      }
+      index3.stop();
     }
     else {
       isShooting = true;
@@ -194,26 +212,21 @@ public class Robot extends TimedRobot {
     }
 
     //Intake
-    intake.move(gp2.isKeyHeld(Key.A),false);
-    
-    if(!isShooting) {
-    //Index
-    index1.move(gp2.isKeyHeld(Key.A),false);
-    index2.move(gp2.isKeyHeld(Key.A),false);
-    index3.move(gp2.isKeyHeld(Key.A),false);
-    }
+    intake.move(gp1.isKeyHeld(Key.A),false);
 
     //Shooter
-    shooter.move(gp2.isKeyHeld(Key.RT),false);
+    shooter.move(gp1.isKeyHeld(Key.RT),false);
 
     //Intake Arm
-    if(gp2.isKeyToggled(Key.Y)) {
+    if(gp1.isKeyToggled(Key.Y)) {
       arm.actuate();
     }
   }
 
   public void postData() {
     SmartDashboard.putNumber("FALCON SPEED", shooter.getVelocity());
+    SmartDashboard.putNumber("Ultrasonic Intake", usIntake.getRangeInches());
+    SmartDashboard.putNumber("Motor Speed", index1.getCurrentPower());
     //SmartDashboard.putString("Current Gear", (Chassis.shifter.status == Status.FORWARD ? "Low" : "High"));
   }
 

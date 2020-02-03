@@ -8,7 +8,7 @@ public class Timer {
 
     public Timer(String name) {
         this.name = name;
-        startTime = System.currentTimeMillis();
+        //startTime = System.currentTimeMillis();
     }   
 
     public Timer() {
@@ -32,6 +32,11 @@ public class Timer {
     public long getElaspedTimeInMs() {
         endTime = System.currentTimeMillis();
         return endTime - startTime;
+    }
+
+    public void zero() {
+        endTime = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
     }
 
     public String toString() {
