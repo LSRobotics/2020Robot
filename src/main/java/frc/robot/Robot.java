@@ -19,7 +19,7 @@ public class Robot extends TimedRobot {
 
   public Gamepad gp1,gp2;
   public double driveSpeed = 1.0;
-  public DriveMethod driveMethod;
+  public DriveMethod driveMethod = DriveMethod.R_STICK;
   public SendableChooser<DriveMethod> m_chooser = new SendableChooser<>();
   public MotorNG index1, index2, index3, shooter, intake, feeder;
   public RGBSensor colorSensor = new RGBSensor();
@@ -75,6 +75,9 @@ public class Robot extends TimedRobot {
     NavX.initialize();
     NavX.navx.zeroYaw();
 
+    //Chassis
+    Chassis.initialize();
+
     //PID
     gyroPID = new PIDController(.045, .85, .005); // variables you test
 
@@ -88,7 +91,7 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void autonomousInit() {
+  public void teleopInit() {
     driveMethod = m_chooser.getSelected();
     System.out.println("Drive Selected: " + driveMethod);
   }
