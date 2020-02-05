@@ -14,13 +14,13 @@ public class Utils {
     public static boolean isOutputEnabled = Statics.DEBUG_MODE;
 
     static public double getCurvedValue(SpeedCurve curve, double value) {
-        if(curve == SpeedCurve.LINEAR) return value;
-        else if(curve == SpeedCurve.SQUARED) {
+        if (curve == SpeedCurve.LINEAR)
+            return value;
+        else if (curve == SpeedCurve.SQUARED) {
             boolean isNegative = value < 0;
 
-            return Math.pow(value, 2) * (isNegative? -1 : 1);
-        }
-        else {
+            return Math.pow(value, 2) * (isNegative ? -1 : 1);
+        } else {
             return Math.pow(value, 3);
         }
     }
@@ -55,6 +55,7 @@ public class Utils {
             DriverStation.reportWarning(message, false);
         }
     }
+
     /**
      *
      * @param value the original value
@@ -76,18 +77,16 @@ public class Utils {
     }
 
     public static double mapAnalog(double value, double absMin, double absMax) {
-        
+
         boolean isNegative = (value < 0);
-        
+
         value = Math.abs(value);
 
-        if(value < absMin) {
+        if (value < absMin) {
             return 0;
-        }
-        else if(value > absMax || value == absMax) {
+        } else if (value > absMax || value == absMax) {
             return isNegative ? -1 : 1;
-        }
-        else {
+        } else {
             return (value - absMin) / absMax * (isNegative ? -1 : 1);
         }
     }
@@ -103,7 +102,18 @@ public class Utils {
         return (value == min || value > min) && (value < max || value == max);
     }
 
-    public static boolean isDataClose(double value, double expected, double tolerance) {
-        return Math.abs(value - expected) < tolerance || (Math.abs(value - expected)) == tolerance || Math.abs(value - expected) == 0;
+    public static boolean isColorMatch(double[] data, double[] target, double tolerance) {
+        for (int i = 0; i < data.length; ++i) {
+            if (Math.abs(data[i] - target[i]) > tolerance) {
+                return false;
+            }
+        }
+        return true;
     }
+
+    public static boolean isDataClose(double value, double expected, double tolerance) {
+        return Math.abs(value - expected) < tolerance || (Math.abs(value - expected)) == tolerance
+                || Math.abs(value - expected) == 0;
+    }
+
 }
