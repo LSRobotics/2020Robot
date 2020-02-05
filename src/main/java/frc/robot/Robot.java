@@ -28,7 +28,8 @@ public class Robot extends TimedRobot {
 
   public Timer intakeTimer = new Timer("Intake Timer");
 
-  boolean isShooting = false;
+  boolean isShooting = false,
+          isLastBall = false;
   Solenoid arm;
 
   @Override
@@ -174,7 +175,7 @@ public class Robot extends TimedRobot {
     //Ball is in
     if(usIntake.getRangeInches() < 3) {
       
-      if(!intakeTimer.isBusy()) {
+      if(!intakeTimer.isBusy() && !isLastBall) {
         
           intakeTimer.start();
           index1.move(1);
@@ -189,12 +190,17 @@ public class Robot extends TimedRobot {
       index3.stop();
       intakeTimer.stop();
       intakeTimer.zero();
+
+      if(usIntake.getRangeInches() < 3) {
+        isLastBall = true;
+      }
     }
 
 
     //Autonomous Shooter (Experimental)
     if(gp1.isKeyToggled(Key.B)) {
       new AutonBall(gp1, Key.DPAD_DOWN).run();
+      isLastBall = false;
     }
 
     if(shooter.getVelocity() < 20300) {
