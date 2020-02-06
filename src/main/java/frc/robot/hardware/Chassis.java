@@ -4,6 +4,7 @@ import frc.robot.software.*;
 import edu.wpi.first.wpilibj.Compressor;
 import frc.robot.constants.*;
 import frc.robot.hardware.MotorNG.Model;
+import frc.robot.hardware.RangeSensor.Type;
 
 public class Chassis {
 
@@ -12,16 +13,13 @@ public class Chassis {
     static Compressor compressor;
     public static Solenoid shifter;
 
-    public static UltrasonicSensor frontAligner = new UltrasonicSensor(Statics.US_ALIGNER_F_PING, Statics.US_ALIGNER_F_ECHO),
-                                   sideAligner  = new UltrasonicSensor(Statics.US_ALIGNER_S_PING, Statics.US_ALIGNER_S_ECHO);
+    public static RangeSensor frontAligner = new RangeSensor(Statics.US_ALIGNER_F_PING, Statics.US_ALIGNER_F_ECHO,Type.DIO_US_HC_SR04),
+                                   sideAligner  = new RangeSensor(Statics.US_ALIGNER_S_PING, Statics.US_ALIGNER_S_ECHO,Type.DIO_US_HC_SR04);
 
     static SpeedCurve curve = SpeedCurve.LINEAR;
 
     static public void initialize() {
 
-
-        frontAligner.initialize();
-        sideAligner.initialize();
         shifter = new Solenoid(Statics.SHIFTER_PCM, Statics.SHIFTER_F, Statics.SHIFTER_R);
 
         l1 = new MotorNG(Statics.CHASSIS_L1, Model.FALCON_500);

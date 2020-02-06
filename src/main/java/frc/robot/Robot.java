@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import frc.robot.hardware.*;
 import frc.robot.hardware.Gamepad.Key;
 import frc.robot.hardware.MotorNG.Model;
+import frc.robot.hardware.RangeSensor.Type;
 import frc.robot.software.*;
 import frc.robot.constants.*;
 import frc.robot.autonomous.*;
@@ -24,7 +25,7 @@ public class Robot extends TimedRobot {
   public MotorNG index1, index2, index3, shooter, intake, feeder;
   public RGBSensor colorSensor = new RGBSensor();
   public PIDController gyroPID;
-  public UltrasonicSensor usIntake;
+  public RangeSensor usIntake;
 
   public Timer intakeTimer = new Timer("Intake Timer");
 
@@ -55,8 +56,7 @@ public class Robot extends TimedRobot {
     intake  = new MotorNG(Statics.INTAKE, Model.TALON_SRX);
     arm = new Solenoid(Statics.ARM_PCM, Statics.ARM_FORWARD, Statics.ARM_REVERSE);
 
-    usIntake = new UltrasonicSensor(Statics.US_INTAKE_PING, Statics.US_INTAKE_ECHO);
-    usIntake.initialize();
+    usIntake = new RangeSensor(Statics.US_INTAKE_PING, Statics.US_INTAKE_ECHO,Type.DIO_US_HC_SR04);
 
     //Setting up motor speeds
     index1.setSpeed(0.5);

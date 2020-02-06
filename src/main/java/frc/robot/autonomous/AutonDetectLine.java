@@ -2,7 +2,6 @@ package frc.robot.autonomous;
 
 import frc.robot.hardware.*;
 import frc.robot.software.*;
-import frc.robot.*;
 
 public class AutonDetectLine extends AutonBase {
     public double[] color = {};
