@@ -29,6 +29,7 @@ public class RangeSensor {
                 dio = new Ultrasonic(port1,port2,Ultrasonic.Unit.kInches);
                 break;
             case ANALOG_IR_GP2Y0A710K0F:
+                analog = new AnalogInput(port1);
                 break;
         }
     }
