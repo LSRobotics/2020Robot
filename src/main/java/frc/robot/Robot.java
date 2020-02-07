@@ -15,6 +15,7 @@ import frc.robot.hardware.RangeSensor.Type;
 import frc.robot.software.*;
 import frc.robot.constants.*;
 import frc.robot.autonomous.*;
+import frc.robot.components.Shooter;
 
 public class Robot extends TimedRobot {
 
@@ -22,15 +23,10 @@ public class Robot extends TimedRobot {
   public double driveSpeed = 1.0;
   public DriveMethod driveMethod = DriveMethod.R_STICK;
   public SendableChooser<DriveMethod> m_chooser = new SendableChooser<>();
-  public MotorNG index1, index2, index3, shooter, intake, feeder;
   public RGBSensor colorSensor = new RGBSensor();
   public PIDController gyroPID;
-  public RangeSensor usIntake;
+  public MotorNG intake;
 
-  public Timer intakeTimer = new Timer("Intake Timer");
-
-  boolean isShooting = false,
-          isLastBall = false;
   Solenoid arm;
 
   @Override
@@ -43,27 +39,12 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putData("Drive Choices",m_chooser);
 
-    //Index Motors
-    index1 = new MotorNG(Statics.INDEX_1, Model.VICTOR_SPX,true);
-    index2 = new MotorNG(Statics.INDEX_2, Model.TALON_SRX);
-    index3 = new MotorNG(Statics.INDEX_3, Model.VICTOR_SPX);
-
-    //Shooting Motors
-    feeder = new MotorNG(Statics.FEEDER, Model.VICTOR_SPX,true);
-    shooter = new MotorNG(Statics.SHOOTER, Model.FALCON_500,true);
-
     //Intake Mechanism
     intake  = new MotorNG(Statics.INTAKE, Model.TALON_SRX);
-    arm = new Solenoid(Statics.ARM_PCM, Statics.ARM_FORWARD, Statics.ARM_REVERSE);
-
-    usIntake = new RangeSensor(Statics.US_INTAKE_PING, Statics.US_INTAKE_ECHO,Type.DIO_US_HC_SR04);
-
-    //Setting up motor speeds
-    index1.setSpeed(0.3);
-    index2.setSpeed(0.3);
-    index3.setSpeed(0.3);
-    feeder.setSpeed(0.4);
     intake.setSpeed(0.6);
+
+    arm = new Solenoid(Statics.ARM_PCM, Statics.ARM_FORWARD, Statics.ARM_REVERSE);
+    
 
     //Gamepads
     gp1 = new Gamepad(0);
@@ -81,6 +62,9 @@ public class Robot extends TimedRobot {
 
     //PID
     gyroPID = new PIDController(.045, .85, .005); // variables you test
+
+    //Shooter
+    Shooter.initialize();
 
     Camera.initialize();
 
@@ -172,67 +156,23 @@ public class Robot extends TimedRobot {
 
   public void updateTop() {
 
-    //Ball is in
-    if(usIntake.getRangeInches() < 3) {
-      
-      if(!intakeTimer.isBusy() && !isLastBall) {
-        
-          intakeTimer.start();
-          index1.move(1);
-          index2.move(1);
-          index3.move(1);
-      }
-    }
-
-    if(intakeTimer.getElaspedTimeInMs() > 200) {
-      index1.stop();
-      index2.stop();
-      index3.stop();
-      intakeTimer.stop();
-      intakeTimer.zero();
-
-      if(usIntake.getRangeInches() < 3) {
-        isLastBall = true;
-      }
-    }
-
-
-    //Autonomous Shooter
-    if(gp1.isKeyToggled(Key.B)) {
-      new AutonBall(gp1, Key.DPAD_DOWN).run();
-      isLastBall = false;
-    }
-
-    if(shooter.getVelocity() < 20300) {
-      isShooting = false;
-      feeder.stop();
-      index3.stop();
-    }
-    else {
-      isShooting = true;
-      feeder.move(1);
-      index1.move(1);
-      index2.move(1);
-      index3.move(1);
-
-    }
+    Shooter.update();
 
     //Intake
     intake.move(gp1.isKeyHeld(Key.A),false);
-
-    //Shooter
-    shooter.move(gp1.isKeyHeld(Key.RT),false);
 
     //Intake Arm
     if(gp1.isKeyToggled(Key.Y)) {
       arm.actuate();
     }
+
   }
 
   public void postData() {
-    SmartDashboard.putNumber("FALCON SPEED", shooter.getVelocity());
-    SmartDashboard.putNumber("Ultrasonic Intake", usIntake.getRangeInches());
+    SmartDashboard.putNumber("FALCON SPEED", Shooter.getVelocity());
+    SmartDashboard.putNumber("Ultrasonic Intake", Shooter.usIntake.getRangeInches());
     SmartDashboard.putNumber("NavX Angle", NavX.navx.getYaw());
+    SmartDashboard.putNumber("Number of balls", Shooter.numBalls);
   }
 
   @Override

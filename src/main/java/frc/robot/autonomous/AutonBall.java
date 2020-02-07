@@ -2,6 +2,7 @@ package frc.robot.autonomous;
 
 import frc.robot.software.Timer;
 import frc.robot.hardware.*;
+import frc.robot.components.*;
 
 /**
  * THE IQ 200 SHOOTER -- Does everything we need;
@@ -27,7 +28,7 @@ public class AutonBall extends AutonBase {
     @Override
     public void preRun() {
         //Chassis.stop();
-        robot.shooter.move(1);
+        Shooter.shooter.move(1);
         masterTimer.start();
     }
 
@@ -40,25 +41,25 @@ public class AutonBall extends AutonBase {
         }
 
         //Wait for the speed to come up
-        while(robot.shooter.getVelocity() < 20500) {
+        while(Shooter.shooter.getVelocity() < 20500) {
             
-            robot.index1.stop();
-            robot.index2.stop();
-            robot.index3.stop();
-            robot.feeder.stop();
+            Shooter.index1.stop();
+            Shooter.index2.stop();
+            Shooter.index3.stop();
+            Shooter.feeder.stop();
 
             if(!isAutonPeriod && !isGamepadGood()) return;
         }
 
-        robot.feeder.move(1);
-        robot.index1.move(1);
-        robot.index2.move(1);
-        robot.index3.move(1);
+        Shooter.feeder.move(1);
+        Shooter.index1.move(1);
+        Shooter.index2.move(1);
+        Shooter.index3.move(1);
         
 
         shootTimer.start();
 
-        while(robot.shooter.getVelocity() > 19500) {
+        while(Shooter.shooter.getVelocity() > 19500) {
 
             if(shootTimer.getElaspedTimeInMs() > 2000) {
                 isNoBallLeft = true;
@@ -81,10 +82,10 @@ public class AutonBall extends AutonBase {
 
     @Override
     public void postRun() {
-        robot.shooter.move(0);
-        robot.feeder.move(0);
-        robot.index1.move(0);
-        robot.index2.move(0);
-        robot.index3.move(0);
+        Shooter.shooter.move(0);
+        Shooter.feeder.move(0);
+        Shooter.index1.move(0);
+        Shooter.index2.move(0);
+        Shooter.index3.move(0);
     }
 }
