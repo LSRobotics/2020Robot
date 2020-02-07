@@ -59,9 +59,9 @@ public class Robot extends TimedRobot {
     usIntake = new RangeSensor(Statics.US_INTAKE_PING, Statics.US_INTAKE_ECHO,Type.DIO_US_HC_SR04);
 
     //Setting up motor speeds
-    index1.setSpeed(0.5);
-    index2.setSpeed(0.5);
-    index3.setSpeed(0.4);
+    index1.setSpeed(0.3);
+    index2.setSpeed(0.3);
+    index3.setSpeed(0.3);
     feeder.setSpeed(0.4);
     intake.setSpeed(0.6);
 
@@ -184,7 +184,7 @@ public class Robot extends TimedRobot {
       }
     }
 
-    if(intakeTimer.getElaspedTimeInMs() > 50) {
+    if(intakeTimer.getElaspedTimeInMs() > 200) {
       index1.stop();
       index2.stop();
       index3.stop();
@@ -197,7 +197,7 @@ public class Robot extends TimedRobot {
     }
 
 
-    //Autonomous Shooter (Experimental)
+    //Autonomous Shooter
     if(gp1.isKeyToggled(Key.B)) {
       new AutonBall(gp1, Key.DPAD_DOWN).run();
       isLastBall = false;
@@ -232,15 +232,7 @@ public class Robot extends TimedRobot {
   public void postData() {
     SmartDashboard.putNumber("FALCON SPEED", shooter.getVelocity());
     SmartDashboard.putNumber("Ultrasonic Intake", usIntake.getRangeInches());
-    //SmartDashboard.putNumber("Front Ultrasonic", Chassis.frontAligner.getRangeInches());
-    //SmartDashboard.putNumber("Side Ultrasonic", Chassis.sideAligner.getRangeInches());
-    //SmartDashboard.putString("Current Gear", (Chassis.shifter.status == Status.FORWARD ? "Low" : "High"));
     SmartDashboard.putNumber("NavX Angle", NavX.navx.getYaw());
-    //SmartDashboard.putString("Color Sensor (R,G,B)", color[0] + ", " + color[1] + ", " + color[2]);
-    //SmartDashboard.putBoolean("Is Blue Line Detected", isBlueLine);
-    //SmartDashboard.putBoolean("Is Red Line Detected", isRedLine);
-
-    //SmartDashboard.putString("Current Gear", (Chassis.shifter.status == Status.FORWARD ? "Low" : "High"));
   }
 
   @Override
