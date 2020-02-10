@@ -24,7 +24,7 @@ public class AutonGyroTurn extends AutonBase {
 
     @Override
     public void duringRun() {
-        Chassis.driveRaw(0,robot.gyroPID.calculate(NavX.navx.getYaw())* 0.15);
+        Chassis.driveRaw(0,-robot.gyroPID.calculate(NavX.navx.getYaw())* 0.15);
     }
 
     @Override

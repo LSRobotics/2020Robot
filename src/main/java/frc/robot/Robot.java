@@ -150,7 +150,7 @@ public class Robot extends TimedRobot {
         xKey = Key.J_RIGHT_X;
         break;
       }
-      Chassis.drive(Utils.mapAnalog(gp1.getValue(yKey)), -gp1.getValue(xKey));
+      Chassis.drive(Utils.mapAnalog(-gp1.getValue(yKey)), Utils.mapAnalog(gp1.getValue(xKey)));
     }
   }
 

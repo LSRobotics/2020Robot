@@ -20,7 +20,7 @@ public class AutonDetectLine extends AutonBase {
     
     @Override
     public void preRun() {
-        Chassis.driveRaw(-0.2, 0);
+        Chassis.driveRaw(0.2, 0);
     }
 
     @Override
