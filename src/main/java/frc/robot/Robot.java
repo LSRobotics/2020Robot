@@ -56,6 +56,7 @@ public class Robot extends TimedRobot {
     //NavX.navx.zeroYaw();
 
     Chassis.initialize();
+    Chassis.setSpeedCurve(SpeedCurve.SQUARED);
 
     //Shooter
     //Shooter.initialize();
@@ -97,6 +98,10 @@ public class Robot extends TimedRobot {
 
   // All code for driving
   public void updateBottom() {
+
+    if(gp1.isKeyToggled(Key.A)) {
+      new AutonEncoderForward(50,gp1,Key.DPAD_DOWN).run();
+    }
 
     //Autonomous Rotation (Experimental)
     if(gp1.isKeyToggled(Key.B)) {

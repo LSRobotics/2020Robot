@@ -17,9 +17,9 @@ public class MotorNG {
         VICTOR_SPX;
     }
 
-    private SpeedController phoenix;
-    private WPI_TalonFX falcon;
-    private CANSparkMax max;
+    public SpeedController phoenix;
+    public WPI_TalonFX falcon;
+    public CANSparkMax max;
     
     private double speed = 1.0;
     private double lastPower = 0;
