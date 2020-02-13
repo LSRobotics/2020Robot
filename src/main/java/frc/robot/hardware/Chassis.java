@@ -73,8 +73,13 @@ public class Chassis {
         r2.move(right);
     }
 
-    static public double getEncoderReading(boolean isLeft) {
-        return isLeft ? l1.getEncoderReading() : r1.getEncoderReading();
+    static public double [] getEncoderReading() {
+        return new double [] {
+            l1.getEncoderReading(),
+            l2.getEncoderReading(),
+            r1.getEncoderReading(),
+            r2.getEncoderReading()
+        }; 
     }
 
     static public MotorNG getMotor(boolean isLeft, int index) {

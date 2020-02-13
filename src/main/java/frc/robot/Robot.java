@@ -4,7 +4,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.Compressor;
 
 //Internal
@@ -24,7 +23,6 @@ public class Robot extends TimedRobot {
   public DriveMethod driveMethod = DriveMethod.R_STICK;
   public SendableChooser<DriveMethod> m_chooser = new SendableChooser<>();
   public RGBSensor colorSensor = new RGBSensor();
-  public PIDController gyroPID;
   public MotorNG intake;
 
   Solenoid arm;
@@ -40,33 +38,29 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Drive Choices",m_chooser);
 
     //Intake Mechanism
-    intake  = new MotorNG(Statics.INTAKE, Model.TALON_SRX);
-    intake.setSpeed(0.6);
+    //intake  = new MotorNG(Statics.INTAKE, Model.TALON_SRX);
+    //intake.setSpeed(0.6);
 
-    arm = new Solenoid(Statics.ARM_PCM, Statics.ARM_FORWARD, Statics.ARM_REVERSE);
+    //arm = new Solenoid(Statics.ARM_PCM, Statics.ARM_FORWARD, Statics.ARM_REVERSE);
     
 
     //Gamepads
     gp1 = new Gamepad(0);
-    gp2 = new Gamepad(1);
+    //gp2 = new Gamepad(1);
 
     //Framework Core initialize (Allowing global access to everything in this class -- not safe in real world, but hey this is Robotics)
     Core.initialize(this);
 
     //NavX
-    NavX.initialize();
-    NavX.navx.zeroYaw();
+    //NavX.initialize();
+    //NavX.navx.zeroYaw();
 
-    //Chassis
-    //Chassis.initialize();
-
-    //PID
-    gyroPID = new PIDController(.045, .85, .005); // variables you test
+    Chassis.initialize();
 
     //Shooter
-    Shooter.initialize();
+    //Shooter.initialize();
 
-    Camera.initialize();
+    //Camera.initialize();
 
   }
 
@@ -84,7 +78,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
 
-    //TODO: Complete this part
     teleopPeriodic();
   }
 
@@ -95,8 +88,8 @@ public class Robot extends TimedRobot {
     gp1.fetchData();
     gp2.fetchData();
 
-    //updateBottom();
-    updateTop();
+    updateBottom();
+    //updateTop();
     
     postData();
 
@@ -150,7 +143,8 @@ public class Robot extends TimedRobot {
         xKey = Key.J_RIGHT_X;
         break;
       }
-      Chassis.drive(Utils.mapAnalog(-gp1.getValue(yKey)), Utils.mapAnalog(gp1.getValue(xKey)));
+      //FORCE Override
+      Chassis.drive(Utils.mapAnalog(gp1.getValue(Key.RT) - gp1.getValue(Key.LT)), Utils.mapAnalog(gp1.getValue(Key.J_LEFT_X)));
     }
   }
 
@@ -169,10 +163,15 @@ public class Robot extends TimedRobot {
   }
 
   public void postData() {
+    /*
     SmartDashboard.putNumber("FALCON SPEED", Shooter.getVelocity());
     SmartDashboard.putNumber("Ultrasonic Intake", Shooter.usIntake.getRangeInches());
     SmartDashboard.putNumber("NavX Angle", NavX.navx.getYaw());
     SmartDashboard.putNumber("Number of balls", Shooter.numBalls);
+    */
+
+    SmartDashboard.putNumberArray("Chassis Encoders", Chassis.getEncoderReading());
+    
   }
 
   @Override
