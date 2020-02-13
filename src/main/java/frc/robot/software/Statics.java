@@ -44,6 +44,7 @@ public class Statics {
 //Color
     static final public double[] TAPE_RED = {0.47,0.37,0.16},
                                  TAPE_BLUE = {0.21,0.42,0.36};
-                        
-                        
+                                               
+    static final public double CHASSIS_ENCODER_UNITS_PER_INCH = 1286.455191;
+    static final public double CHASSIS_ENCODER_UNITS_PER_DEGREE = 336.666667;
 }

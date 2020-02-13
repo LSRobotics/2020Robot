@@ -86,7 +86,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     
     gp1.fetchData();
-    gp2.fetchData();
+    //gp2.fetchData();
 
     updateBottom();
     //updateTop();
@@ -144,7 +144,7 @@ public class Robot extends TimedRobot {
         break;
       }
       //FORCE Override
-      Chassis.drive(Utils.mapAnalog(gp1.getValue(Key.RT) - gp1.getValue(Key.LT)), Utils.mapAnalog(gp1.getValue(Key.J_LEFT_X)));
+      Chassis.drive(Utils.mapAnalog(-gp1.getValue(yKey)), Utils.mapAnalog(gp1.getValue(xKey)));
     }
   }
 
