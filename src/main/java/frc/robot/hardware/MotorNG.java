@@ -46,6 +46,7 @@ public class MotorNG {
         switch(model) {
             case FALCON_500:
                 falcon = new WPI_TalonFX(port);
+                falcon.setSelectedSensorPosition(0);
                 break;
             case VICTOR_SPX:
                 phoenix = new WPI_VictorSPX(port);

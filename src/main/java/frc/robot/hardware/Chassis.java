@@ -35,6 +35,12 @@ public class Chassis {
         shifter.actuate();
     }
     
+    static public void filp() {
+        l1.flip();
+        l2.flip();
+        r1.flip();
+        r2.flip();
+    }
 
     static public void setSpeedCurve(SpeedCurve newCurve) {
         curve = newCurve;
