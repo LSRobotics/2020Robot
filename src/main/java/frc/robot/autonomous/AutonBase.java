@@ -9,18 +9,16 @@ public class AutonBase {
     Gamepad interruptGamepad;
     Gamepad.Key interruptKey;
     Robot robot;
-    boolean isAutonPeriod = false;
+    //boolean isAutonPeriod = false;
 
     public AutonBase(Gamepad interruptGamepad, Gamepad.Key interruptKey) {
         this.interruptGamepad = interruptGamepad;
         this.interruptKey = interruptKey;
-        isAutonPeriod = false;
         robot = Core.robot;
     }
 
     public AutonBase() {
-        isAutonPeriod = true;
-        robot = Core.robot;
+        this(Core.robot.gp1,Gamepad.Key.DPAD_DOWN);
     }
 
     final public boolean run() {
@@ -31,7 +29,7 @@ public class AutonBase {
         
             duringRun();
 
-            if(!isAutonPeriod && !isGamepadGood()) {
+            if(!isGamepadGood()) {
                 postRun();
                 return false;
             } 

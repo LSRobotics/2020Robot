@@ -100,12 +100,12 @@ public class Robot extends TimedRobot {
   public void updateBottom() {
 
     if(gp1.isKeyToggled(Key.A)) {
-      new AutonEncoderForward(50,gp1,Key.DPAD_DOWN).run();
+      new AutonEncoderForward(50).run();
     }
 
     //Autonomous Rotation (Experimental)
     if(gp1.isKeyToggled(Key.B)) {
-      new AutonGyroTurn(90, gp1, Key.DPAD_DOWN).run();
+      new AutonGyroTurn(90).run();
     }
 
     // Gearbox

@@ -48,7 +48,7 @@ public class AutonBall extends AutonBase {
             Shooter.index3.stop();
             Shooter.feeder.stop();
 
-            if(!isAutonPeriod && !isGamepadGood()) return;
+            if (!isGamepadGood()) return;
         }
 
         Shooter.feeder.move(1);
