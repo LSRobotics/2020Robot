@@ -1,5 +1,7 @@
 package frc.robot.software;
 
+import frc.robot.autonomous.*;
+
 public class Statics {
 
 //TODO: Update this once the robot gets built
@@ -44,7 +46,17 @@ public class Statics {
 //Color
     static final public double[] TAPE_RED = {0.47,0.37,0.16},
                                  TAPE_BLUE = {0.21,0.42,0.36};
+
+//Analog
+
+    static final public int PIXY_CAM = 0;
                                                
     static final public double CHASSIS_ENCODER_UNITS_PER_INCH = 1286.455191;
     static final public double CHASSIS_ENCODER_UNITS_PER_DEGREE = 336.666667;
+
+    static final public AutonGroup right3Ball = new AutonGroup(new AutonPixyAlign(0),
+                                                            new AutonSleep(100),
+                                                            new AutonBall(),
+                                                            new AutonGyroTurn(180),
+                                                            new AutonEncoderForward(100));
 }

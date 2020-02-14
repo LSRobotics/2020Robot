@@ -8,7 +8,7 @@ public class Timer {
 
     public Timer(String name) {
         this.name = name;
-        //startTime = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
     }   
 
     public Timer() {
