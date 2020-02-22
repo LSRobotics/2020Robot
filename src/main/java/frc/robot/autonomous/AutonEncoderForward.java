@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.hardware.Chassis;
 import frc.robot.hardware.Gamepad;
 import frc.robot.software.Statics;
-import frc.robot.software.Utils;
 
 public class AutonEncoderForward extends AutonBase {
 

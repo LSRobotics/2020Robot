@@ -1,12 +1,16 @@
 package frc.robot.autonomous;
 
-import edu.wpi.first.wpilibj.controller.PIDController;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.hardware.*;
+import frc.robot.software.SmartPID;
 
 public class AutonPixyAlign extends AutonBase {
-    
+    //221 inches is pixy range
+
     double target;
-    PIDController pid = new PIDController(.045, .75, .005);
+    SmartPID pid;
 
     public AutonPixyAlign (double target) {
         super();
@@ -19,18 +23,27 @@ public class AutonPixyAlign extends AutonBase {
     
     @Override
     public void preRun() {
+        pid = new SmartPID(1.5, 0, 0.0);
+        //working values (1.75, 0, 0.6)
         pid.setSetpoint(target);
     }
 
     @Override
     public void duringRun() {
+        double val = -pid.next(PixyCam.getTargetLocation());
+        Chassis.driveRaw(0,val);
 
-        Chassis.driveRaw(0,-pid.calculate(PixyCam.getTargetLocation()) * 0.2 );
+        SmartDashboard.putNumber("PIXY PID Calc", val);
         robot.postData();
     }
 
     @Override
     public boolean isActionDone() {
-        return pid.atSetpoint();
+        return pid.isActionDone();
+    }
+
+    @Override
+    public String toString() {
+        return "AutonPixyAlign " + target;
     }
 }
