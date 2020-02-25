@@ -23,9 +23,6 @@ public class Robot extends TimedRobot {
   public DriveMethod driveMethod = DriveMethod.R_STICK;
   public SendableChooser<DriveMethod> m_chooser = new SendableChooser<>();
   public RGBSensor colorSensor = new RGBSensor();
-  public MotorNG intake;
-
-  Solenoid arm;
 
   @Override
   public void robotInit() {
@@ -36,12 +33,6 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("Both Strick Drive", DriveMethod.BOTH_STICKS);
 
     SmartDashboard.putData("Drive Choices", m_chooser);
-
-    // Intake Mechanism
-    intake = new MotorNG(Statics.INTAKE, Model.TALON_SRX);
-    intake.setSpeed(0.6);
-
-    arm = new Solenoid(Statics.MASTER_PCM, Statics.ARM_FORWARD, Statics.ARM_REVERSE);
 
     // Gamepads
     gp1 = new Gamepad(0);
@@ -171,14 +162,6 @@ public class Robot extends TimedRobot {
   public void updateTop() {
 
     Shooter.update();
-
-    // Intake
-    intake.move(gp1.isKeyHeld(Key.A), false);
-
-    // Intake Arm
-    if (gp1.isKeyToggled(Key.Y)) {
-      arm.actuate();
-    }
 
     // Experimental
     Climb.turnRoller(gp1.isKeyHeld(Key.X), gp1.isKeyHeld(Key.Y));

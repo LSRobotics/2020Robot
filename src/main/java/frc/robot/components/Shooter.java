@@ -9,11 +9,13 @@ import frc.robot.autonomous.*;
 
 public class Shooter {
 
-    public static MotorNG index1, index2, index3, feeder, shooter;
+    public static MotorNG index1, index2, index3, feeder, shooter,intake;
+    public static Solenoid intakeArm;
     private static RangeSensor usIntake;
     public static int numBalls = 0;
     public static Timer intakeTimer = new Timer("Intake Timer");
     public static boolean isShooting = false, lastBallStatus = false;
+    public static boolean isIntakeDown = false;
 
     public static void initialize() {
         // Index Motors
@@ -27,6 +29,12 @@ public class Shooter {
 
         usIntake = new RangeSensor(Statics.US_INTAKE_PING, Statics.US_INTAKE_ECHO, Type.DIO_US_HC_SR04);
 
+        // Intake Mechanism
+        intake = new MotorNG(Statics.INTAKE, Model.TALON_SRX);
+        intake.setSpeed(0.6);
+
+        intakeArm = new Solenoid(Statics.MASTER_PCM, Statics.ARM_FORWARD, Statics.ARM_REVERSE);
+
         // Setting up motor speeds
         index1.setSpeed(0.7);
         index2.setSpeed(0.7);
@@ -38,7 +46,13 @@ public class Shooter {
     public static void update() {
 
         boolean ballStatus = usIntake.getRangeInches() < 3;
-        
+
+        if(Core.robot.gp1.isKeyToggled(Key.A)) {
+            isIntakeDown = !isIntakeDown;
+            intake.move(isIntakeDown? 1 : 0);
+            intakeArm.move(isIntakeDown, !isIntakeDown);
+        }
+
         //Indexer
 
         // Ball is in

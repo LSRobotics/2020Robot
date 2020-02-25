@@ -35,7 +35,7 @@ public class Climb {
         //In slow portion
         if((currentDistance / Statics.CLIMB_MOTOR_TRAVEL_DISTANCE < SLOW_PORTION) 
          || currentDistance / Statics.CLIMB_MOTOR_TRAVEL_DISTANCE > (1 - SLOW_PORTION) ) {
-            roller.move(isUp? 0.3 : -0.3); //FIXME: Tweak this
+            roller.move(isUp? 0.7 : -0.7); //FIXME: Tweak this
         }
         else if (currentDistance > Statics.FALCON_UNITS_PER_INCH) {
             roller.stop();
@@ -44,7 +44,7 @@ public class Climb {
         }
         //In fast portion
         else {
-            roller.move(isUp? 0.7 : -0.7); //FIXME: Tweak this
+            roller.move(isUp? 0.3 : -0.3); //FIXME: Tweak this
         }
 
         return true;
