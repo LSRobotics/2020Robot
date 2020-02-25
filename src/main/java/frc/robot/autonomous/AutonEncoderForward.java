@@ -1,6 +1,7 @@
 package frc.robot.autonomous;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.components.Shooter;
 import frc.robot.hardware.Chassis;
 import frc.robot.hardware.Gamepad;
 import frc.robot.software.Statics;
@@ -42,7 +43,8 @@ public class AutonEncoderForward extends AutonBase {
         Chassis.driveRaw(distance > 0 ? 0.5 : -0.5, 0);
         
         if(isIntakeEnabled) {
-            Core.robot.intake.move(1);
+            Shooter.intake.move(1);
+            Shooter.intakeArm.move(true,false);
         }
     }
 
@@ -60,7 +62,8 @@ public class AutonEncoderForward extends AutonBase {
     public void postRun() {
         Chassis.stop();
         if(isIntakeEnabled) {
-            Core.robot.intake.move(0);
+            Shooter.intake.move(0);
+            Shooter.intakeArm.move(false,true);
         }
     }
 
