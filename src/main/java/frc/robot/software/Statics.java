@@ -29,11 +29,18 @@ public class Statics {
                             INDEX_3 = 3,
                             INTAKE  = 4,
                             SHOOTER = 5,
-                            FEEDER  = 6;
+                            FEEDER  = 6,
+                            CLIMB_ROLLER = 7;
 
-    static final public int ARM_PCM = 0,
+//Solenoids
+    static final public int MASTER_PCM = 0,
                             ARM_FORWARD = 0,
-                            ARM_REVERSE = 1;
+                            ARM_REVERSE = 1,
+                            CLIMB_FORWARD = 2,
+                            CLIMB_REVERSE = 3,
+                            CHASSIS_FORWARD = 4,
+                            CHASSIS_REVERSE = 5;
+
 	public static final int US_ALIGNER_S_PING = 0;
 	public static final int US_ALIGNER_F_PING = 1;
 	public static final int US_ALIGNER_F_ECHO = 2;
@@ -54,12 +61,10 @@ public class Statics {
     static final public int PIXY_CAM = 0;
     static final public int IR = 1; //TODO: Change this
                                                
-    static final public double CHASSIS_ENCODER_UNITS_PER_INCH = 1286.455191;
-    static final public double CHASSIS_ENCODER_UNITS_PER_DEGREE = 336.666667;
+    static final public double FALCON_UNITS_PER_INCH = 1286.455191;
+    static final public double FALCON_UNITS_PER_DEGREE = 336.666667;
 
-    static final public AutonGroup right3Ball = new AutonGroup(new AutonPixyAlign(0),
-                                                            new AutonSleep(100),
-                                                            new AutonBall(),
-                                                            new AutonGyroTurn(180),
-                                                            new AutonEncoderForward(100));
+//Other Constants
+    static final public double CLIMB_MOTOR_TRAVEL_DISTANCE = 200; //FIXME: Update this after getting data from build team
+
 }

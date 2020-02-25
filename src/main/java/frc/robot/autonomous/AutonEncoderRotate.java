@@ -24,7 +24,7 @@ public class AutonEncoderRotate extends AutonBase {
     public void preRun() {
         Chassis.stop();
 
-        target = Chassis.getEncoderReading()[0] + (degreesCw * Statics.CHASSIS_ENCODER_UNITS_PER_DEGREE);
+        target = Chassis.getEncoderReading()[0] + (degreesCw * Statics.FALCON_UNITS_PER_INCH);
         Chassis.driveRaw(degreesCw > 0 ? 0.5 : -0.5, 0);
     }
 
@@ -49,6 +49,6 @@ public class AutonEncoderRotate extends AutonBase {
     }
 
     private double degreesCwLeft() {
-        return Math.abs(Chassis.getEncoderReading()[0] - target) / Statics.CHASSIS_ENCODER_UNITS_PER_INCH;
+        return Math.abs(Chassis.getEncoderReading()[0] - target) / Statics.FALCON_UNITS_PER_INCH;
     }
 }

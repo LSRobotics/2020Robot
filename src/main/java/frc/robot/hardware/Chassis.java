@@ -36,6 +36,10 @@ public class Chassis {
     static public void shift() {
         shifter.actuate();
     }
+
+    static public void shift(boolean isLow) {
+        shifter.move(isLow, !isLow);
+    }
     
     static public void filp() {
         l1.flip();

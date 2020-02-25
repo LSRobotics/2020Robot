@@ -4,16 +4,15 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.Compressor;
 
 //Internal
 import frc.robot.hardware.*;
 import frc.robot.hardware.Gamepad.Key;
 import frc.robot.hardware.MotorNG.Model;
-import frc.robot.hardware.RangeSensor.Type;
 import frc.robot.software.*;
 import frc.robot.constants.*;
 import frc.robot.autonomous.*;
+import frc.robot.components.Climb;
 import frc.robot.components.Shooter;
 
 public class Robot extends TimedRobot {
@@ -42,7 +41,7 @@ public class Robot extends TimedRobot {
     intake = new MotorNG(Statics.INTAKE, Model.TALON_SRX);
     intake.setSpeed(0.6);
 
-    arm = new Solenoid(Statics.ARM_PCM, Statics.ARM_FORWARD, Statics.ARM_REVERSE);
+    arm = new Solenoid(Statics.MASTER_PCM, Statics.ARM_FORWARD, Statics.ARM_REVERSE);
 
     // Gamepads
     gp1 = new Gamepad(0);
@@ -61,6 +60,8 @@ public class Robot extends TimedRobot {
     Shooter.initialize();
 
     Camera.initialize();
+
+    Climb.initialize();
 
     AutonChooser.initialize();
   }
@@ -178,6 +179,9 @@ public class Robot extends TimedRobot {
     if (gp1.isKeyToggled(Key.Y)) {
       arm.actuate();
     }
+
+    // Experimental
+    Climb.turnRoller(gp1.isKeyHeld(Key.X), gp1.isKeyHeld(Key.Y));
 
   }
 
