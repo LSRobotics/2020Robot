@@ -18,19 +18,16 @@ public class Statics {
    static final public int CHASSIS_L1 = 1,
                             CHASSIS_L2 = 2,
                             CHASSIS_R1 = 3,
-                            CHASSIS_R2 = 4,
-                            SHIFTER_PCM = 1,
-                            SHIFTER_F = 0,
-                            SHIFTER_R = 1;
+                            CHASSIS_R2 = 4;
 
 //Motors
-    static final public int INDEX_1 = 0,
-                            INDEX_2 = 2,
-                            INDEX_3 = 3,
-                            INTAKE  = 4,
-                            SHOOTER = 5,
-                            FEEDER  = 6,
-                            CLIMB_ROLLER = 7;
+    static final public int INDEX_1 = 5,
+                            INDEX_2 = 6,
+                            INDEX_3 = 7,
+                            INTAKE  = 8,
+                            SHOOTER = 9,
+                            FEEDER  = 10,
+                            CLIMB_ROLLER = 11;
 
 //Solenoids
     static final public int MASTER_PCM = 0,
@@ -49,8 +46,8 @@ public class Statics {
 
 
 //Intake Ultrasonic
-    public static final int US_INTAKE_PING = 2,
-                            US_INTAKE_ECHO = 3;
+    public static final int US_INTAKE_PING = 4,
+                            US_INTAKE_ECHO = 5;
 
 //Color
     static final public double[] TAPE_RED = {0.47,0.37,0.16},

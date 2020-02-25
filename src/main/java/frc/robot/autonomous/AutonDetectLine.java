@@ -21,7 +21,7 @@ public class AutonDetectLine extends AutonBase {
         this.color = color;
         
     }
-    
+
     @Override
     public void preRun() {
         Chassis.driveRaw(0.2, 0);

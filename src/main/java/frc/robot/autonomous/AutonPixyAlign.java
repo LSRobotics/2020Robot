@@ -19,6 +19,7 @@ public class AutonPixyAlign extends AutonBase {
 
     public AutonPixyAlign (double target, Gamepad killGp, Gamepad.Key killKey) {
         super(killGp,killKey);
+        this.target = target;
     }
     
     @Override
