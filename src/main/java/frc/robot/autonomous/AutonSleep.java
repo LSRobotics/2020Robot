@@ -33,4 +33,9 @@ public class AutonSleep extends AutonBase {
     public void postRun() {
         timer.stop();
     }
+
+    @Override
+    public String toString() {
+        return "AutonSleep " + milliseconds;
+    }
 }

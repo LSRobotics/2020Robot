@@ -3,9 +3,13 @@ package frc.robot.autonomous;
 import frc.robot.hardware.*;
 import frc.robot.software.*;
 
+import javax.annotation.OverridingMethodsMustInvokeSuper;
+
+import frc.robot.*;
+
 public class AutonDetectLine extends AutonBase {
     public double[] color = {};
-    public static boolean isBlueLine, isRedLine;
+    public static boolean isBlueLine, isRedLine, isWhiteLine;
 
     public AutonDetectLine (double color[]) {
         super();
@@ -38,7 +42,7 @@ public class AutonDetectLine extends AutonBase {
     }
 
     @Override
-    public void postRun() {
-        Chassis.stop();
+    public String toString() {
+        return "AutonDetectLine";
     }
 }

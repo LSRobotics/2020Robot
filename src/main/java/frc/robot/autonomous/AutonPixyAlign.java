@@ -26,6 +26,8 @@ public class AutonPixyAlign extends AutonBase {
         pid = new SmartPID(1.5, 0, 0.0);
         //working values (1.75, 0, 0.6)
         pid.setSetpoint(target);
+        PixyCam.switchLED(true);
+        new AutonSleep(100).run();
     }
 
     @Override
@@ -35,6 +37,12 @@ public class AutonPixyAlign extends AutonBase {
 
         SmartDashboard.putNumber("PIXY PID Calc", val);
         robot.postData();
+    }
+
+    @Override
+    public void postRun() {
+        PixyCam.switchLED(false);
+        Chassis.stop();
     }
 
     @Override

@@ -39,6 +39,8 @@ public class Statics {
 	public static final int US_ALIGNER_F_ECHO = 2;
     public static final int US_ALIGNER_S_ECHO = 3;
 
+
+
 //Intake Ultrasonic
     public static final int US_INTAKE_PING = 2,
                             US_INTAKE_ECHO = 3;
@@ -50,6 +52,7 @@ public class Statics {
 //Analog
 
     static final public int PIXY_CAM = 0;
+    static final public int IR = 1; //TODO: Change this
                                                
     static final public double CHASSIS_ENCODER_UNITS_PER_INCH = 1286.455191;
     static final public double CHASSIS_ENCODER_UNITS_PER_DEGREE = 336.666667;

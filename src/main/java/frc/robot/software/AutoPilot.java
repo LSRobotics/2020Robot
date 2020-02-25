@@ -65,4 +65,48 @@ public class AutoPilot {
         
         return true;
     }
+
+    public static boolean sleep(int milliseconds,Gamepad interruptGamepad, Gamepad.Key interruptKey) {
+
+        Timer timer = new Timer("Sleep Timer");
+
+        timer.start();
+
+        while(timer.getElaspedTimeInMs() < milliseconds) {
+            if(interruptGamepad.getRawReading(interruptKey) != 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static boolean turnRobotByTime(boolean isLeft) {
+
+        final double power = isLeft ? -0.5 : 0.5;
+
+        Timer t = new Timer("Robot Turn");
+
+        Chassis.stop();
+        Chassis.driveRaw(0, power);
+
+        t.start();
+
+        while (t.getElaspedTimeInMs() < AutonConstants.TIME_PER_360 /4) {
+            Core.robot.gp1.fetchData();
+            Core.robot.gp2.fetchData();
+
+            // Interrupt action if LB in GP1 is toggled
+            if (Core.robot.gp1.isKeyToggled(Gamepad.Key.DPAD_DOWN)) {
+                Chassis.stop();
+                return false;
+            }
+
+            Core.robot.updateTop();
+        }
+
+        Chassis.stop();
+
+        return true;
+    }
 }

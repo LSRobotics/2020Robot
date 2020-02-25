@@ -10,7 +10,7 @@ import frc.robot.autonomous.*;
 public class Shooter {
 
     public static MotorNG index1, index2, index3, feeder, shooter;
-    public static RangeSensor usIntake;
+    private static RangeSensor usIntake;
     public static int numBalls = 0;
     public static Timer intakeTimer = new Timer("Intake Timer");
     public static boolean isShooting = false, lastBallStatus = false;
@@ -38,6 +38,9 @@ public class Shooter {
     public static void update() {
 
         boolean ballStatus = usIntake.getRangeInches() < 3;
+        
+        //Indexer
+
         // Ball is in
         if (usIntake.getRangeInches() < 3 && (ballStatus != lastBallStatus)) {
 
@@ -48,6 +51,9 @@ public class Shooter {
                 index1.move(1);
                 index2.move(1);
                 index3.move(1);
+            }
+            else if(numBalls == 4) {
+                numBalls = 5;
             }
         }
 

@@ -16,6 +16,8 @@ public class Chassis {
     public static RangeSensor frontAligner = new RangeSensor(Statics.US_ALIGNER_F_PING, Statics.US_ALIGNER_F_ECHO,Type.DIO_US_HC_SR04),
                                    sideAligner  = new RangeSensor(Statics.US_ALIGNER_S_PING, Statics.US_ALIGNER_S_ECHO,Type.DIO_US_HC_SR04);
 
+    public static RangeSensor sensorIR = new RangeSensor(Statics.IR, Type.ANALOG_IR_GP2Y0A710K0F);
+
     static SpeedCurve curve = SpeedCurve.LINEAR;
 
     static public void initialize() {

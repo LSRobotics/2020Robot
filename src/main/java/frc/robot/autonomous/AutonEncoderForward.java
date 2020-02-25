@@ -4,21 +4,35 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.hardware.Chassis;
 import frc.robot.hardware.Gamepad;
 import frc.robot.software.Statics;
+import frc.robot.software.*;
 
 public class AutonEncoderForward extends AutonBase {
 
     double distance = 0;
     double target   = 0;
+    boolean isIntakeEnabled = false;
 
-    public AutonEncoderForward(double distance) {
+    public AutonEncoderForward(double distance, boolean isIntakeEnabled) {
         super();
         this.distance = distance;
+        this.isIntakeEnabled = isIntakeEnabled;
     }
 
-    public AutonEncoderForward(double distance, Gamepad interruptGamepad, Gamepad.Key interruptKey) {
+    public AutonEncoderForward(double distance, Gamepad interruptGamepad, Gamepad.Key interruptKey, boolean isIntakeEnabled) {
         super(interruptGamepad, interruptKey);
         this.distance = distance;
+        this.isIntakeEnabled = isIntakeEnabled;
     }
+
+    //Overloaded Constructors -- No intake by default
+    public AutonEncoderForward(double distance, Gamepad interruptGamepad, Gamepad.Key interruptKey) {
+        this(distance, interruptGamepad, interruptKey, false);
+    }
+
+    public AutonEncoderForward(double distance) {
+        this(distance, false);
+    }
+
 
     @Override
     public void preRun() {
@@ -26,6 +40,10 @@ public class AutonEncoderForward extends AutonBase {
 
         target = Chassis.getEncoderReading()[0] + (distance * Statics.CHASSIS_ENCODER_UNITS_PER_INCH);
         Chassis.driveRaw(distance > 0 ? 0.5 : -0.5, 0);
+        
+        if(isIntakeEnabled) {
+            Core.robot.intake.move(1);
+        }
     }
 
     @Override 
@@ -41,6 +59,9 @@ public class AutonEncoderForward extends AutonBase {
     @Override
     public void postRun() {
         Chassis.stop();
+        if(isIntakeEnabled) {
+            Core.robot.intake.move(0);
+        }
     }
 
     @Override

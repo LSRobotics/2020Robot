@@ -1,12 +1,12 @@
 package frc.robot.autonomous;
 
-import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.robot.hardware.*;
+import frc.robot.software.SmartPID;
 
 public class AutonGyroTurn extends AutonBase {
     
     double targetAngle;
-    PIDController pid = new PIDController(.045, .85, .005); // variables you test
+    SmartPID pid;
 
     public AutonGyroTurn (double targetAngle) {
         super();
@@ -21,16 +21,25 @@ public class AutonGyroTurn extends AutonBase {
     
     @Override
     public void preRun() {
+        //pid = new SmartPID(1.5, 0, 0);
+        pid =  new SmartPID(.045, .85, .05);
         pid.setSetpoint(targetAngle);
     }
 
     @Override
     public void duringRun() {
-        Chassis.driveRaw(0,-pid.calculate(NavX.navx.getYaw())* 0.15);
+        //Chassis.driveRaw(0,pid.next(NavX.navx.getYaw()));
+        Chassis.driveRaw(0,pid.next(NavX.navx.getYaw()) * .2);
     }
 
     @Override
     public boolean isActionDone() {
         return pid.atSetpoint();
+        //return pid.isActionDone();
+    }
+
+    @Override
+    public String toString() {
+        return "AutonGyroTurn " + targetAngle;
     }
 }

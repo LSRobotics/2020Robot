@@ -16,29 +16,25 @@ public class NavX {
         }
     }
 
-    public static double getVelocity (Axis axis) {
-        
-        if(axis == Axis.X) {
+    public static double getVelocity(Axis axis) {
+
+        if (axis == Axis.X) {
             return navx.getVelocityX();
-        }
-        else if(axis == Axis.Y) {
+        } else if (axis == Axis.Y) {
             return navx.getVelocityY();
-        }
-        else {
+        } else {
             return navx.getVelocityZ();
         }
 
     }
 
-    public static double getDisplacement (Axis axis) {
-        
-        if(axis == Axis.X) {
+    public static double getDisplacement(Axis axis) {
+
+        if (axis == Axis.X) {
             return navx.getDisplacementX();
-        }
-        else if(axis == Axis.Y) {
+        } else if (axis == Axis.Y) {
             return navx.getDisplacementY();
-        }
-        else {
+        } else {
             return navx.getDisplacementZ();
         }
 

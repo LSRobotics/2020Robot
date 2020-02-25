@@ -2,6 +2,7 @@ package frc.robot.autonomous;
 
 import frc.robot.hardware.*;
 import frc.robot.hardware.Gamepad.Key;
+//import frc.robot.software.SmartPID;
 
 //drives robot until the sensor reads a set distance
 public class AutonRSMove extends AutonBase{
@@ -25,7 +26,7 @@ public class AutonRSMove extends AutonBase{
     
     @Override
     public void preRun() {
-        //pid = new SmartPID(1.2, 0, 1);
+        // pid = new SmartPID(.045, .85, .05);
         //pid.setSetpoint(targetDistance);
     }
 
@@ -40,16 +41,16 @@ public class AutonRSMove extends AutonBase{
             Chassis.driveRaw((distanceLeft > 0) ? 0.1 : -0.1, 0);
         }
         else {
-            Chassis.driveRaw((distanceLeft > 0) ? 0.3 : -0.3, 0);
+            Chassis.driveRaw((distanceLeft > 0) ? 1 : -1, 0);
         }
 
-        //Chassis.driveRaw(-pid.next(sensor.getRangeInches()) * 0.2,0);
+        //Chassis.driveRaw(-pid.next(sensor.getRangeInches()) ,0);
     }
 
     @Override
     public boolean isActionDone() {
         
-        return Math.abs(diff) < 3;
+        return Math.abs(diff) < 1;
         //return pid.atSetpoint();
         //return pid.isActionDone();
     }

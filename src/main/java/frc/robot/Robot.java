@@ -18,7 +18,8 @@ import frc.robot.components.Shooter;
 
 public class Robot extends TimedRobot {
 
-  public Gamepad gp1,gp2;
+  public boolean isLinearAutonOK = false;
+  public Gamepad gp1, gp2;
   public double driveSpeed = 1.0;
   public DriveMethod driveMethod = DriveMethod.R_STICK;
   public SendableChooser<DriveMethod> m_chooser = new SendableChooser<>();
@@ -31,67 +32,80 @@ public class Robot extends TimedRobot {
   public void robotInit() {
 
     // Drive mode GUI setup
-    m_chooser.setDefaultOption("Right Stick Drive (Default)",DriveMethod.R_STICK);
-    m_chooser.addOption(       "Left Strick Drive",          DriveMethod.L_STICK);
-    m_chooser.addOption(       "Both Strick Drive",          DriveMethod.BOTH_STICKS);
+    m_chooser.setDefaultOption("Right Stick Drive (Default)", DriveMethod.R_STICK);
+    m_chooser.addOption("Left Strick Drive", DriveMethod.L_STICK);
+    m_chooser.addOption("Both Strick Drive", DriveMethod.BOTH_STICKS);
 
-    SmartDashboard.putData("Drive Choices",m_chooser);
+    SmartDashboard.putData("Drive Choices", m_chooser);
 
-    //Intake Mechanism
-    //intake  = new MotorNG(Statics.INTAKE, Model.TALON_SRX);
-    //intake.setSpeed(0.6);
+    // Intake Mechanism
+    intake = new MotorNG(Statics.INTAKE, Model.TALON_SRX);
+    intake.setSpeed(0.6);
 
-    //arm = new Solenoid(Statics.ARM_PCM, Statics.ARM_FORWARD, Statics.ARM_REVERSE);
-    
+    arm = new Solenoid(Statics.ARM_PCM, Statics.ARM_FORWARD, Statics.ARM_REVERSE);
 
-    //Gamepads
+    // Gamepads
     gp1 = new Gamepad(0);
-    //gp2 = new Gamepad(1);
+    gp2 = new Gamepad(1);
 
-    //Framework Core initialize (Allowing global access to everything in this class -- not safe in real world, but hey this is Robotics)
+    // Framework Core initialize (Allowing global access to everything in this class
+    // -- not safe in real world, but hey this is Robotics)
     Core.initialize(this);
 
-    //NavX
-    //NavX.initialize();
-    //NavX.navx.zeroYaw();
+    NavX.initialize();
+    NavX.navx.zeroYaw();
 
     Chassis.initialize();
     Chassis.setSpeedCurve(SpeedCurve.SQUARED);
 
-    //Shooter
-    //Shooter.initialize();
+    Shooter.initialize();
 
-    //Camera.initialize();
+    Camera.initialize();
 
+    AutonChooser.initialize();
   }
 
   @Override
   public void disabledPeriodic() {
     postData();
+    Core.isDisabled = true;
   }
 
   @Override
   public void teleopInit() {
+    Core.isDisabled = false;
     driveMethod = m_chooser.getSelected();
     System.out.println("Drive Selected: " + driveMethod);
   }
 
   @Override
-  public void autonomousPeriodic() {
-
-    teleopPeriodic();
+  public void autonomousInit() {
+    Core.isDisabled = false;
+    isLinearAutonOK = false;
   }
 
+  @Override
+  public void testInit() {
+    Core.isDisabled = false;
+  }
+
+  @Override
+  public void autonomousPeriodic() {
+    if (!isLinearAutonOK) {
+      isLinearAutonOK = true;
+      AutonChooser.getSelected().run();
+    }
+  }
 
   @Override
   public void teleopPeriodic() {
-    
+
     gp1.fetchData();
-    //gp2.fetchData();
+    // gp2.fetchData();
 
     updateBottom();
-    //updateTop();
-    
+    updateTop();
+
     postData();
 
   }
@@ -99,12 +113,12 @@ public class Robot extends TimedRobot {
   // All code for driving
   public void updateBottom() {
 
-    if(gp1.isKeyToggled(Key.A)) {
+    if (gp1.isKeyToggled(Key.A)) {
       new AutonEncoderForward(50).run();
     }
 
-    //Autonomous Rotation (Experimental)
-    if(gp1.isKeyToggled(Key.B)) {
+    // Autonomous Rotation (Experimental)
+    if (gp1.isKeyToggled(Key.B)) {
       new AutonGyroTurn(90).run();
     }
 
@@ -148,7 +162,7 @@ public class Robot extends TimedRobot {
         xKey = Key.J_RIGHT_X;
         break;
       }
-      //FORCE Override
+      // FORCE Override
       Chassis.drive(Utils.mapAnalog(-gp1.getValue(yKey)), Utils.mapAnalog(gp1.getValue(xKey)));
     }
   }
@@ -157,11 +171,11 @@ public class Robot extends TimedRobot {
 
     Shooter.update();
 
-    //Intake
-    intake.move(gp1.isKeyHeld(Key.A),false);
+    // Intake
+    intake.move(gp1.isKeyHeld(Key.A), false);
 
-    //Intake Arm
-    if(gp1.isKeyToggled(Key.Y)) {
+    // Intake Arm
+    if (gp1.isKeyToggled(Key.Y)) {
       arm.actuate();
     }
 
@@ -169,14 +183,15 @@ public class Robot extends TimedRobot {
 
   public void postData() {
     /*
-    SmartDashboard.putNumber("FALCON SPEED", Shooter.getVelocity());
-    SmartDashboard.putNumber("Ultrasonic Intake", Shooter.usIntake.getRangeInches());
-    SmartDashboard.putNumber("NavX Angle", NavX.navx.getYaw());
-    SmartDashboard.putNumber("Number of balls", Shooter.numBalls);
-    */
+     * SmartDashboard.putNumber("FALCON SPEED", Shooter.getVelocity());
+     * SmartDashboard.putNumber("Ultrasonic Intake",
+     * Shooter.usIntake.getRangeInches()); SmartDashboard.putNumber("NavX Angle",
+     * NavX.navx.getYaw()); SmartDashboard.putNumber("Number of balls",
+     * Shooter.numBalls);
+     */
 
     SmartDashboard.putNumberArray("Chassis Encoders", Chassis.getEncoderReading());
-    
+
   }
 
   @Override

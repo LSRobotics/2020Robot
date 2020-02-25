@@ -1,5 +1,7 @@
 package frc.robot.software;
 
+
+@Deprecated
 public class AutonConstants {
         //Everything in SI unit
 
@@ -17,5 +19,6 @@ public class AutonConstants {
 
         final public static double ENCODER_UNITS_PER_CENTIMETER = 1000; //TODO: Update This
 
+        final public static int TIME_PER_360 = 1800;
 
 }

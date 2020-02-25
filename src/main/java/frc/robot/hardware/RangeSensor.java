@@ -54,9 +54,10 @@ public class RangeSensor {
         switch(type) {
             case ANALOG_US_MAXBOTIX:
                 return 
+                57.793*voltage + 2.2858;
                 //0.2886*Math.pow(voltage, 4)-2.9291*Math.pow(voltage, 3)+11.575*Math.pow(voltage, 2)+21.765*voltage+12.541;
                 //((analog.getValue())*.125);
-                1.7503*Math.pow(voltage, 2)+34.221*voltage+7.6138;
+                //1.7503*Math.pow(voltage, 2)+34.221*voltage+7.6138;
             case DIO_US_HC_SR04:
                 return dio.getRangeInches();
             case ANALOG_IR_GP2Y0A710K0F:

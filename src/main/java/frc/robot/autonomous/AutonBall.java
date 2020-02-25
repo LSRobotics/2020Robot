@@ -73,6 +73,7 @@ public class AutonBall extends AutonBase {
 
             if(!isGamepadGood()) return;
         }
+        Shooter.numBalls -= 1;
     }
 
     @Override
@@ -87,5 +88,6 @@ public class AutonBall extends AutonBase {
         Shooter.index1.move(0);
         Shooter.index2.move(0);
         Shooter.index3.move(0);
+        Shooter.numBalls = 0;
     }
 }
