@@ -14,7 +14,6 @@ public class AutonBall extends AutonBase {
     Timer masterTimer = new Timer("Auton Shooter Master Timer"); //For determining whether the shooter took too long to shoot -- mechanical faliure?
     boolean isNoBallLeft = false,
             isTimeout    = false;
-    
     boolean isFirstBall = true;
 
     public AutonBall () {
@@ -64,7 +63,7 @@ public class AutonBall extends AutonBase {
 
         while(Shooter.shooter.getVelocity() > 19500) {
 
-            if(shootTimer.getElaspedTimeInMs() > 2000) {
+            if(shootTimer.getElaspedTimeInMs() > 1500) {
                 isNoBallLeft = true;
                 break;
             }

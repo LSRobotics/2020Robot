@@ -172,8 +172,15 @@ public class Robot extends TimedRobot {
 
     Shooter.update();
 
+    /*
     // Experimental
     Climb.turnRoller(gp1.isKeyHeld(Key.X), gp1.isKeyHeld(Key.Y));
+    */
+    Climb.test(gp1.getValue(Key.RT) - gp1.getValue(Key.LT));
+
+    if(gp1.isKeyToggled(Key.Y)) {
+      Climb.lock(!Climb.isEngaged());
+    }
 
   }
 
