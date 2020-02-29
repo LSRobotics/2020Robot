@@ -9,9 +9,14 @@ import frc.robot.autonomous.*;
 
 public class Shooter {
 
-    public static MotorNG index1, index2, index3, feeder, shooter,intake;
+    
+    public static MotorNG index, feeder, shooter, intake;
+    
+    //Internal Motors
+    private static MotorNG index2, index3;
+    
     public static Solenoid intakeArm;
-    private static RangeSensor usIntake;
+    public static RangeSensor usIntake;
     public static int numBalls = 0;
     public static Timer intakeTimer = new Timer("Intake Timer");
     public static boolean isShooting = false, lastBallStatus = false;
@@ -19,7 +24,7 @@ public class Shooter {
 
     public static void initialize() {
         // Index Motors
-        index1 = new MotorNG(Statics.INDEX_1, Model.VICTOR_SPX, true);
+        index = new MotorNG(Statics.INDEX_1, Model.VICTOR_SPX, true);
         index2 = new MotorNG(Statics.INDEX_2, Model.TALON_SRX);
         index3 = new MotorNG(Statics.INDEX_3, Model.VICTOR_SPX);
 
@@ -36,10 +41,13 @@ public class Shooter {
         intakeArm = new Solenoid(Statics.MASTER_PCM, Statics.ARM_FORWARD, Statics.ARM_REVERSE);
 
         // Setting up motor speeds
-        index1.setSpeed(0.7);
+        index.setSpeed(0.7);
         index2.setSpeed(0.7);
         index3.setSpeed(0.7);
         feeder.setSpeed(0.4);
+
+        index.addSlave(index2);
+        index.addSlave(index3);
 
     }
 
@@ -62,9 +70,11 @@ public class Shooter {
 
                 numBalls += 1;
                 intakeTimer.start();
-                index1.move(1);
+                index.move(1);
+                /*
                 index2.move(1);
                 index3.move(1);
+                */
             }
             else if(numBalls == 4) {
                 numBalls = 5;
@@ -72,9 +82,11 @@ public class Shooter {
         }
 
         if (intakeTimer.getElaspedTimeInMs() > 80) {
-            index1.stop();
+            index.stop();
+            /*
             index2.stop();
             index3.stop();
+            */
             intakeTimer.stop();
             intakeTimer.zero();
         }

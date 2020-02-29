@@ -43,19 +43,22 @@ public class AutonBall extends AutonBase {
         //Wait for the speed to come up
         while(Shooter.shooter.getVelocity() < 20500) {
             
-            Shooter.index1.stop();
+            Shooter.index.stop();
+            /*
             Shooter.index2.stop();
             Shooter.index3.stop();
+            */
             Shooter.feeder.stop();
 
             if (!isGamepadGood()) return;
         }
 
         Shooter.feeder.move(1);
-        Shooter.index1.move(1);
+        Shooter.index.move(1);
+        /*
         Shooter.index2.move(1);
         Shooter.index3.move(1);
-        
+        */
 
         shootTimer.start();
 
@@ -85,9 +88,11 @@ public class AutonBall extends AutonBase {
     public void postRun() {
         Shooter.shooter.move(0);
         Shooter.feeder.move(0);
-        Shooter.index1.move(0);
+        Shooter.index.move(0);
+        /*
         Shooter.index2.move(0);
         Shooter.index3.move(0);
+        */
         Shooter.numBalls = 0;
     }
 }

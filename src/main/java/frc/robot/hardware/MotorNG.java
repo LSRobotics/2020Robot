@@ -1,5 +1,7 @@
 package frc.robot.hardware;
 
+import java.util.ArrayList;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
@@ -23,9 +25,10 @@ public class MotorNG {
     
     private double speed = 1.0;
     private double lastPower = 0;
-    public static Model DEFAULT_MODEL = Model.FALCON_500;
+    final public static Model DEFAULT_MODEL = Model.FALCON_500;
     private Model model = DEFAULT_MODEL;
     private boolean isReverse = false;
+    private ArrayList<MotorNG> slaves = new ArrayList<>();
 
     public MotorNG(int port) {
         this(port, DEFAULT_MODEL);
@@ -60,6 +63,10 @@ public class MotorNG {
                 break;
         }
         setReverse(isReverse);
+    }
+
+    public void addSlave(MotorNG slave) {
+        slaves.add(slave);
     }
 
     public void setReverse(boolean isReverse) {
@@ -98,6 +105,12 @@ public class MotorNG {
         }
         else {
             max.set(value);
+        }
+
+        if(slaves.size() > 0) {
+            for(MotorNG slave : slaves) {
+                slave.moveRaw(value);
+            }
         }
     }
 
