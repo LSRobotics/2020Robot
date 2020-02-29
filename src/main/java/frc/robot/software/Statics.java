@@ -27,16 +27,16 @@ public class Statics {
                             INDEX_3 = 7,
                             INTAKE  = 8,
                             SHOOTER = 9,
-                            FEEDER  = 10,
+                            //FEEDER  = 10,
                             CLIMB_ROLLER = 11;
 
 //Solenoids
     static final public int MASTER_PCM = 0,
                             ARM_FORWARD = 0,
-                            ARM_REVERSE = 1,
+                            ARM_REVERSE = 4,
                             CLIMB_FORWARD = 2,
-                            CLIMB_REVERSE = 3,
-                            CHASSIS_FORWARD = 4,
+                            CLIMB_REVERSE = 6,
+                            CHASSIS_FORWARD = 1,
                             CHASSIS_REVERSE = 5;
 
 	public static final int US_ALIGNER_S_PING = 0;

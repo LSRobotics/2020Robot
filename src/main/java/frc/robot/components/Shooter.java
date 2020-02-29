@@ -10,7 +10,7 @@ import frc.robot.autonomous.*;
 public class Shooter {
 
     
-    public static MotorNG index, feeder, shooter, intake;
+    public static MotorNG index, shooter, intake;
     
     //Internal Motors
     private static MotorNG index2, index3;
@@ -29,7 +29,7 @@ public class Shooter {
         index3 = new MotorNG(Statics.INDEX_3, Model.VICTOR_SPX);
 
         // Shooting Motors
-        feeder = new MotorNG(Statics.FEEDER, Model.VICTOR_SPX, true);
+        //feeder = new MotorNG(Statics.FEEDER, Model.VICTOR_SPX, true);
         shooter = new MotorNG(Statics.SHOOTER, Model.FALCON_500, true);
 
         usIntake = new RangeSensor(Statics.US_INTAKE_PING, Statics.US_INTAKE_ECHO, Type.DIO_US_HC_SR04);
@@ -44,7 +44,7 @@ public class Shooter {
         index.setSpeed(0.7);
         index2.setSpeed(0.7);
         index3.setSpeed(0.7);
-        feeder.setSpeed(0.4);
+        //feeder.setSpeed(0.4);
 
         index.addSlave(index2);
         index.addSlave(index3);

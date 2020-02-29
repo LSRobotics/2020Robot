@@ -47,12 +47,12 @@ public class AutonBall extends AutonBase {
             Shooter.index2.stop();
             Shooter.index3.stop();
             */
-            Shooter.feeder.stop();
+            //Shooter.feeder.stop();
 
             if (!isGamepadGood()) return;
         }
 
-        Shooter.feeder.move(1);
+        //Shooter.feeder.move(1);
         Shooter.index.move(1);
         /*
         Shooter.index2.move(1);
@@ -86,7 +86,7 @@ public class AutonBall extends AutonBase {
     @Override
     public void postRun() {
         Shooter.shooter.move(0);
-        Shooter.feeder.move(0);
+        //Shooter.feeder.move(0);
         Shooter.index.move(0);
         /*
         Shooter.index2.move(0);

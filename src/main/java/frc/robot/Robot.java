@@ -61,6 +61,9 @@ public class Robot extends TimedRobot {
     Climb.initialize();
 
     AutonChooser.initialize();
+    PixyCam.initialize();
+
+    Lights.initialize();
   }
 
   @Override
@@ -114,6 +117,10 @@ public class Robot extends TimedRobot {
   // All code for driving
   public void updateBottom() {
 
+    if (gp1.isKeyToggled(Key.J_LEFT_DOWN)) {
+      new AutonPixyAlign(0).run();
+    }
+
     if (gp1.isKeyToggled(Key.A)) {
       new AutonEncoderForward(50).run();
     }
@@ -166,6 +173,8 @@ public class Robot extends TimedRobot {
       // FORCE Override
       Chassis.drive(Utils.mapAnalog(-gp1.getValue(yKey)), Utils.mapAnalog(gp1.getValue(xKey)));
     }
+
+
   }
 
   public void updateTop() {
@@ -209,7 +218,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("IR Sensor", Chassis.sensorIR.getRangeInches());
     SmartDashboard.putString("Current Gear", (Chassis.shifter.status == Status.FORWARD ? "Low" : "High"));
     SmartDashboard.putNumber("Angle", NavX.navx.getYaw());
-    SmartDashboard.putString("Color Sensor (R,G,B)", color[0] + ", " + color[1] + ", " + color[2]);
+    //SmartDashboard.putString("Color Sensor (R,G,B)", color[0] + ", " + color[1] + ", " + color[2]);
     SmartDashboard.putNumber("PIXY CAM", PixyCam.getTargetLocation());
 
     //color sensor booleans
