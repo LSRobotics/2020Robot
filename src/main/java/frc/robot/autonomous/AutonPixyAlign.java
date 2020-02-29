@@ -43,6 +43,19 @@ public class AutonPixyAlign extends AutonBase {
     @Override
     public void postRun() {
         PixyCam.switchLED(false);
+        Lights.lightSpark.set(.77);
+
+        new Thread(() -> {
+            try {
+            Thread.sleep(2000);
+
+            Lights.lightSpark.set(0);
+            Lights.isAuton = false;
+
+            }catch(Exception e) {
+                //Stfu
+            }
+        }).start();
         Chassis.stop();
     }
 

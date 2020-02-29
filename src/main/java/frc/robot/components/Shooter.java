@@ -11,7 +11,7 @@ public class Shooter {
 
     public static MotorNG index1, index2, index3, feeder, shooter,intake;
     public static Solenoid intakeArm;
-    private static RangeSensor usIntake;
+    public static RangeSensor usIntake;
     public static int numBalls = 0;
     public static Timer intakeTimer = new Timer("Intake Timer");
     public static boolean isShooting = false, lastBallStatus = false;
