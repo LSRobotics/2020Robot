@@ -4,11 +4,13 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DriverStation;
 
 //Internal
 import frc.robot.hardware.*;
 import frc.robot.hardware.Gamepad.Key;
 import frc.robot.hardware.MotorNG.Model;
+import frc.robot.hardware.Solenoid.Status;
 import frc.robot.software.*;
 import frc.robot.constants.*;
 import frc.robot.autonomous.*;
@@ -23,6 +25,10 @@ public class Robot extends TimedRobot {
   public DriveMethod driveMethod = DriveMethod.R_STICK;
   public SendableChooser<DriveMethod> m_chooser = new SendableChooser<>();
   public RGBSensor colorSensor = new RGBSensor();
+  public double lightMode;
+  public static boolean isBlueLine, isRedLine, isWhiteLine, isYellowCP, isRedCP, isGreenCP, isBlueCP; //CP = control panel
+
+  public double[] color = {};
 
   @Override
   public void robotInit() {
@@ -83,7 +89,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    if (!isLinearAutonOK) {
+    //NavX.navx.zeroYaw();
+    if(!isLinearAutonOK) {
       isLinearAutonOK = true;
       AutonChooser.getSelected().run();
     }
@@ -99,6 +106,8 @@ public class Robot extends TimedRobot {
     updateTop();
 
     postData();
+
+    updateLights();
 
   }
 
@@ -168,14 +177,43 @@ public class Robot extends TimedRobot {
 
   }
 
+  public void updateLights() {
+    if (Utils.mapAnalog(gp1.getValue(Key.J_RIGHT_Y),0.2,1) != 0) {
+      lightMode = -.07;
+    }
+    else {
+      if (DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue) {
+      lightMode = .85;
+    }
+      else {
+        lightMode = .61;
+      }
+    }
+    Lights.lightChange(lightMode);
+  }
+
   public void postData() {
-    /*
-     * SmartDashboard.putNumber("FALCON SPEED", Shooter.getVelocity());
-     * SmartDashboard.putNumber("Ultrasonic Intake",
-     * Shooter.usIntake.getRangeInches()); SmartDashboard.putNumber("NavX Angle",
-     * NavX.navx.getYaw()); SmartDashboard.putNumber("Number of balls",
-     * Shooter.numBalls);
-     */
+    SmartDashboard.putNumber("FALCON SPEED", Shooter.getVelocity());
+    SmartDashboard.putNumber("Ultrasonic Intake",
+    Shooter.usIntake.getRangeInches()); SmartDashboard.putNumber("NavX Angle",
+    NavX.navx.getYaw()); SmartDashboard.putNumber("Number of balls",
+    Shooter.numBalls);
+    SmartDashboard.putNumber("Front Ultrasonic", Chassis.frontAligner.getRangeInches());
+    SmartDashboard.putNumber("IR Sensor", Chassis.sensorIR.getRangeInches());
+    SmartDashboard.putString("Current Gear", (Chassis.shifter.status == Status.FORWARD ? "Low" : "High"));
+    SmartDashboard.putNumber("Angle", NavX.navx.getYaw());
+    SmartDashboard.putString("Color Sensor (R,G,B)", color[0] + ", " + color[1] + ", " + color[2]);
+    SmartDashboard.putNumber("PIXY CAM", PixyCam.getTargetLocation());
+
+    //color sensor booleans
+    SmartDashboard.putBoolean("Is Blue Line Detected", isBlueLine);
+    SmartDashboard.putBoolean("Is Red Line Detected", isRedLine);
+    SmartDashboard.putBoolean("Is White Line Detected", isWhiteLine);
+    SmartDashboard.putBoolean("Yellow", isYellowCP);
+    SmartDashboard.putBoolean("Red", isRedCP);
+    SmartDashboard.putBoolean("Green", isGreenCP);
+    SmartDashboard.putBoolean("Blue", isBlueCP);
+    SmartDashboard.putNumber("LED", lightMode);
 
     SmartDashboard.putNumberArray("Chassis Encoders", Chassis.getEncoderReading());
 
