@@ -17,6 +17,7 @@ public class Climb {
         roller = new MotorNG(Statics.CLIMB_ROLLER, Model.FALCON_500);
 
         roller.setSpeed(0.3);
+
         lock.move(false, true);
     }
 

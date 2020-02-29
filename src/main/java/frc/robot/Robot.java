@@ -121,10 +121,6 @@ public class Robot extends TimedRobot {
       new AutonPixyAlign(0).run();
     }
 
-    if (gp1.isKeyToggled(Key.A)) {
-      new AutonEncoderForward(50).run();
-    }
-
     // Autonomous Rotation (Experimental)
     if (gp1.isKeyToggled(Key.B)) {
       new AutonGyroTurn(90).run();

@@ -24,8 +24,8 @@ public class Shooter {
 
     public static void initialize() {
         // Index Motors
-        index = new MotorNG(Statics.INDEX_1, Model.VICTOR_SPX, true);
-        index2 = new MotorNG(Statics.INDEX_2, Model.TALON_SRX);
+        index = new MotorNG(Statics.INDEX_1, Model.VICTOR_SPX,true);
+        index2 = new MotorNG(Statics.INDEX_2, Model.VICTOR_SPX,true);
         index3 = new MotorNG(Statics.INDEX_3, Model.VICTOR_SPX);
 
         // Shooting Motors
@@ -92,7 +92,7 @@ public class Shooter {
         }
 
         // Autonomous Shooter
-        if (Core.robot.gp1.isKeyToggled(Key.B)) {
+        if (Core.robot.gp1.isKeyToggled(Key.X)) {
             new AutonBall(Core.robot.gp1, Key.DPAD_DOWN).run();
             numBalls = 0;
         }
