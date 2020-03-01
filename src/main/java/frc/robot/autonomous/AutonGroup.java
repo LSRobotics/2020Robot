@@ -9,8 +9,18 @@ public class AutonGroup {
     private ArrayList<AutonBase> actions = new ArrayList<AutonBase>();
 
     public AutonGroup(AutonBase... actions) {
-        for(AutonBase i : actions) {
-            this.actions.add(i);
+        this(50, actions);
+    }
+
+    public AutonGroup(double sleepTimeInMs, AutonBase... actions) {
+        for(int i = 0; i < actions.length; ++i) {
+            this.actions.add(actions[i]);
+
+            //Auto Sleep
+            if(sleepTimeInMs != 0 && i < actions.length - 1) {
+                this.actions.add(new AutonSleep(sleepTimeInMs));
+            }
+
         }
     }
 

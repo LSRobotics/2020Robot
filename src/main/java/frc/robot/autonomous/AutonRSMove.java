@@ -56,6 +56,11 @@ public class AutonRSMove extends AutonBase{
     }
 
     @Override
+    public void postRun() {
+        Chassis.stop();
+    }
+
+    @Override
     public String toString() {
         return "Auton Range Sensor Move " + targetDistance;
     }

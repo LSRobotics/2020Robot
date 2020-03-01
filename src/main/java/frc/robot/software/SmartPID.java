@@ -25,7 +25,7 @@ public class SmartPID extends PIDController {
             timer.start();
         }
 
-        if(history.size() > 4 && history.size() % 5 == 0) {
+        if(history.size() > 4 && history.size() % 2 == 0) {
 
             double max = 0;
 
@@ -37,8 +37,7 @@ public class SmartPID extends PIDController {
                 }
             }
 
-            if(max < 0.1) {
-                Utils.report("Detected, Current Value:" + result);
+            if(max < oscilateCutOff) {
                 isActionDone = true;
             }
         }
@@ -49,6 +48,11 @@ public class SmartPID extends PIDController {
 
     public void setCutOff(double oscilateCutOff) {
         this.oscilateCutOff = Math.abs(oscilateCutOff);
+    }
+
+
+    public void clearHistory() {
+        history.clear();
     }
 
     public boolean isActionDone() {

@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 //Internal
 import frc.robot.hardware.*;
 import frc.robot.hardware.Gamepad.Key;
-import frc.robot.hardware.MotorNG.Model;
 import frc.robot.hardware.Solenoid.Status;
 import frc.robot.software.*;
 import frc.robot.constants.*;
@@ -177,6 +176,7 @@ public class Robot extends TimedRobot {
 
     Shooter.update();
 
+    //FIXME: Uncomment this when tweaking is done
     /*
     // Experimental
     Climb.turnRoller(gp1.isKeyHeld(Key.X), gp1.isKeyHeld(Key.Y));
@@ -205,11 +205,11 @@ public class Robot extends TimedRobot {
   }
 
   public void postData() {
-    SmartDashboard.putNumber("FALCON SPEED", Shooter.getVelocity());
+    SmartDashboard.putNumber("Shooter Speed", Shooter.getVelocity());
     SmartDashboard.putNumber("Ultrasonic Intake",
     Shooter.usIntake.getRangeInches()); SmartDashboard.putNumber("NavX Angle",
     NavX.navx.getYaw()); SmartDashboard.putNumber("Number of balls",
-    Shooter.numBalls);
+    Shooter.getNumBalls());
     SmartDashboard.putNumber("Front Ultrasonic", Chassis.frontAligner.getRangeInches());
     SmartDashboard.putNumber("IR Sensor", Chassis.sensorIR.getRangeInches());
     SmartDashboard.putString("Current Gear", (Chassis.shifter.status == Status.FORWARD ? "Low" : "High"));

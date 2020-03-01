@@ -39,6 +39,12 @@ public class AutonGyroTurn extends AutonBase {
     }
 
     @Override
+    public void postRun() {
+        Chassis.stop();
+        pid.clearHistory();
+    }
+
+    @Override
     public String toString() {
         return "AutonGyroTurn " + targetAngle;
     }

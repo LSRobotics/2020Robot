@@ -50,7 +50,6 @@ public class MotorNG {
             case FALCON_500:
                 falcon = new WPI_TalonFX(port);
                 falcon.setSelectedSensorPosition(0);
-                //falcon.configAllSettings(allConfigs)
                 break;
             case VICTOR_SPX:
                 phoenix = new WPI_VictorSPX(port);
@@ -107,12 +106,6 @@ public class MotorNG {
         else {
             max.set(value);
         }
-
-        if(slaves.size() > 0) {
-            for(MotorNG slave : slaves) {
-                slave.moveRaw(value);
-            }
-        }
     }
 
     public void move(double value) {
@@ -122,6 +115,13 @@ public class MotorNG {
         lastPower = value * speed;
 
         moveRaw(lastPower);
+
+        //Slaves are served last (Of course!)
+        if(slaves.size() > 0) {
+            for(MotorNG slave : slaves) {
+                slave.move(value);
+            }
+        }
     }
 
     public void stop() {

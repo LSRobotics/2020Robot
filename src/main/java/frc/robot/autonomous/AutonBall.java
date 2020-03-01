@@ -15,6 +15,7 @@ public class AutonBall extends AutonBase {
     boolean isNoBallLeft = false,
             isTimeout    = false;
     boolean isFirstBall = true;
+    final static double TIMEOUT_SECONDS = 10;
 
     public AutonBall () {
         super();
@@ -26,7 +27,7 @@ public class AutonBall extends AutonBase {
 
     @Override
     public void preRun() {
-        //Chassis.stop();
+        Chassis.stop();
         Shooter.shooter.move(1);
         masterTimer.start();
     }
@@ -34,7 +35,7 @@ public class AutonBall extends AutonBase {
     @Override
     public void duringRun() {
 
-        if(masterTimer.getElaspedTimeInMs() > 6000) {
+        if(masterTimer.getElaspedTimeInMs() > TIMEOUT_SECONDS * 1000) {
             isTimeout = true;
             return;
         }
@@ -43,32 +44,26 @@ public class AutonBall extends AutonBase {
         while(Shooter.shooter.getVelocity() < 20500) {
             
             Shooter.index.stop();
-            /*
-            Shooter.index2.stop();
-            Shooter.index3.stop();
-            */
-            //Shooter.feeder.stop();
 
             if (!isGamepadGood()) return;
         }
 
-        //Shooter.feeder.move(1);
+        //Record the speed of the motor at the moment of shooting out (Momentum loss very soon)
+        var outSpeed = Shooter.shooter.getVelocity();
+
         Shooter.index.move(1);
-        /*
-        Shooter.index2.move(1);
-        Shooter.index3.move(1);
-        */
 
         shootTimer.start();
 
-        while(Shooter.shooter.getVelocity() > 19500) {
+        //Keep idnex running until momentum loss is detected (threshold: 2000 encoder units per 100 ms)
+        while(outSpeed - Shooter.shooter.getVelocity() < 2000) {
 
             if(shootTimer.getElaspedTimeInMs() > 1500) {
                 isNoBallLeft = true;
-                break;
+                return;
             }
 
-            if(masterTimer.getElaspedTimeInMs() > 6000) {
+            if(masterTimer.getElaspedTimeInMs() > TIMEOUT_SECONDS * 1000) {
                 isTimeout = true;
                 break;
             }
@@ -86,12 +81,7 @@ public class AutonBall extends AutonBase {
     @Override
     public void postRun() {
         Shooter.shooter.move(0);
-        //Shooter.feeder.move(0);
         Shooter.index.move(0);
-        /*
-        Shooter.index2.move(0);
-        Shooter.index3.move(0);
-        */
         Shooter.numBalls = 0;
     }
 }

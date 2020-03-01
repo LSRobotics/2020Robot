@@ -4,14 +4,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.components.Shooter;
 import frc.robot.hardware.Chassis;
 import frc.robot.hardware.Gamepad;
+import frc.robot.software.SmartPID;
 import frc.robot.software.Statics;
-import frc.robot.software.*;
 
 public class AutonEncoderForward extends AutonBase {
+
+    //TODO: Tweak PID
 
     double distance = 0;
     double target   = 0;
     boolean isIntakeEnabled = false;
+    SmartPID pid;
 
     public AutonEncoderForward(double distance, boolean isIntakeEnabled) {
         super();
@@ -40,7 +43,9 @@ public class AutonEncoderForward extends AutonBase {
         Chassis.stop();
 
         target = Chassis.getEncoderReading()[0] + (distance * Statics.FALCON_UNITS_PER_INCH);
-        Chassis.driveRaw(distance > 0 ? 0.5 : -0.5, 0);
+        
+        pid = new SmartPID(1.5, 0, 0);
+        pid.setSetpoint(target);
         
         if(isIntakeEnabled) {
             Shooter.intake.move(1);
@@ -52,10 +57,8 @@ public class AutonEncoderForward extends AutonBase {
     public void duringRun() {
 
         SmartDashboard.putNumber("Distance Left", distanceLeft());
-
-        if(distanceLeft() < 20) {
-            Chassis.driveRaw(distance > 0 ? 0.2 : -0.2,0);
-        }
+        
+        Chassis.drive(pid.calculate(Chassis.getEncoderReading()[0]) * 0.5,0);
     }
 
     @Override
@@ -65,11 +68,12 @@ public class AutonEncoderForward extends AutonBase {
             Shooter.intake.move(0);
             Shooter.intakeArm.move(false,true);
         }
+        pid.clearHistory();
     }
 
     @Override
     public boolean isActionDone() {
-        return distanceLeft() < 3;
+        return pid.isActionDone();
     }
 
     private double distanceLeft() {

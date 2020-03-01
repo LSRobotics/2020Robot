@@ -1,7 +1,5 @@
 package frc.robot.autonomous;
 
-import javax.annotation.OverridingMethodsMustInvokeSuper;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.hardware.*;
 import frc.robot.software.SmartPID;
@@ -46,6 +44,7 @@ public class AutonPixyAlign extends AutonBase {
         Lights.lightChange(.77);
         Lights.lock(true);
 
+        //Set lights back to default
         new Thread(() -> {
             try {
             Thread.sleep(2000);
@@ -57,7 +56,10 @@ public class AutonPixyAlign extends AutonBase {
                 //Stfu
             }
         }).start();
+
         Chassis.stop();
+
+        pid.clearHistory();
     }
 
     @Override
