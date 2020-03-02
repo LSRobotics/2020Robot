@@ -33,22 +33,17 @@ public class AutonChooser {
                                                    new AutonRSMove(Chassis.sensorIR, 94.66 - 15), //subtract to center of bot
                                                    new AutonGyroTurn(0),
                                                    new AutonPixyAlign(0),
-                                                   //shooter
                                                    new AutonBall(),
-                                                   //drive off line
                                                    new AutonEncoderForward(-30)
                                                    ));
         chooser.addOption("Drive to goal from right", new AutonGroup(new AutonGyroTurn(-90),
                                                    new AutonRSMove(Chassis.sensorIR, 219.18), //subtract to center of bot
                                                    new AutonGyroTurn(0),
                                                    new AutonPixyAlign(0),
-                                                   //shooter
                                                    new AutonBall(),
-                                                   //drive off line
                                                    new AutonEncoderForward(-30)
                                                    ));
         chooser.addOption("Pick up 5 balls in our trench", new AutonGroup(new AutonPixyAlign(0),
-                                                   //shoot
                                                    new AutonBall(),
                                                    new AutonGyroTurn(180),
                                                    //encoders or back distance sensor to drive forward and pick up five balls
@@ -64,8 +59,9 @@ public class AutonChooser {
                                                    new AutonEncoderForward(20),
                                                    new AutonPixyAlign(0),
                                                    //shooter
-                                                   new AutonBall()
+                                                   new AutonBall(),
                                                    //drive off line
+                                                   new AutonEncoderForward(-30)
                                                    ));    
         chooser.addOption("Auton5", new AutonGroup(//Finish later
                                                    ));

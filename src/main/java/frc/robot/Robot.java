@@ -191,6 +191,9 @@ public class Robot extends TimedRobot {
 
   public void updateLights() {
     if (Utils.mapAnalog(gp1.getValue(Key.J_RIGHT_Y),0.2,1) != 0) {
+      lightMode = .57;
+    }
+    else if (Shooter.numBalls == 5) {
       lightMode = -.07;
     }
     else {
@@ -228,6 +231,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("LED", lightMode);
 
     SmartDashboard.putNumberArray("Chassis Encoders", Chassis.getEncoderReading());
+    SmartDashboard.putNumber("Chassis Encoders", Climb.getDistance());
+
 
   }
 
