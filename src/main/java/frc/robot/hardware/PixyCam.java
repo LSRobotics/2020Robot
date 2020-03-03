@@ -26,7 +26,7 @@ public class PixyCam {
 
         pixy = new AnalogInput(Statics.PIXY_CAM);
         led = new AnalogOutput(0);
-        switchLED(true);
+        switchLED(false);
 
         // ccc = new Pixy2().getCCC();
 
