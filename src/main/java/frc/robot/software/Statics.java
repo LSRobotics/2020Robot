@@ -13,7 +13,7 @@ public class Statics {
 
 //Controller
     static final public double OFFSET_MIN = 0.1,
-                               OFFSET_MAX = 0.7;
+                               OFFSET_MAX = 0.9;
 
 //Chassis
    static final public int CHASSIS_L1 = 1,

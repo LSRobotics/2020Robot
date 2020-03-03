@@ -52,23 +52,15 @@ public class Shooter {
 
     }
 
+    public static void actuateIntake() {
+        isIntakeDown = !isIntakeDown;
+        intake.move(isIntakeDown? 1 : 0);
+        intakeArm.move(isIntakeDown, !isIntakeDown);
+    }
+
     public static void update() {
 
         boolean ballStatus = usIntake.getRangeInches() < 3;
-
-        //Intake Arm / Intake
-        if(Core.robot.gp1.isKeyToggled(Key.A)) {
-            isIntakeDown = !isIntakeDown;
-            intake.move(isIntakeDown? 1 : 0);
-            intakeArm.move(isIntakeDown, !isIntakeDown);
-        }
-
-        // Autonomous Shooter
-        if (Core.robot.gp1.isKeyToggled(Key.X)) {
-                new AutonBall(Core.robot.gp1, Key.DPAD_DOWN).run();
-                numBalls = 0;
-        }
-
         //Indexer
 
         // Ball is in

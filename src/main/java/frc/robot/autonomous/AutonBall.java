@@ -13,22 +13,36 @@ public class AutonBall extends AutonBase {
     Timer shootTimer = new Timer("Auton Shooter Shoot Timer"); //For determining whether the shooter motor took too short to reload -- no balls left?
     Timer masterTimer = new Timer("Auton Shooter Master Timer"); //For determining whether the shooter took too long to shoot -- mechanical faliure?
     boolean isNoBallLeft = false,
-            isTimeout    = false;
-    boolean isFirstBall = true;
+            isTimeout    = false,
+            isHighGoal = false,
+            isInterrupted = false;
+
     final static double TIMEOUT_SECONDS = 10;
 
     public AutonBall () {
-        super();
+        this(true);
     }
 
     public AutonBall (Gamepad killGp, Gamepad.Key killKey) {
         super(killGp,killKey);
     }
 
+    public AutonBall(boolean isHighGoal) {
+        super();
+        this.isHighGoal = isHighGoal;
+    }
+
     @Override
     public void preRun() {
         Chassis.stop();
         Shooter.shooter.move(1);
+        
+        Shooter.index.move(-0.2);
+    
+        if(!new AutonSleep(150).run()) {
+            isInterrupted = true;
+        }
+    
         masterTimer.start();
     }
 
@@ -41,7 +55,7 @@ public class AutonBall extends AutonBase {
         }
 
         //Wait for the speed to come up
-        while(Shooter.shooter.getVelocity() < 20500) {
+        while(Shooter.shooter.getVelocity() < (isHighGoal ? 20500 : 15500)) {
             
             Shooter.index.stop();
 
@@ -75,13 +89,20 @@ public class AutonBall extends AutonBase {
 
     @Override
     public boolean isActionDone() {
-        return isNoBallLeft || isTimeout;
+        return isNoBallLeft || isTimeout || isInterrupted;
     }
 
     @Override
     public void postRun() {
+        
         Shooter.shooter.move(0);
         Shooter.index.move(0);
-        Shooter.numBalls = 0;
+        //Shooter.numBalls = 0;
+
+        //Reset boolean values just in case
+        isInterrupted = false;
+        isTimeout = false;
+        isNoBallLeft = false;
+
     }
 }

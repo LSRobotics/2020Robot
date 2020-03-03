@@ -25,7 +25,9 @@ public class Robot extends TimedRobot {
   public SendableChooser<DriveMethod> m_chooser = new SendableChooser<>();
   public RGBSensor colorSensor = new RGBSensor();
   public double lightMode;
-  public static boolean isBlueLine, isRedLine, isWhiteLine, isYellowCP, isRedCP, isGreenCP, isBlueCP; //CP = control panel
+  public static boolean isBlueLine, isRedLine, isWhiteLine, isYellowCP, isRedCP, isGreenCP, isBlueCP; // CP = control
+                                                                                                      // panel
+  private static Gamepad.Key xKey, yKey;
 
   public double[] color = {};
 
@@ -59,23 +61,42 @@ public class Robot extends TimedRobot {
 
     Climb.initialize();
 
-    AutonChooser.initialize();
     PixyCam.initialize();
 
     Lights.initialize();
+
+    AutonChooser.initialize();
   }
 
   @Override
   public void disabledPeriodic() {
     postData();
     Core.isDisabled = true;
+
+    yKey = Key.J_RIGHT_Y;
+    xKey = Key.J_RIGHT_X;
+
+    switch (m_chooser.getSelected()) {
+    case L_STICK: // Left Stick Drive
+      yKey = Key.J_LEFT_Y;
+      xKey = Key.J_LEFT_X;
+      break;
+
+    case BOTH_STICKS: // Both Stick Drive
+      yKey = Key.J_LEFT_Y;
+      xKey = Key.J_RIGHT_X;
+      break;
+
+    case R_STICK: // Right Stick Drive
+      yKey = Key.J_RIGHT_Y;
+      xKey = Key.J_RIGHT_X;
+      break;
+    }
   }
 
   @Override
   public void teleopInit() {
     Core.isDisabled = false;
-    driveMethod = m_chooser.getSelected();
-    System.out.println("Drive Selected: " + driveMethod);
   }
 
   @Override
@@ -91,8 +112,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    //NavX.navx.zeroYaw();
-    if(!isLinearAutonOK) {
+    // NavX.navx.zeroYaw();
+    if (!isLinearAutonOK) {
       isLinearAutonOK = true;
       AutonChooser.getSelected().run();
     }
@@ -116,10 +137,6 @@ public class Robot extends TimedRobot {
   // All code for driving
   public void updateBottom() {
 
-    if (gp1.isKeyToggled(Key.J_LEFT_DOWN)) {
-      new AutonPixyAlign(0).run();
-    }
-
     // Autonomous Rotation (Experimental)
     if (gp1.isKeyToggled(Key.B)) {
       new AutonGyroTurn(90).run();
@@ -130,45 +147,19 @@ public class Robot extends TimedRobot {
       Chassis.shift();
     }
 
-    // raise drive speed
-    if (gp1.isKeyToggled(Key.RB)) {
-      if (driveSpeed + 0.25 <= 1.0) {
-        driveSpeed += 0.25;
-        Chassis.setSpeedFactor(driveSpeed);
-      }
-    }
-    // lower drive speed
-    else if (gp1.isKeyToggled(Key.LB)) {
-      if (driveSpeed - 0.25 >= 0) {
-        driveSpeed -= 0.25;
-        Chassis.setSpeedFactor(driveSpeed);
-      }
+    if(gp1.isKeysChanged(Key.LB,Key.RB)) {
+      driveSpeed += gp1.isKeyHeld(Key.LB) ? -0.25 : 0.25;
+
+      //Out-of-bound check
+      driveSpeed = (driveSpeed < 0 ? 0 : driveSpeed);
+      driveSpeed = (driveSpeed > 1 ? 1 : driveSpeed);
+
+      Chassis.setSpeedFactor(driveSpeed);
     }
     // Drive control
     else {
-      Gamepad.Key yKey = Key.J_RIGHT_Y;
-      Gamepad.Key xKey = Key.J_RIGHT_X;
-
-      switch (driveMethod) {
-      case L_STICK: // Left Stick Drive
-        yKey = Key.J_LEFT_Y;
-        xKey = Key.J_LEFT_X;
-        break;
-
-      case BOTH_STICKS: // Both Stick Drive
-        yKey = Key.J_LEFT_Y;
-        xKey = Key.J_RIGHT_X;
-        break;
-
-      case R_STICK: // Right Stick Drive
-        yKey = Key.J_RIGHT_Y;
-        xKey = Key.J_RIGHT_X;
-        break;
-      }
-      // FORCE Override
       Chassis.drive(Utils.mapAnalog(-gp1.getValue(yKey)), Utils.mapAnalog(gp1.getValue(xKey)));
     }
-
 
   }
 
@@ -187,17 +178,28 @@ public class Robot extends TimedRobot {
       Climb.lock(!Climb.isEngaged());
     }
 
+    //Toggle intake (bringing it down & run and vice versa)
+    if(gp1.isKeyToggled(Key.A)) {
+      Shooter.actuateIntake();
+    }
+
+    //Ball Shooting
+    if(gp1.isKeyToggled(Key.DPAD_LEFT) || gp1.isKeyToggled(Key.DPAD_RIGHT)) {
+      new AutonGroup(
+        new AutonPixyAlign(0),
+        new AutonBall(gp1.isKeyToggled(Key.DPAD_LEFT) ? false : true))
+        .run();
+    }
+    
   }
 
   public void updateLights() {
-    if (Utils.mapAnalog(gp1.getValue(Key.J_RIGHT_Y),0.2,1) != 0) {
+    if (Utils.mapAnalog(gp1.getValue(Key.J_RIGHT_Y)) != 0) {
       lightMode = -.07;
-    }
-    else {
+    } else {
       if (DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue) {
-      lightMode = .85;
-    }
-      else {
+        lightMode = .85;
+      } else {
         lightMode = .61;
       }
     }
@@ -206,18 +208,18 @@ public class Robot extends TimedRobot {
 
   public void postData() {
     SmartDashboard.putNumber("Shooter Speed", Shooter.getVelocity());
-    SmartDashboard.putNumber("Ultrasonic Intake",
-    Shooter.usIntake.getRangeInches()); SmartDashboard.putNumber("NavX Angle",
-    NavX.navx.getYaw()); SmartDashboard.putNumber("Number of balls",
-    Shooter.getNumBalls());
+    SmartDashboard.putNumber("Ultrasonic Intake", Shooter.usIntake.getRangeInches());
+    SmartDashboard.putNumber("NavX Angle", NavX.navx.getYaw());
+    SmartDashboard.putNumber("Number of balls", Shooter.getNumBalls());
     SmartDashboard.putNumber("Front Ultrasonic", Chassis.frontAligner.getRangeInches());
     SmartDashboard.putNumber("IR Sensor", Chassis.sensorIR.getRangeInches());
     SmartDashboard.putString("Current Gear", (Chassis.shifter.status == Status.FORWARD ? "Low" : "High"));
     SmartDashboard.putNumber("Angle", NavX.navx.getYaw());
-    //SmartDashboard.putString("Color Sensor (R,G,B)", color[0] + ", " + color[1] + ", " + color[2]);
+    // SmartDashboard.putString("Color Sensor (R,G,B)", color[0] + ", " + color[1] +
+    // ", " + color[2]);
     SmartDashboard.putNumber("PIXY CAM", PixyCam.getTargetLocation());
 
-    //color sensor booleans
+    // color sensor booleans
     SmartDashboard.putBoolean("Is Blue Line Detected", isBlueLine);
     SmartDashboard.putBoolean("Is Red Line Detected", isRedLine);
     SmartDashboard.putBoolean("Is White Line Detected", isWhiteLine);
