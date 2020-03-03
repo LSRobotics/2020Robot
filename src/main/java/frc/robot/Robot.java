@@ -197,13 +197,9 @@ public class Robot extends TimedRobot {
       lightMode = -.07;
     }
     else {
-      if (DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue) {
-      lightMode = .85;
+      lightMode = DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue ? 0.85 : 0.61;
     }
-      else {
-        lightMode = .61;
-      }
-    }
+    
     Lights.lightChange(lightMode);
   }
 

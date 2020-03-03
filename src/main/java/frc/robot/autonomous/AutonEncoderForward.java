@@ -68,7 +68,6 @@ public class AutonEncoderForward extends AutonBase {
             Shooter.intake.move(0);
             Shooter.intakeArm.move(false,true);
         }
-        pid.clearHistory();
     }
 
     @Override

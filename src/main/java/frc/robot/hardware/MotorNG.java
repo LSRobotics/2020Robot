@@ -81,7 +81,6 @@ public class MotorNG {
         else {
             max.setInverted(isReverse);
         }
-
     }
 
     public boolean isReverse() {
