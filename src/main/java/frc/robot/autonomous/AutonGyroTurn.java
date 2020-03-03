@@ -41,7 +41,6 @@ public class AutonGyroTurn extends AutonBase {
     @Override
     public void postRun() {
         Chassis.stop();
-        pid.clearHistory();
     }
 
     @Override

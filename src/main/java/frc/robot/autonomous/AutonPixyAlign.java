@@ -40,6 +40,7 @@ public class AutonPixyAlign extends AutonBase {
 
     @Override
     public void postRun() {
+        
         PixyCam.switchLED(false);
         Lights.lightChange(.77);
         Lights.lock(true);
@@ -58,8 +59,6 @@ public class AutonPixyAlign extends AutonBase {
         }).start();
 
         Chassis.stop();
-
-        pid.clearHistory();
     }
 
     @Override

@@ -17,8 +17,10 @@ public class PixyCam {
     private static AnalogInput pixy;
     public static AnalogOutput led;
     public static boolean isLedOn = false;
+    /*
     private static Pixy2CCC ccc;
     private static ArrayList<Block> blockBuffer;
+    */
 
     public static void initialize() {
 

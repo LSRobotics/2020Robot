@@ -27,7 +27,8 @@ public class Robot extends TimedRobot {
   public double lightMode;
   public static boolean isBlueLine, isRedLine, isWhiteLine, isYellowCP, isRedCP, isGreenCP, isBlueCP; // CP = control
                                                                                                       // panel
-  private static Gamepad.Key xKey, yKey;
+  private static Gamepad.Key xKey = Key.J_RIGHT_X,
+                            yKey = Key.J_RIGHT_Y;
 
   public double[] color = {};
 
@@ -73,25 +74,7 @@ public class Robot extends TimedRobot {
     postData();
     Core.isDisabled = true;
 
-    yKey = Key.J_RIGHT_Y;
-    xKey = Key.J_RIGHT_X;
-
-    switch (m_chooser.getSelected()) {
-    case L_STICK: // Left Stick Drive
-      yKey = Key.J_LEFT_Y;
-      xKey = Key.J_LEFT_X;
-      break;
-
-    case BOTH_STICKS: // Both Stick Drive
-      yKey = Key.J_LEFT_Y;
-      xKey = Key.J_RIGHT_X;
-      break;
-
-    case R_STICK: // Right Stick Drive
-      yKey = Key.J_RIGHT_Y;
-      xKey = Key.J_RIGHT_X;
-      break;
-    }
+    updateGUI();
   }
 
   @Override
@@ -196,14 +179,30 @@ public class Robot extends TimedRobot {
   public void updateLights() {
     if (Utils.mapAnalog(gp1.getValue(Key.J_RIGHT_Y)) != 0) {
       lightMode = -.07;
-    } else {
-      if (DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue) {
-        lightMode = .85;
-      } else {
-        lightMode = .61;
-      }
+    } 
+    else {
+      lightMode = DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue ? 0.85 : 0.61;
     }
     Lights.lightChange(lightMode);
+  }
+
+  public void updateGUI() {
+    switch (m_chooser.getSelected()) {
+      case L_STICK: // Left Stick Drive
+        yKey = Key.J_LEFT_Y;
+        xKey = Key.J_LEFT_X;
+        break;
+  
+      case BOTH_STICKS: // Both Stick Drive
+        yKey = Key.J_LEFT_Y;
+        xKey = Key.J_RIGHT_X;
+        break;
+  
+      case R_STICK: // Right Stick Drive
+        yKey = Key.J_RIGHT_Y;
+        xKey = Key.J_RIGHT_X;
+        break;
+      }
   }
 
   public void postData() {
@@ -230,6 +229,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("LED", lightMode);
 
     SmartDashboard.putNumberArray("Chassis Encoders", Chassis.getEncoderReading());
+    SmartDashboard.putNumber("Chassis Encoders", Climb.getDistance());
+
 
   }
 

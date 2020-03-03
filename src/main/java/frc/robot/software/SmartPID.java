@@ -6,7 +6,8 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 
 public class SmartPID extends PIDController {
 
-    ArrayList<Double> history = new ArrayList<Double>();
+    ArrayList<Double> history = new ArrayList<Double>(); //FIXME: A potential source of crash due to limited RAM
+
     Timer timer = new Timer("SmartPID Timer");
     double oscilateCutOff = 0.1;
     boolean isActionDone = false;
@@ -25,7 +26,7 @@ public class SmartPID extends PIDController {
             timer.start();
         }
 
-        if(history.size() > 4 && history.size() % 2 == 0) {
+        if(!isActionDone && history.size() > 4 && history.size() % 2 == 0) {
 
             double max = 0;
 
@@ -39,6 +40,7 @@ public class SmartPID extends PIDController {
 
             if(max < oscilateCutOff) {
                 isActionDone = true;
+                history.clear();
             }
         }
 
@@ -50,9 +52,11 @@ public class SmartPID extends PIDController {
         this.oscilateCutOff = Math.abs(oscilateCutOff);
     }
 
-
-    public void clearHistory() {
-        history.clear();
+    /**
+     * I don't see why I even need this method, but whatever
+     */
+    public void reset() {
+        isActionDone = false;
     }
 
     public boolean isActionDone() {

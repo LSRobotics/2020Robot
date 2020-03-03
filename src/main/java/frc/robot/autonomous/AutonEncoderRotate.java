@@ -46,7 +46,6 @@ public class AutonEncoderRotate extends AutonBase {
     @Override
     public void postRun() {
         Chassis.stop();
-        pid.clearHistory();
     }
 
     @Override
