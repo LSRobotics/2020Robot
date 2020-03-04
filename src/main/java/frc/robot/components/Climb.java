@@ -18,7 +18,7 @@ public class Climb {
 
         roller.setSpeed(0.3);
 
-        lock.move(false, true);
+        lock.move(true, false);
     }
 
 
@@ -82,10 +82,10 @@ public class Climb {
 
         if(isLocked) {
             roller.stop();
-            lock.move(true,false);
+            lock.move(false,true);
         }
         else {
-            lock.move(false,true);
+            lock.move(true,false);
         }
     }
 

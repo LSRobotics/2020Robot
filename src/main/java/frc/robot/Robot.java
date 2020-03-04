@@ -169,7 +169,7 @@ public class Robot extends TimedRobot {
     //Ball Shooting
     if(gp1.isKeyToggled(Key.DPAD_LEFT) || gp1.isKeyToggled(Key.DPAD_RIGHT)) {
       new AutonGroup(
-        new AutonPixyAlign(0),
+        //new AutonPixyAlign(0),
         new AutonBall(gp1.isKeyToggled(Key.DPAD_LEFT) ? false : true))
         .run();
     }
