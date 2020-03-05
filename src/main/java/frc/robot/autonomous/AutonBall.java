@@ -17,6 +17,9 @@ public class AutonBall extends AutonBase {
             isHighGoal = false,
             isInterrupted = false;
 
+    final private double LOW_GOAL_SPEED = 10500,
+                         HIGH_GOAL_SPEED = 21000;
+
     final static double TIMEOUT_SECONDS = 10;
 
     public AutonBall () {
@@ -35,11 +38,13 @@ public class AutonBall extends AutonBase {
     @Override
     public void preRun() {
         Chassis.stop();
-        Shooter.shooter.move(1);
-        
-        Shooter.index.move(-0.2);
+
+        Shooter.shooter.moveBySpeed(isHighGoal? HIGH_GOAL_SPEED : LOW_GOAL_SPEED);
+        //Shooter.shooter.move(1);
+
+        Shooter.index.move(-0.5);
     
-        if(!new AutonSleep(150).run()) {
+        if(!new AutonSleep(20).run()) {
             isInterrupted = true;
         }
     
@@ -55,7 +60,7 @@ public class AutonBall extends AutonBase {
         }
 
         //Wait for the speed to come up
-        while(Shooter.shooter.getVelocity() < (isHighGoal ? 20500 : 15500)) {
+        while(Shooter.shooter.getVelocity() < (isHighGoal ? HIGH_GOAL_SPEED : LOW_GOAL_SPEED)) {
             
             Shooter.index.stop();
 
@@ -69,8 +74,8 @@ public class AutonBall extends AutonBase {
 
         shootTimer.start();
 
-        //Keep idnex running until momentum loss is detected (threshold: 2000 encoder units per 100 ms)
-        while(outSpeed - Shooter.shooter.getVelocity() < 2000) {
+        //Keep idnex running until momentum loss is detected (threshold: 1500 encoder units per 100 ms)
+        while(outSpeed - Shooter.shooter.getVelocity() < 1500) {
 
             if(shootTimer.getElaspedTimeInMs() > 1500) {
                 isNoBallLeft = true;
@@ -95,7 +100,7 @@ public class AutonBall extends AutonBase {
     @Override
     public void postRun() {
         
-        Shooter.shooter.move(0);
+        Shooter.shooter.moveBySpeed(0);
         Shooter.index.move(0);
         //Shooter.numBalls = 0;
 

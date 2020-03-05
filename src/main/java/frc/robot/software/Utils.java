@@ -64,6 +64,14 @@ public class Utils {
         }
     }
 
+    public static void sleep(long miliseconds) {
+        try {
+            Thread.sleep(miliseconds);
+        } catch (Exception e) {
+            //Shhhh
+        }
+    }
+
     /**
      *
      * @param value the original value

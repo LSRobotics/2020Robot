@@ -37,8 +37,8 @@ public class Shooter {
         usIntake = new RangeSensor(Statics.US_INTAKE_PING, Statics.US_INTAKE_ECHO, Type.DIO_US_HC_SR04);
 
         // Intake Mechanism
-        intake = new MotorNG(Statics.INTAKE, Model.TALON_SRX);
-        intake.setSpeed(1);
+        intake = new MotorNG(Statics.INTAKE, Model.VICTOR_SPX, true);
+        intake.setSpeed(0.75);
         intakeArm = new Solenoid(Statics.MASTER_PCM, Statics.ARM_FORWARD, Statics.ARM_REVERSE, "Intake");
 
         // Setting up motor speeds
