@@ -80,7 +80,7 @@ public class Climb {
 
         isEngaged = isLocked;
 
-        if(isLocked) {
+        if(!isLocked) {
             roller.stop();
             lock.move(true,false);
         }
