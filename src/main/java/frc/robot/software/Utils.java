@@ -1,5 +1,6 @@
 package frc.robot.software;
 
+import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.SpeedCurve;
 
@@ -12,6 +13,7 @@ public class Utils {
     private static String gameData;
     final public static int DEFAULT_BREAK_TIME = 1200;
     public static boolean isOutputEnabled = Statics.DEBUG_MODE;
+    public static Timer sysTimer = new Timer();
 
     static public double getCurvedValue(SpeedCurve curve, double value) {
         if (curve == SpeedCurve.LINEAR)
@@ -52,7 +54,13 @@ public class Utils {
 
     public static void report(String message) {
         if (isOutputEnabled) {
-            DriverStation.reportWarning(message, false);
+
+            String finalMsg = "[5181] " + ((double)sysTimer.getElaspedTimeInMs() / 1000) + "s : " + message;
+
+            //I am "hacking" driver station -- read their implementation and bypassed their wrappers
+            HAL.sendError(false, 1, false, finalMsg, new String(), new String(), true);
+            
+            //DriverStation.reportWarning(message, false);
         }
     }
 

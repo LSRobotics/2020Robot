@@ -39,7 +39,7 @@ public class Shooter {
         // Intake Mechanism
         intake = new MotorNG(Statics.INTAKE, Model.TALON_SRX);
         intake.setSpeed(1);
-        intakeArm = new Solenoid(Statics.MASTER_PCM, Statics.ARM_FORWARD, Statics.ARM_REVERSE);
+        intakeArm = new Solenoid(Statics.MASTER_PCM, Statics.ARM_FORWARD, Statics.ARM_REVERSE, "Intake");
 
         // Setting up motor speeds
         index.setSpeed(0.7);

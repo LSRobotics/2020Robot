@@ -105,4 +105,10 @@ public class AutonBall extends AutonBase {
         isNoBallLeft = false;
 
     }
+
+    @Override
+    public String toString() {
+        
+        return "AutonBall " + (isHighGoal ? "Higher Port" : "Lower Port");
+    }
 }

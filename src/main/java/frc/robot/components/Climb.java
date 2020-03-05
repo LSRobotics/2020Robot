@@ -13,26 +13,29 @@ public class Climb {
     
 
     public static void initialize() {
-        lock = new Solenoid(Statics.MASTER_PCM, Statics.CLIMB_FORWARD, Statics.CLIMB_REVERSE);
+        lock = new Solenoid(Statics.MASTER_PCM, Statics.CLIMB_FORWARD, Statics.CLIMB_REVERSE, "Climb");
         roller = new MotorNG(Statics.CLIMB_ROLLER, Model.FALCON_500);
 
-        roller.setSpeed(0.3);
+        roller.setSpeed(0.4);
 
-        lock.move(false, true);
+        lock.move(true, false);
     }
 
 
     /**
-     * Ditch this method in the future, this is for testing purposes only.
-     * Motor would not run if lock is engaged
+     * Whenever motor is not running, engage lock
+     * 
      * @param speed speed of the roller motor
      */
     public static void test(double speed) {
-        if(!isEngaged) {
+
+        if(speed > 0) {
+            lock(false); 
             roller.move(speed);
         }
         else {
             roller.stop();
+            lock(true);
         }
     }
 
@@ -72,8 +75,8 @@ public class Climb {
         return true;
     }
 
-    public static double getDistance() {
-        return roller.getEncoderReading() / Statics.FALCON_UNITS_PER_INCH;
+    public static double getLocation() {
+        return roller.getEncoderReading();
     }
 
     public static void lock(boolean isLocked) {
@@ -82,10 +85,10 @@ public class Climb {
 
         if(!isLocked) {
             roller.stop();
-            lock.move(true,false);
+            lock.move(false,true);
         }
         else {
-            lock.move(false,true);
+            lock.move(true,false);
         }
     }
 

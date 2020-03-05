@@ -22,7 +22,7 @@ public class Robot extends TimedRobot {
   public Gamepad gp1, gp2;
   public double driveSpeed = 1.0;
   public DriveMethod driveMethod = DriveMethod.R_STICK;
-  public SendableChooser<DriveMethod> m_chooser = new SendableChooser<>();
+  public SendableChooser<DriveMethod> driveChooser;
   public RGBSensor colorSensor = new RGBSensor();
   public double lightMode;
   public static boolean isBlueLine, isRedLine, isWhiteLine, isYellowCP, isRedCP, isGreenCP, isBlueCP; // CP = control
@@ -35,12 +35,14 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
-    // Drive mode GUI setup
-    m_chooser.setDefaultOption("Right Stick Drive (Default)", DriveMethod.R_STICK);
-    m_chooser.addOption("Left Strick Drive", DriveMethod.L_STICK);
-    m_chooser.addOption("Both Strick Drive", DriveMethod.BOTH_STICKS);
+    driveChooser = new SendableChooser<>();
 
-    SmartDashboard.putData("Drive Choices", m_chooser);
+    // Drive mode GUI setup
+    driveChooser.setDefaultOption("Right Stick Drive (Default)", DriveMethod.R_STICK);
+    driveChooser.addOption("Left Strick Drive", DriveMethod.L_STICK);
+    driveChooser.addOption("Both Strick Drive", DriveMethod.BOTH_STICKS);
+
+    SmartDashboard.putData("Drive Choices", driveChooser);
 
     // Gamepads
     gp1 = new Gamepad(0);
@@ -67,6 +69,8 @@ public class Robot extends TimedRobot {
     Lights.initialize();
 
     AutonChooser.initialize();
+
+    Utils.report("Robot Initialization Complete.");
   }
 
   @Override
@@ -169,7 +173,7 @@ public class Robot extends TimedRobot {
     //Ball Shooting
     if(gp1.isKeyToggled(Key.DPAD_LEFT) || gp1.isKeyToggled(Key.DPAD_RIGHT)) {
       new AutonGroup(
-      //  new AutonPixyAlign(0),
+        //new AutonPixyAlign(0),
         new AutonBall(gp1.isKeyToggled(Key.DPAD_LEFT) ? false : true))
         .run();
     }
@@ -187,7 +191,7 @@ public class Robot extends TimedRobot {
   }
 
   public void updateGUI() {
-    switch (m_chooser.getSelected()) {
+    switch (driveChooser.getSelected()) {
       case L_STICK: // Left Stick Drive
         yKey = Key.J_LEFT_Y;
         xKey = Key.J_LEFT_X;
@@ -212,7 +216,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Number of balls", Shooter.getNumBalls());
     SmartDashboard.putNumber("Front Ultrasonic", Chassis.frontAligner.getRangeInches());
     SmartDashboard.putNumber("IR Sensor", Chassis.sensorIR.getRangeInches());
-    SmartDashboard.putString("Current Gear", (Chassis.shifter.status == Status.FORWARD ? "Low" : "High"));
+    SmartDashboard.putString("Current Gear", (Chassis.shifter.lastStatus == Status.FORWARD ? "Low" : "High"));
     SmartDashboard.putNumber("Angle", NavX.navx.getYaw());
     // SmartDashboard.putString("Color Sensor (R,G,B)", color[0] + ", " + color[1] +
     // ", " + color[2]);
@@ -228,8 +232,10 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Blue", isBlueCP);
     SmartDashboard.putNumber("LED", lightMode);
 
+    SmartDashboard.putNumber("Intake power", Shooter.intake.getCurrentPower());
+
     SmartDashboard.putNumberArray("Chassis Encoders", Chassis.getEncoderReading());
-    SmartDashboard.putNumber("Chassis Encoders", Climb.getDistance());
+    SmartDashboard.putNumber("Climb Encoder", Climb.getLocation());
 
 
   }
