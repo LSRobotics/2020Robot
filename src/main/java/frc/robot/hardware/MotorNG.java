@@ -2,6 +2,7 @@ package frc.robot.hardware;
 
 import java.util.ArrayList;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
@@ -9,6 +10,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.SpeedController;
+import frc.robot.software.Utils;
 
 public class MotorNG {
 
@@ -91,11 +93,11 @@ public class MotorNG {
         setReverse(!isReverse);
     }
 
-    public void setSpeed(double newSpeed) {
+    public synchronized void setSpeed(double newSpeed) {
         speed = newSpeed;
     }
 
-    public void moveRaw(double value) {
+    public synchronized void moveRaw(double value) {
         if (model == Model.FALCON_500) {
             falcon.set(value);
         }
@@ -107,7 +109,7 @@ public class MotorNG {
         }
     }
 
-    public void move(double value) {
+    public synchronized void move(double value) {
 
         if(value * speed == lastPower) return;
 
@@ -123,7 +125,18 @@ public class MotorNG {
         }
     }
 
-    public void stop() {
+    /*
+    public synchronized void moveBySpeed(double speed) {
+        if(model == Model.FALCON_500) {
+            falcon.set(ControlMode.Velocity,speed);
+        }
+        else {
+            Utils.report("You tried to call moveBySpeed() but it is not an falcon 500. Motor would not run.");
+        }
+    }
+    */
+
+    public synchronized void stop() {
         move(0);
     }
 

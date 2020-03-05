@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DriverStation;
-
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 //Internal
 import frc.robot.hardware.*;
 import frc.robot.hardware.Gamepad.Key;
@@ -24,6 +24,7 @@ public class Robot extends TimedRobot {
   public DriveMethod driveMethod = DriveMethod.R_STICK;
   public SendableChooser<DriveMethod> driveChooser;
   public RGBSensor colorSensor = new RGBSensor();
+  public PowerDistributionPanel pdp;
   public double lightMode;
   public static boolean isBlueLine, isRedLine, isWhiteLine, isYellowCP, isRedCP, isGreenCP, isBlueCP; // CP = control
                                                                                                       // panel
@@ -47,6 +48,8 @@ public class Robot extends TimedRobot {
     // Gamepads
     gp1 = new Gamepad(0);
     gp2 = new Gamepad(1);
+
+    pdp = new PowerDistributionPanel();
 
     // Framework Core initialize (Allowing global access to everything in this class
     // -- not safe in real world, but hey this is Robotics)
