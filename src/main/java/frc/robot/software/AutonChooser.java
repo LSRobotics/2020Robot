@@ -65,7 +65,7 @@ public class AutonChooser {
                                                    ));    
         chooser.addOption("Auton5", new AutonGroup(//Finish later
                                                    ));
-        SmartDashboard.putData(chooser);
+        SmartDashboard.putData("Auton Chooser", chooser);
     }
 
     public static AutonGroup getSelected() {
