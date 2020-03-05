@@ -37,9 +37,9 @@ public class AutonBall extends AutonBase {
         Chassis.stop();
         Shooter.shooter.move(1);
         
-        Shooter.index.move(-0.2);
+        Shooter.index.move(-0.5);
     
-        if(!new AutonSleep(150).run()) {
+        if(!new AutonSleep(20).run()) {
             isInterrupted = true;
         }
     
@@ -55,7 +55,7 @@ public class AutonBall extends AutonBase {
         }
 
         //Wait for the speed to come up
-        while(Shooter.shooter.getVelocity() < (isHighGoal ? 20500 : 15500)) {
+        while(Shooter.shooter.getVelocity() < (isHighGoal ? 20500 : 10000)) {
             
             Shooter.index.stop();
 

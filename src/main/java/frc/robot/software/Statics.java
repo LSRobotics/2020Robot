@@ -32,12 +32,12 @@ public class Statics {
 
 //Solenoids
     static final public int MASTER_PCM = 0,
-                            ARM_FORWARD = 0,
-                            ARM_REVERSE = 4,
-                            CLIMB_FORWARD = 2,
-                            CLIMB_REVERSE = 6,
+                            ARM_FORWARD = 2,
+                            ARM_REVERSE = 7,
+                            CLIMB_FORWARD = 6,
+                            CLIMB_REVERSE = 3,
                             CHASSIS_FORWARD = 1,
-                            CHASSIS_REVERSE = 5;
+                            CHASSIS_REVERSE = 0;
 
 	public static final int US_ALIGNER_S_PING = 0;
 	public static final int US_ALIGNER_F_PING = 1;

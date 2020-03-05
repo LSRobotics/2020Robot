@@ -14,7 +14,7 @@ public class Climb {
 
     public static void initialize() {
         lock = new Solenoid(Statics.MASTER_PCM, Statics.CLIMB_FORWARD, Statics.CLIMB_REVERSE, "Climb");
-        roller = new MotorNG(Statics.CLIMB_ROLLER, Model.FALCON_500);
+        roller = new MotorNG(Statics.CLIMB_ROLLER, Model.FALCON_500,true);
 
         roller.setSpeed(0.4);
 
@@ -29,8 +29,10 @@ public class Climb {
      */
     public static void test(double speed) {
 
-        if(speed > 0) {
-            lock(false); 
+        if(speed != 0) {
+            if(isEngaged) {
+                lock(false); 
+            }
             roller.move(speed);
         }
         else {
