@@ -186,6 +186,11 @@ public class Robot extends TimedRobot {
         Utils.report(Gamepad.getParsedEvents());
       }
     }
+
+    if (gp1.isKeyToggled(Key.START)) {
+      Gamepad.setRecording(false);
+      new AutonRunRecord(Gamepad.getEvents()).run();
+    }
   }
 
   public void updateLights() {
@@ -218,7 +223,7 @@ public class Robot extends TimedRobot {
 
   public void postData() {
     SmartDashboard.putNumber("Shooter Speed", Shooter.getVelocity());
-    SmartDashboard.putNumber("Ultrasonic Intake", Shooter.usIntake.getRangeInches());
+    SmartDashboard.putNumber("Ultrasonic Intake", Shooter.indexSensor.getRangeInches());
     SmartDashboard.putNumber("NavX Angle", NavX.navx.getYaw());
     SmartDashboard.putNumber("Number of balls", Shooter.getNumBalls());
     SmartDashboard.putNumber("Front Ultrasonic", Chassis.frontAligner.getRangeInches());

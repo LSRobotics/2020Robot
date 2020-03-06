@@ -29,6 +29,11 @@ public class Chassis {
         r1 = new MotorNG(Statics.CHASSIS_R1, Model.FALCON_500, true);
         r2 = new MotorNG(Statics.CHASSIS_R2, Model.FALCON_500, true);
 
+        l1.setCurrentLimit(70);
+        l2.setCurrentLimit(70);
+        r1.setCurrentLimit(70);
+        r2.setCurrentLimit(70);
+
         compressor = new Compressor();
 
     }

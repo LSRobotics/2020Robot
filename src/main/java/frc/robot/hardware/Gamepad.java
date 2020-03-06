@@ -15,10 +15,10 @@ final public class Gamepad extends XboxController {
     private static Timer r = new Timer("Gamepad Recoding");
     
     private boolean isDebug = false,
-                    isEmulated = false,
                     isGp1   = false;
     
-    private static boolean isRecording = false;
+    private static boolean isRecording = false,
+                           isEmulated = false;
 
     static ArrayList<Event> events = new ArrayList<>();
 
@@ -173,8 +173,9 @@ final public class Gamepad extends XboxController {
         }
     }
 
-    public static ArrayList<Event> startRecording(boolean isStart) {
+    public static ArrayList<Event> setRecording(boolean isStart) {
         
+        if(!isEmulated) {
         if(isStart) {
             r.zero();
             events.clear();
@@ -182,8 +183,9 @@ final public class Gamepad extends XboxController {
             isRecording = true;
         }
 
-        else {
-            isRecording = false;
+            else {
+                isRecording = false;
+            }
         }
         
         return events;
@@ -191,15 +193,19 @@ final public class Gamepad extends XboxController {
     }
 
     public static ArrayList<Event> toggleRecording() {
-        return startRecording(!isRecording);
+        return setRecording(!isRecording);
     }
 
     private void recordEvent(Key key) {
-            events.add(new Event(r.getElaspedTimeInMs(),key, getValue(key), isGp1));
+        events.add(new Event(r.getElaspedTimeInMs(),key, getValue(key), isGp1));
     }
 
     public static boolean isRecording() {
         return isRecording;
+    }
+
+    public static ArrayList<Event> getEvents() {
+        return events;
     }
 
     public static String getParsedEvents() {
@@ -221,5 +227,16 @@ final public class Gamepad extends XboxController {
         out += "}";
 
         return out;
+    }
+
+    public static void setEmulated(boolean value) {
+        isEmulated = value;
+    }
+
+    public void override(Key key, double value) {
+        if(isEmulated) {
+            values[key.ordinal()] = value;
+            states[key.ordinal()] = true;
+        }
     }
 }

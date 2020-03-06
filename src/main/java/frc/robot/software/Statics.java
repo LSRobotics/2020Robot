@@ -44,10 +44,6 @@ public class Statics {
 	public static final int US_ALIGNER_F_ECHO = 2;
     public static final int US_ALIGNER_S_ECHO = 3;
 
-//Intake Ultrasonic
-    public static final int US_INTAKE_PING = 4,
-                            US_INTAKE_ECHO = 5;
-
 //Color
     static final public double[] TAPE_RED = {0.47,0.37,0.16},
                                 TAPE_BLUE = {0.21,0.42,0.36},
@@ -59,8 +55,10 @@ public class Statics {
 
 //Analog
 
-    static final public int PIXY_CAM = 0;
-    static final public int IR = 1; //TODO: Change this
+    static final public int PIXY_CAM = 0,
+                            IR = 1,//TODO: Change this
+                            IR_INTAKE = 2,
+                            US_MAXBOTIX = 3;
                                                
     static final public double FALCON_UNITS_PER_INCH = 1286.455191;
     static final public double FALCON_UNITS_PER_DEGREE = 336.666667;

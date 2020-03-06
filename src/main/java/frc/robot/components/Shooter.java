@@ -1,11 +1,9 @@
 package frc.robot.components;
 
 import frc.robot.hardware.*;
-import frc.robot.hardware.Gamepad.Key;
 import frc.robot.hardware.MotorNG.Model;
 import frc.robot.hardware.RangeSensor.Type;
 import frc.robot.software.*;
-import frc.robot.autonomous.*;
 
 public class Shooter {
 
@@ -17,7 +15,7 @@ public class Shooter {
     
     public static Solenoid intakeArm;
 
-    public static RangeSensor usIntake;
+    public static RangeSensor indexSensor;
     
     public static int numBalls = 0;
     public static Timer intakeTimer = new Timer("Intake Timer");
@@ -34,7 +32,7 @@ public class Shooter {
         // Shooting Motors
         shooter = new MotorNG(Statics.SHOOTER, Model.FALCON_500, true);
 
-        usIntake = new RangeSensor(Statics.US_INTAKE_PING, Statics.US_INTAKE_ECHO, Type.DIO_US_HC_SR04);
+        indexSensor = new RangeSensor(Statics.IR_INTAKE, Type.ANALOG_RAW);
 
         // Intake Mechanism
         intake = new MotorNG(Statics.INTAKE, Model.VICTOR_SPX,true);
@@ -60,11 +58,11 @@ public class Shooter {
 
     public static void update() {
 
-        boolean ballStatus = usIntake.getRangeInches() < 3;
+        boolean ballStatus = indexSensor.getRangeInches() < 3;
         //Indexer
 
         // Ball is in
-        if (usIntake.getRangeInches() < 3 && (ballStatus != lastBallStatus)) {
+        if (indexSensor.getRangeInches() < 3 && (ballStatus != lastBallStatus)) {
 
             if (!intakeTimer.isBusy() && numBalls < 4) {
 

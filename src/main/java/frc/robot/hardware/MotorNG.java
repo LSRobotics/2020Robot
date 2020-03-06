@@ -3,6 +3,8 @@ package frc.robot.hardware;
 import java.util.ArrayList;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
@@ -82,6 +84,18 @@ public class MotorNG {
         }
         else {
             max.setInverted(isReverse);
+        }
+    }
+
+    public void setCurrentLimit(double amps) {
+        if(model == Model.FALCON_500) {
+            var config = new TalonFXConfiguration();
+            var statorConfig = new StatorCurrentLimitConfiguration();
+            statorConfig.currentLimit = 70;
+            statorConfig.enable = true;
+            config.statorCurrLimit = statorConfig;
+
+            falcon.configAllSettings(config);
         }
     }
 

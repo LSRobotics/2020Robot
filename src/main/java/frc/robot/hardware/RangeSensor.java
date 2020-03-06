@@ -9,7 +9,8 @@ public class RangeSensor {
         ANALOG_US_MAXBOTIX,
         DIO_US_HC_SR04,
         ANALOG_IR_GP2Y0A710K0F,
-        PIXY_CAM
+        PIXY_CAM,
+        ANALOG_RAW
     }
 
     private boolean isInitialized = false;
@@ -29,6 +30,7 @@ public class RangeSensor {
             case ANALOG_US_MAXBOTIX:
             case ANALOG_IR_GP2Y0A710K0F:
             case PIXY_CAM:
+            case ANALOG_RAW:
                 analog = new AnalogInput(port1);
                 break;
         }
@@ -67,6 +69,8 @@ public class RangeSensor {
                 //371.67*Math.pow(voltage, 2)-1502.3*voltage+1583.4;
             case PIXY_CAM:
                 return (voltage / 3.3 * 2) - 1;
+            case ANALOG_RAW:
+                return voltage;
             default: return 0;
         }
     }
