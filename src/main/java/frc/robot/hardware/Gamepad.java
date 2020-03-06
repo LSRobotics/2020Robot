@@ -1,5 +1,6 @@
 package frc.robot.hardware;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import edu.wpi.first.wpilibj.XboxController;
@@ -8,12 +9,35 @@ import frc.robot.software.*;
 final public class Gamepad extends XboxController {
 
     final private static int NUM_KEYS = 20;
+
     private Timer p = new Timer("Gamepad");
-    private boolean isDebug = false;
+    
+    private static Timer r = new Timer("Gamepad Recoding");
+    
+    private boolean isDebug = false,
+                    isEmulated = false,
+                    isGp1   = false;
+    
+    private static boolean isRecording = false;
+
+    static ArrayList<Event> events = new ArrayList<>();
 
     public enum Key {
         J_LEFT_X, J_LEFT_Y, J_RIGHT_X, J_RIGHT_Y, LT, RT, J_LEFT_DOWN, J_RIGHT_DOWN, A, B, X, Y, LB, RB, BACK, START,
         DPAD_UP, DPAD_DOWN, DPAD_LEFT, DPAD_RIGHT
+    }
+
+    public class Event {
+        public long time;
+        public Key key;
+        public boolean isGp1 = false;
+        public double value;
+        public Event(long time, Key key, double value, boolean isGp1) {
+            this.time = time;
+            this.isGp1 = isGp1;
+            this.key = key;
+            this.value = value;
+        }
     }
 
     public boolean[] states = new boolean[NUM_KEYS];
@@ -22,6 +46,9 @@ final public class Gamepad extends XboxController {
 
     public Gamepad(int xboxPort) {
         super(xboxPort);
+
+        isGp1 = (xboxPort == 0);
+        
         // Initialize Arrays
         Arrays.fill(states, false);
         Arrays.fill(values, 0);
@@ -116,24 +143,83 @@ final public class Gamepad extends XboxController {
 
     public void fetchData() {
 
-        if (isDebug)
-            p.start();
+        if (!isEmulated) {
+            if (isDebug)
+                p.start();
 
-        for (int i = 0; i < NUM_KEYS; ++i) {
+            for (int i = 0; i < NUM_KEYS; ++i) {
 
-            double tempVal = getRawReading(key_index[i]);
+                double tempVal = getRawReading(key_index[i]);
 
-            if (tempVal != values[i]) {
-                states[i] = true;
-                values[i] = tempVal;
-            } else {
-                states[i] = false;
+                if (tempVal != values[i]) {
+                    states[i] = true;
+                    values[i] = tempVal;
+                } else {
+                    states[i] = false;
+                }
+            }
+
+            if (isDebug) {
+                p.stop();
+                Utils.report(p.toString());
+            }
+            if(isRecording) {
+                for(int i = 0; i < states.length; ++i) {
+                    if(states[i] == true) {
+                        recordEvent(key_index[i]);
+                    }
+                }
+            }
+        }
+    }
+
+    public static ArrayList<Event> startRecording(boolean isStart) {
+        
+        if(isStart) {
+            r.zero();
+            events.clear();
+            r.start();
+            isRecording = true;
+        }
+
+        else {
+            isRecording = false;
+        }
+        
+        return events;
+        
+    }
+
+    public static ArrayList<Event> toggleRecording() {
+        return startRecording(!isRecording);
+    }
+
+    private void recordEvent(Key key) {
+            events.add(new Event(r.getElaspedTimeInMs(),key, getValue(key), isGp1));
+    }
+
+    public static boolean isRecording() {
+        return isRecording;
+    }
+
+    public static String getParsedEvents() {
+        
+        //Imagine writing java in java...
+        String out = "{";
+        
+        for(int i = 0; i < events.size(); ++i) {
+
+            Event event = events.get(i);
+
+            out += "new Event(" + event.time +  ", Key." + event.key + ", " + event.value + ", " + (event.isGp1 ? "true" : "false") + ")";
+
+            if(i < events.size() - 1) {
+                out += ",";
             }
         }
 
-        if (isDebug) {
-            p.stop();
-            Utils.report(p.toString());
-        }
+        out += "}";
+
+        return out;
     }
 }

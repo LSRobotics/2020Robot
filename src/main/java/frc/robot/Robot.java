@@ -28,8 +28,7 @@ public class Robot extends TimedRobot {
   public double lightMode;
   public static boolean isBlueLine, isRedLine, isWhiteLine, isYellowCP, isRedCP, isGreenCP, isBlueCP; // CP = control
                                                                                                       // panel
-  private static Gamepad.Key xKey = Key.J_RIGHT_X,
-                            yKey = Key.J_RIGHT_Y;
+  private static Gamepad.Key xKey = Key.J_RIGHT_X, yKey = Key.J_RIGHT_Y;
 
   public double[] color = {};
 
@@ -137,10 +136,10 @@ public class Robot extends TimedRobot {
       Chassis.shift();
     }
 
-    if(gp1.isKeysChanged(Key.LB,Key.RB)) {
+    if (gp1.isKeysChanged(Key.LB, Key.RB)) {
       driveSpeed += gp1.isKeyHeld(Key.LB) ? -0.25 : 0.25;
 
-      //Out-of-bound check
+      // Out-of-bound check
       driveSpeed = (driveSpeed < 0 ? 0 : driveSpeed);
       driveSpeed = (driveSpeed > 1 ? 1 : driveSpeed);
 
@@ -157,37 +156,42 @@ public class Robot extends TimedRobot {
 
     Shooter.update();
 
-    //FIXME: Uncomment this when tweaking is done
+    // FIXME: Uncomment this when tweaking is done
     /*
-    // Experimental
-    Climb.turnRoller(gp1.isKeyHeld(Key.X), gp1.isKeyHeld(Key.Y));
-    */
+     * // Experimental Climb.turnRoller(gp1.isKeyHeld(Key.X), gp1.isKeyHeld(Key.Y));
+     */
     Climb.test(gp1.getValue(Key.RT) - gp1.getValue(Key.LT));
 
-    if(gp1.isKeyToggled(Key.Y)) {
+    if (gp1.isKeyToggled(Key.Y)) {
       Climb.lock(!Climb.isEngaged());
     }
 
-    //Toggle intake (bringing it down & run and vice versa)
-    if(gp1.isKeyToggled(Key.A)) {
+    // Toggle intake (bringing it down & run and vice versa)
+    if (gp1.isKeyToggled(Key.A)) {
       Shooter.actuateIntake();
     }
 
-    //Ball Shooting
-    if(gp1.isKeyToggled(Key.DPAD_LEFT) || gp1.isKeyToggled(Key.DPAD_RIGHT)) {
+    // Ball Shooting
+    if (gp1.isKeyToggled(Key.DPAD_LEFT) || gp1.isKeyToggled(Key.DPAD_RIGHT)) {
       new AutonGroup(
-        //new AutonPixyAlign(0),
-        new AutonBall(gp1.isKeyToggled(Key.DPAD_LEFT) ? false : true))
-        .run();
+          // new AutonPixyAlign(0),
+          new AutonBall(gp1.isKeyToggled(Key.DPAD_LEFT) ? false : true)).run();
     }
-    
+
+    if (gp1.isKeyToggled(Key.BACK)) {
+
+      Gamepad.toggleRecording();
+
+      if (!Gamepad.isRecording()) {
+        Utils.report(Gamepad.getParsedEvents());
+      }
+    }
   }
 
   public void updateLights() {
     if (Utils.mapAnalog(gp1.getValue(Key.J_RIGHT_Y)) != 0) {
       lightMode = -.07;
-    } 
-    else {
+    } else {
       lightMode = DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue ? 0.85 : 0.61;
     }
     Lights.lightChange(lightMode);
@@ -195,21 +199,21 @@ public class Robot extends TimedRobot {
 
   public void updateGUI() {
     switch (driveChooser.getSelected()) {
-      case L_STICK: // Left Stick Drive
-        yKey = Key.J_LEFT_Y;
-        xKey = Key.J_LEFT_X;
-        break;
-  
-      case BOTH_STICKS: // Both Stick Drive
-        yKey = Key.J_LEFT_Y;
-        xKey = Key.J_RIGHT_X;
-        break;
-  
-      case R_STICK: // Right Stick Drive
-        yKey = Key.J_RIGHT_Y;
-        xKey = Key.J_RIGHT_X;
-        break;
-      }
+    case L_STICK: // Left Stick Drive
+      yKey = Key.J_LEFT_Y;
+      xKey = Key.J_LEFT_X;
+      break;
+
+    case BOTH_STICKS: // Both Stick Drive
+      yKey = Key.J_LEFT_Y;
+      xKey = Key.J_RIGHT_X;
+      break;
+
+    case R_STICK: // Right Stick Drive
+      yKey = Key.J_RIGHT_Y;
+      xKey = Key.J_RIGHT_X;
+      break;
+    }
   }
 
   public void postData() {
@@ -239,7 +243,6 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumberArray("Chassis Encoders", Chassis.getEncoderReading());
     SmartDashboard.putNumber("Climb Encoder", Climb.getLocation());
-
 
   }
 
