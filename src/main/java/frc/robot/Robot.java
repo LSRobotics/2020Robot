@@ -132,11 +132,11 @@ public class Robot extends TimedRobot {
     }
 
     // Autonomous Rotation (Experimental)
-    if (gp1.isKeyToggled(Key.B)) {
+    if (gp2.isKeyToggled(Key.B)) {
       new AutonPixyAlign(0).run();
     }
 
-    if (gp1.isKeyToggled(Key.DPAD_UP)) {
+    if (gp1.isKeyToggled(Key.B)) {
       new AutonGyroTurn(0);
     }
 
@@ -165,6 +165,10 @@ public class Robot extends TimedRobot {
       Chassis.drive(gp1.getValue(Key.RT) - gp1.getValue(Key.LT),0);
     }
 
+    if(gp2.isKeyToggled(Key.DPAD_UP)) {
+      new AutonDetectLine(color);
+    }
+
   }
 
   public void updateTop() {
@@ -189,7 +193,7 @@ public class Robot extends TimedRobot {
     }
 
     // Ball Shooting
-    if (gp2.isKeyToggled(Key.B) || gp2.isKeyToggled(Key.Y)) {
+    if (gp2.isKeyToggled(Key.X) || gp2.isKeyToggled(Key.Y)) {
       new AutonGroup(
           // new AutonPixyAlign(0),
           new AutonBall((gp2.isKeyToggled(Key.B) ? false : true),gp2,Key.DPAD_DOWN)
@@ -256,21 +260,22 @@ public class Robot extends TimedRobot {
     SmartDashboard.putString("Current Gear", (Chassis.shifter.lastStatus == Status.FORWARD ? "Low" : "High"));
     SmartDashboard.putNumber("Angle", NavX.navx.getYaw());
     SmartDashboard.putBoolean("Drive Inverted", Chassis.isInverted());
-    // SmartDashboard.putString("Color Sensor (R,G,B)", color[0] + ", " + color[1] +
-    // ", " + color[2]);
+     SmartDashboard.putString("Color Sensor (R,G,B)", color[0] + ", " + color[1] + ", " + color[2]);
     SmartDashboard.putNumber("PIXY CAM", PixyCam.getTargetLocation());
 
     // color sensor booleans
+    SmartDashboard.putBoolean("Blue Line Detected", isBlueLine);
+    SmartDashboard.putBoolean("Red Line Detected", isRedLine);
+    SmartDashboard.putBoolean("White Line Detected", isWhiteLine);
+
     /*
-    SmartDashboard.putBoolean("Is Blue Line Detected", isBlueLine);
-    SmartDashboard.putBoolean("Is Red Line Detected", isRedLine);
-    SmartDashboard.putBoolean("Is White Line Detected", isWhiteLine);
     SmartDashboard.putBoolean("Yellow", isYellowCP);
     SmartDashboard.putBoolean("Red", isRedCP);
     SmartDashboard.putBoolean("Green", isGreenCP);
     SmartDashboard.putBoolean("Blue", isBlueCP);
-    SmartDashboard.putNumber("LED", lightMode);
     */
+
+    //SmartDashboard.putNumber("LED", lightMode);
 
     SmartDashboard.putNumber("Intake power", Shooter.intake.getCurrentPower());
 
