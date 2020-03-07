@@ -17,7 +17,7 @@ public class Climb {
 
         roller.setSpeed(0.4);
 
-        lock.move(true, false);
+        lock.move(false, true);
     }
 
     /**

@@ -60,6 +60,7 @@ public class Robot extends TimedRobot {
 
     Chassis.initialize();
     Chassis.setSpeedCurve(SpeedCurve.HYBRID);
+    Chassis.shift(true);
 
     Shooter.initialize();
 
@@ -127,9 +128,11 @@ public class Robot extends TimedRobot {
   // All code for driving
   public void updateBottom() {
 
+    /*
     if (gp1.isKeyToggled(Key.Y)) {
       Chassis.filp();
     }
+    */
 
     // Autonomous Rotation (Experimental)
     if (gp2.isKeyToggled(Key.B)) {
