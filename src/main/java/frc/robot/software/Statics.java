@@ -36,8 +36,8 @@ public class Statics {
                             ARM_REVERSE = 7,
                             CLIMB_FORWARD = 3,
                             CLIMB_REVERSE = 6,
-                            CHASSIS_FORWARD = 0,
-                            CHASSIS_REVERSE = 1;
+                            CHASSIS_FORWARD = 1,
+                            CHASSIS_REVERSE = 0;
 
 	public static final int US_ALIGNER_S_PING = 0;
 	public static final int US_ALIGNER_F_PING = 1;
