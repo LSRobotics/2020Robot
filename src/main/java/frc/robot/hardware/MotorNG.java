@@ -118,7 +118,12 @@ public class MotorNG {
         speed = newSpeed;
     }
 
+
     public synchronized void moveRaw(double value) {
+        moveRaw(value,false);
+    }
+
+    public synchronized void moveRaw(double value, boolean isFromMove) {
         if (model == Model.FALCON_500) {
             falcon.set(value);
         }
@@ -128,6 +133,14 @@ public class MotorNG {
         else {
             max.set(value);
         }
+
+        if(!isFromMove) {
+            if(slaves.size() > 0) {
+                for(MotorNG slave : slaves) {
+                    slave.moveRaw(value);
+                }
+            }
+        }
     }
 
     public synchronized void move(double value) {
@@ -136,7 +149,7 @@ public class MotorNG {
 
         lastPower = value * speed;
 
-        moveRaw(lastPower);
+        moveRaw(lastPower,true);
 
         //Slaves are served last (Of course!)
         if(slaves.size() > 0) {

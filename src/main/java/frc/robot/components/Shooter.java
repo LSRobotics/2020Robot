@@ -20,7 +20,7 @@ public class Shooter {
     public static int numBalls = 0;
     public static Timer intakeTimer = new Timer("Intake Timer");
     public static boolean isShooting = false, 
-                          lastBallStatus = false, 
+                          //lastBallStatus = false, 
                           isIntakeDown = false,
                           isSpitOut = false;
 
@@ -37,13 +37,13 @@ public class Shooter {
 
         // Intake Mechanism
         intake = new MotorNG(Statics.INTAKE, Model.VICTOR_SPX,true);
-        intake.setSpeed(1);
+        intake.setSpeed(0.65);
         intakeArm = new Solenoid(Statics.MASTER_PCM, Statics.ARM_FORWARD, Statics.ARM_REVERSE, "Intake");
 
         // Setting up motor speeds
         index.setSpeed(0.7);
         index2.setSpeed(0.7);
-        index3.setSpeed(0.5);
+        index3.setSpeed(0.4);
         //feeder.setSpeed(0.4);
 
         index.addSlave(index2);
@@ -64,17 +64,21 @@ public class Shooter {
         //Indexer
 
         // Ball is in
-        if (ballStatus && (ballStatus != lastBallStatus)) {
+        if (ballStatus) {
 
-            if (!intakeTimer.isBusy() && numBalls < 4) {
+            if (!intakeTimer.isBusy() 
+            //&& numBalls < 4
+            ) {
 
                 numBalls += 1;
                 intakeTimer.start();
-                index.move(0.75);
+                index.move(0.5);
             }
+            /*
             else if(numBalls == 4) {
                 numBalls = 5;
             }
+            */
         }
 
         if (intakeTimer.getElaspedTimeInMs() > 250) {
@@ -84,7 +88,7 @@ public class Shooter {
         }
 
 
-        lastBallStatus = ballStatus;
+        //lastBallStatus = ballStatus;
     }
     }
 

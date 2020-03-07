@@ -64,6 +64,10 @@ public class Chassis {
         speedFactor = factor;
     }
 
+    static public double getSpeedFactor() {
+        return speedFactor;
+    }
+
     static private double getCurvedSpeed(double speed,SpeedCurve curve) {
         
         boolean isNegative = speed < 0;
@@ -97,7 +101,7 @@ public class Chassis {
 
     static public void drive(double y, double x) {
 
-        driveRaw(getCurvedSpeed(y,SpeedCurve.HYBRID) * speedFactor, getCurvedSpeed(x,SpeedCurve.SQUARED) * speedFactor);
+        driveRaw(getCurvedSpeed(y,curve) * speedFactor, getCurvedSpeed(x,SpeedCurve.SQUARED) * speedFactor);
 
     }
 

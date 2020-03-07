@@ -15,7 +15,7 @@ public class Climb {
         lock = new Solenoid(Statics.MASTER_PCM, Statics.CLIMB_FORWARD, Statics.CLIMB_REVERSE, "Climb");
         roller = new MotorNG(Statics.CLIMB_ROLLER, Model.FALCON_500,true);
 
-        roller.setSpeed(0.4);
+        roller.setSpeed(0.6);
 
         lock.move(false, true);
     }

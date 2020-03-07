@@ -169,7 +169,9 @@ public class Robot extends TimedRobot {
     }
 
     if(gp1.isKeysChanged(Key.LT,Key.RT)) {
+      Chassis.setSpeedCurve(SpeedCurve.LINEAR);
       Chassis.drive(gp1.getValue(Key.RT) - gp1.getValue(Key.LT),0);
+      Chassis.setSpeedCurve(SpeedCurve.HYBRID);
     }
 
     if(gp2.isKeyToggled(Key.DPAD_UP)) {
@@ -215,7 +217,7 @@ public class Robot extends TimedRobot {
 
     // Spit balls out
     if (gp2.isKeyToggled(Key.DPAD_RIGHT)) {
-      Shooter.index.move(-1);
+      Shooter.index.moveRaw(-1);
       spitOutTimer.start();
       Shooter.isSpitOut = true;
     }
@@ -295,8 +297,7 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumberArray("Chassis Encoders", Chassis.getEncoderReading());
     SmartDashboard.putNumber("Climb Encoder", Climb.getLocation());
-
-
+    SmartDashboard.putNumber("Chassis Speed", Chassis.getSpeedFactor());
   }
 
   @Override
