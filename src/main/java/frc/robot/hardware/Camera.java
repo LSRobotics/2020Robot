@@ -9,12 +9,11 @@ public class Camera {
     static UsbCamera cam0;
     
     static public void initialize() {
+        cam0 = CameraServer.getInstance().startAutomaticCapture(0);
 
         try {
-
-        cam0 = CameraServer.getInstance().startAutomaticCapture(0);
-        cam0.setResolution(1280, 720);
-        cam0.setFPS(30);
+        cam0.setResolution(640, 480);
+        //cam0.setFPS(30);
         } catch(VideoException e) {
             //Shhhhh
         }
