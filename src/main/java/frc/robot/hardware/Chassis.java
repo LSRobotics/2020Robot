@@ -19,7 +19,7 @@ public class Chassis {
     public static RangeSensor sensorIR = new RangeSensor(Statics.IR, Type.ANALOG_IR_GP2Y0A710K0F),
                               maxbotix = new RangeSensor(Statics.US_MAXBOTIX, Type.ANALOG_US_MAXBOTIX);
 
-    static SpeedCurve curve = SpeedCurve.LINEAR;
+    static SpeedCurve curve = SpeedCurve.HYBRID;
 
     static public void initialize() {
 
@@ -63,14 +63,32 @@ public class Chassis {
     }
 
     static private double getCurvedSpeed(double speed) {
+        
+        boolean isNegative = speed < 0;
+        final var CURVE_PORTION = 0.4;
+
+        //Linear
         if (curve == SpeedCurve.LINEAR)
             return speed;
+        
+        //Squared
         else if (curve == SpeedCurve.SQUARED) {
-            boolean isNegative = speed < 0;
-
             return Math.pow(speed, 2) * (isNegative ? -1 : 1);
-        } else {
+        } 
+        
+        //Cubed
+        else if(curve == SpeedCurve.CUBED) {
             return Math.pow(speed, 3);
+        } 
+        
+        //Hybrid
+        else {
+            if(Math.abs(speed) < 0.4) {
+                return Math.pow(speed, 2) * (isNegative ? -1 : 1);
+            } 
+            else {
+                return (2 * CURVE_PORTION * Math.abs(speed) - 2 * CURVE_PORTION + 1) * (isNegative? -1 : 1); 
+            }
         }
     }
 

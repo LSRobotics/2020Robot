@@ -2,8 +2,6 @@ package frc.robot.hardware;
 
 import java.util.ArrayList;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -12,7 +10,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.SpeedController;
-import frc.robot.software.Utils;
 
 public class MotorNG {
 
@@ -21,8 +18,10 @@ public class MotorNG {
         FALCON_500,
         TALON_SRX,
         VICTOR_SPX;
+        
     }
 
+    public TalonFXConfiguration config = new TalonFXConfiguration();
     public SpeedController phoenix;
     public WPI_TalonFX falcon;
     public CANSparkMax max;
@@ -89,12 +88,20 @@ public class MotorNG {
 
     public void setCurrentLimit(double amps) {
         if(model == Model.FALCON_500) {
-            var config = new TalonFXConfiguration();
-            var statorConfig = new StatorCurrentLimitConfiguration();
-            statorConfig.currentLimit = 70;
-            statorConfig.enable = true;
-            config.statorCurrLimit = statorConfig;
+            config.statorCurrLimit.currentLimit = 70;
+            config.statorCurrLimit.enable = true;
+            updateSettings();
+        }
+    }
 
+    public void setMaxAcceleration(int unitsPerSec) {
+        if(model == Model.FALCON_500) {
+        falcon.configMotionAcceleration(unitsPerSec);
+        }
+    }
+
+    private void updateSettings() {
+        if(model == Model.FALCON_500) {
             falcon.configAllSettings(config);
         }
     }

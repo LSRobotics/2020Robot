@@ -58,7 +58,7 @@ public class Robot extends TimedRobot {
     NavX.navx.zeroYaw();
 
     Chassis.initialize();
-    Chassis.setSpeedCurve(SpeedCurve.SQUARED);
+    Chassis.setSpeedCurve(SpeedCurve.HYBRID);
 
     Shooter.initialize();
 
