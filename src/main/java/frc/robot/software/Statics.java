@@ -56,8 +56,8 @@ public class Statics {
 //Analog
 
     static final public int PIXY_CAM = 0,
-                            IR = 1,//TODO: Change this
-                            IR_INTAKE = 2,
+                            IR = 2,//TODO: Change this
+                            IR_INTAKE = 1,
                             US_MAXBOTIX = 3;
                                                
     static final public double FALCON_UNITS_PER_INCH = 1286.455191;

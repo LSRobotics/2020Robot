@@ -65,8 +65,8 @@ public class RangeSensor {
             case ANALOG_IR_GP2Y0A710K0F:
                 return 
                 //430.75 * Math.pow(voltage, -3.7031) + 23.645; //Stole from FRC 2017 haha
-                89.217*Math.pow(voltage, 4)-922.91*Math.pow(voltage, 3)+3522.2*Math.pow(voltage, 2)-5925.3*voltage+3788.1; //good!!!
-                //371.67*Math.pow(voltage, 2)-1502.3*voltage+1583.4;
+                //89.217*Math.pow(voltage, 4)-922.91*Math.pow(voltage, 3)+3522.2*Math.pow(voltage, 2)-5925.3*voltage+3788.1; //good!!!
+                371.67*Math.pow(voltage, 2)-1502.3*voltage+1583.4;
             case PIXY_CAM:
                 return (voltage / 3.3 * 2) - 1;
             case ANALOG_RAW:

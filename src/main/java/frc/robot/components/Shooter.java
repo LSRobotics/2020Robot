@@ -36,7 +36,7 @@ public class Shooter {
 
         // Intake Mechanism
         intake = new MotorNG(Statics.INTAKE, Model.VICTOR_SPX,true);
-        intake.setSpeed(.75);
+        intake.setSpeed(1);
         intakeArm = new Solenoid(Statics.MASTER_PCM, Statics.ARM_FORWARD, Statics.ARM_REVERSE, "Intake");
 
         // Setting up motor speeds
@@ -58,27 +58,27 @@ public class Shooter {
 
     public static void update() {
 
-        boolean ballStatus = indexSensor.getRangeInches() < 3;
+        boolean ballStatus = indexSensor.getRangeInches() > 1.5;
         //Indexer
 
         // Ball is in
-        if (indexSensor.getRangeInches() < 3 && (ballStatus != lastBallStatus)) {
+        if (ballStatus && (ballStatus != lastBallStatus)) {
 
             if (!intakeTimer.isBusy() && numBalls < 4) {
 
                 numBalls += 1;
                 intakeTimer.start();
-                index.move(1);
+                index.move(0.75);
             }
             else if(numBalls == 4) {
                 numBalls = 5;
             }
         }
 
-        if (intakeTimer.getElaspedTimeInMs() > 80) {
+        if (intakeTimer.getElaspedTimeInMs() > 250) {
             index.stop();
             intakeTimer.stop();
-            intakeTimer.zero();
+            //intakeTimer.zero();
         }
 
 

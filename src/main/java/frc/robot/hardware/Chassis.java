@@ -12,11 +12,12 @@ public class Chassis {
     static double speedFactor = 1;
     static Compressor compressor;
     public static Solenoid shifter;
-
+/*
     public static RangeSensor frontAligner = new RangeSensor(Statics.US_ALIGNER_F_PING, Statics.US_ALIGNER_F_ECHO,Type.DIO_US_HC_SR04),
                                    sideAligner  = new RangeSensor(Statics.US_ALIGNER_S_PING, Statics.US_ALIGNER_S_ECHO,Type.DIO_US_HC_SR04);
-
-    public static RangeSensor sensorIR = new RangeSensor(Statics.IR, Type.ANALOG_IR_GP2Y0A710K0F);
+*/
+    public static RangeSensor sensorIR = new RangeSensor(Statics.IR, Type.ANALOG_IR_GP2Y0A710K0F),
+                              maxbotix = new RangeSensor(Statics.US_MAXBOTIX, Type.ANALOG_US_MAXBOTIX);
 
     static SpeedCurve curve = SpeedCurve.LINEAR;
 

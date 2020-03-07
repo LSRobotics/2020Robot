@@ -17,7 +17,7 @@ public class AutonBall extends AutonBase {
             isHighGoal = false,
             isInterrupted = false;
 
-    final private double LOW_GOAL_SPEED = 10500,
+    final private double LOW_GOAL_SPEED = 15500,
                          HIGH_GOAL_SPEED = 21000;
 
     final static double TIMEOUT_SECONDS = 10;
@@ -100,6 +100,7 @@ public class AutonBall extends AutonBase {
     @Override
     public void postRun() {
         
+        Shooter.numBalls = 0;
         Shooter.shooter.move(0);
         Shooter.index.move(0);
         //Shooter.numBalls = 0;

@@ -71,6 +71,11 @@ public class AutonRunRecord extends AutonBase {
         return currentEvent == totalEvents;
     }
     
+    public void postRun() {
+        Chassis.stop();
+        Gamepad.setEmulated(false);
+    }
+
     public String toString() {
         return "AutonRunRecord";
     }

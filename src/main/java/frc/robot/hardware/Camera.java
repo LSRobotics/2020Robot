@@ -13,7 +13,8 @@ public class Camera {
         try {
 
         cam0 = CameraServer.getInstance().startAutomaticCapture(0);
-        cam0.setResolution(640, 360);
+        cam0.setResolution(1280, 720);
+        cam0.setFPS(30);
         } catch(VideoException e) {
             //Shhhhh
         }

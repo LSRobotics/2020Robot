@@ -128,7 +128,7 @@ public class Robot extends TimedRobot {
 
     // Autonomous Rotation (Experimental)
     if (gp1.isKeyToggled(Key.B)) {
-      new AutonGyroTurn(90).run();
+      new AutonPixyAlign(0).run();
     }
 
     // Gearbox
@@ -226,7 +226,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Ultrasonic Intake", Shooter.indexSensor.getRangeInches());
     SmartDashboard.putNumber("NavX Angle", NavX.navx.getYaw());
     SmartDashboard.putNumber("Number of balls", Shooter.getNumBalls());
-    SmartDashboard.putNumber("Front Ultrasonic", Chassis.frontAligner.getRangeInches());
+    SmartDashboard.putNumber("Front Ultrasonic", Chassis.maxbotix.getRangeInches());
     SmartDashboard.putNumber("IR Sensor", Chassis.sensorIR.getRangeInches());
     SmartDashboard.putString("Current Gear", (Chassis.shifter.lastStatus == Status.FORWARD ? "Low" : "High"));
     SmartDashboard.putNumber("Angle", NavX.navx.getYaw());
