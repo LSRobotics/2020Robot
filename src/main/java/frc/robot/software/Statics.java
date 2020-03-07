@@ -34,8 +34,8 @@ public class Statics {
     static final public int MASTER_PCM = 0,
                             ARM_FORWARD = 2,
                             ARM_REVERSE = 7,
-                            CLIMB_FORWARD = 3,
-                            CLIMB_REVERSE = 6,
+                            CLIMB_FORWARD = 6,
+                            CLIMB_REVERSE = 3,
                             CHASSIS_FORWARD = 1,
                             CHASSIS_REVERSE = 0;
 

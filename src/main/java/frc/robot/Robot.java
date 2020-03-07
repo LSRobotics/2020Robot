@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
                                                                                                       // panel
   private static Gamepad.Key xKey = Key.J_RIGHT_X, yKey = Key.J_RIGHT_Y;
 
-  public double[] color = {};
+  public double[] color = {0,0,0};
 
   @Override
   public void robotInit() {
@@ -133,11 +133,15 @@ public class Robot extends TimedRobot {
 
     // Autonomous Rotation (Experimental)
     if (gp2.isKeyToggled(Key.B)) {
-      new AutonPixyAlign(0).run();
+      new AutonPixyAlign(0,gp2,Key.DPAD_DOWN).run();
     }
 
     if (gp1.isKeyToggled(Key.B)) {
       new AutonGyroTurn(0);
+    }
+
+    if (gp1.isKeyToggled(Key.X)) {
+      NavX.navx.zeroYaw();
     }
 
     if(gp1.isKeyToggled(Key.DPAD_LEFT)) {
@@ -166,19 +170,25 @@ public class Robot extends TimedRobot {
     }
 
     if(gp2.isKeyToggled(Key.DPAD_UP)) {
-      new AutonDetectLine(color);
+      new AutonGroup(
+      new AutonDetectLine(color),
+      new AutonPixyAlign(0,gp2,Key.DPAD_DOWN)).run();
+
     }
 
   }
 
   public void updateTop() {
 
+    color = colorSensor.getColor();
+
     Shooter.update();
 
-    if(spitOutTimer.isBusy() && spitOutTimer.getElaspedTimeInMs() > 200) {
+    if(spitOutTimer.isBusy() && spitOutTimer.getElaspedTimeInMs() > 2000) {
       spitOutTimer.stop();
       Shooter.index.stop();
       Shooter.numBalls = 0;
+      Shooter.isSpitOut = false;
     }
 
     // FIXME: Uncomment this when tweaking is done
@@ -196,7 +206,7 @@ public class Robot extends TimedRobot {
     if (gp2.isKeyToggled(Key.X) || gp2.isKeyToggled(Key.Y)) {
       new AutonGroup(
           // new AutonPixyAlign(0),
-          new AutonBall((gp2.isKeyToggled(Key.B) ? false : true),gp2,Key.DPAD_DOWN)
+          new AutonBall((gp2.isKeyToggled(Key.X) ? false : true),gp2,Key.DPAD_DOWN)
           ).run();
     }
 
@@ -204,6 +214,7 @@ public class Robot extends TimedRobot {
     if (gp2.isKeyToggled(Key.DPAD_RIGHT)) {
       Shooter.index.move(-1);
       spitOutTimer.start();
+      Shooter.isSpitOut = true;
     }
 
     if (gp2.isKeyToggled(Key.BACK)) {

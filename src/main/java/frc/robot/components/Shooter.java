@@ -21,7 +21,8 @@ public class Shooter {
     public static Timer intakeTimer = new Timer("Intake Timer");
     public static boolean isShooting = false, 
                           lastBallStatus = false, 
-                          isIntakeDown = false;
+                          isIntakeDown = false,
+                          isSpitOut = false;
 
     public static void initialize() {
         // Index Motors
@@ -58,6 +59,7 @@ public class Shooter {
 
     public static void update() {
 
+        if(!isSpitOut) {
         boolean ballStatus = indexSensor.getRangeInches() > 1.5;
         //Indexer
 
@@ -83,6 +85,7 @@ public class Shooter {
 
 
         lastBallStatus = ballStatus;
+    }
     }
 
     public static double getVelocity() {
