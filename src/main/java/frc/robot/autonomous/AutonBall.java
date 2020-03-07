@@ -35,6 +35,11 @@ public class AutonBall extends AutonBase {
         this.isHighGoal = isHighGoal;
     }
 
+    public AutonBall(boolean isHighGoal, Gamepad killGp, Gamepad.Key killKey) {
+        this(killGp,killKey);
+        this.isHighGoal = isHighGoal;
+    }
+
     @Override
     public void preRun() {
         Chassis.stop();

@@ -18,6 +18,7 @@ import frc.robot.components.Shooter;
 
 public class Robot extends TimedRobot {
 
+  public Timer spitOutTimer = new Timer("Ball spit out");
   public boolean isLinearAutonOK = false;
   public Gamepad gp1, gp2;
   public double driveSpeed = 1.0;
@@ -112,7 +113,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
 
     gp1.fetchData();
-    // gp2.fetchData();
+    gp2.fetchData();
 
     updateBottom();
     updateTop();
@@ -126,13 +127,21 @@ public class Robot extends TimedRobot {
   // All code for driving
   public void updateBottom() {
 
+    if (gp1.isKeyToggled(Key.Y)) {
+      Chassis.filp();
+    }
+
     // Autonomous Rotation (Experimental)
     if (gp1.isKeyToggled(Key.B)) {
       new AutonPixyAlign(0).run();
     }
 
-    // Gearbox
     if (gp1.isKeyToggled(Key.DPAD_UP)) {
+      new AutonGyroTurn(0);
+    }
+
+    // Gearbox
+    if (gp1.isKeyToggled(Key.DPAD_RIGHT) || gp1.isKeyToggled(Key.DPAD_LEFT)) {
       Chassis.shift();
     }
 
@@ -150,35 +159,48 @@ public class Robot extends TimedRobot {
       Chassis.drive(Utils.mapAnalog(-gp1.getValue(yKey)), Utils.mapAnalog(gp1.getValue(xKey)));
     }
 
+    if(gp1.isKeysChanged(Key.LT,Key.RT)) {
+      Chassis.drive(gp1.getValue(Key.RT) - gp1.getValue(Key.LT),0);
+    }
+
   }
 
   public void updateTop() {
 
     Shooter.update();
 
+    if(spitOutTimer.isBusy() && spitOutTimer.getElaspedTimeInMs() > 200) {
+      spitOutTimer.stop();
+      Shooter.index.stop();
+      Shooter.numBalls = 0;
+    }
+
     // FIXME: Uncomment this when tweaking is done
     /*
      * // Experimental Climb.turnRoller(gp1.isKeyHeld(Key.X), gp1.isKeyHeld(Key.Y));
      */
-    Climb.test(gp1.getValue(Key.RT) - gp1.getValue(Key.LT));
-
-    if (gp1.isKeyToggled(Key.Y)) {
-      Climb.lock(!Climb.isEngaged());
-    }
+    Climb.test(gp2.getValue(Key.RT) - gp2.getValue(Key.LT));
 
     // Toggle intake (bringing it down & run and vice versa)
-    if (gp1.isKeyToggled(Key.A)) {
+    if (gp2.isKeyToggled(Key.A)) {
       Shooter.actuateIntake();
     }
 
     // Ball Shooting
-    if (gp1.isKeyToggled(Key.DPAD_LEFT) || gp1.isKeyToggled(Key.DPAD_RIGHT)) {
+    if (gp2.isKeyToggled(Key.B) || gp2.isKeyToggled(Key.Y)) {
       new AutonGroup(
           // new AutonPixyAlign(0),
-          new AutonBall(gp1.isKeyToggled(Key.DPAD_LEFT) ? false : true)).run();
+          new AutonBall((gp2.isKeyToggled(Key.B) ? false : true),gp2,Key.DPAD_DOWN)
+          ).run();
     }
 
-    if (gp1.isKeyToggled(Key.BACK)) {
+    // Spit balls out
+    if (gp2.isKeyToggled(Key.DPAD_RIGHT)) {
+      Shooter.index.move(-1);
+      spitOutTimer.start();
+    }
+
+    if (gp2.isKeyToggled(Key.BACK)) {
 
       Gamepad.toggleRecording();
 
@@ -187,7 +209,7 @@ public class Robot extends TimedRobot {
       }
     }
 
-    if (gp1.isKeyToggled(Key.START)) {
+    if (gp2.isKeyToggled(Key.START)) {
       Gamepad.setRecording(false);
       new AutonRunRecord(Gamepad.getEvents()).run();
     }
@@ -222,7 +244,8 @@ public class Robot extends TimedRobot {
   }
 
   public void postData() {
-    SmartDashboard.putNumber("Shooter Speed", Shooter.getVelocity());
+
+    //SmartDashboard.putNumber("Shooter Speed", Shooter.getVelocity());
     SmartDashboard.putNumber("Ultrasonic Intake", Shooter.indexSensor.getRangeInches());
     SmartDashboard.putNumber("NavX Angle", NavX.navx.getYaw());
     SmartDashboard.putNumber("Number of balls", Shooter.getNumBalls());
@@ -230,11 +253,13 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("IR Sensor", Chassis.sensorIR.getRangeInches());
     SmartDashboard.putString("Current Gear", (Chassis.shifter.lastStatus == Status.FORWARD ? "Low" : "High"));
     SmartDashboard.putNumber("Angle", NavX.navx.getYaw());
+    SmartDashboard.putBoolean("Drive Inverted", Chassis.isInverted());
     // SmartDashboard.putString("Color Sensor (R,G,B)", color[0] + ", " + color[1] +
     // ", " + color[2]);
     SmartDashboard.putNumber("PIXY CAM", PixyCam.getTargetLocation());
 
     // color sensor booleans
+    /*
     SmartDashboard.putBoolean("Is Blue Line Detected", isBlueLine);
     SmartDashboard.putBoolean("Is Red Line Detected", isRedLine);
     SmartDashboard.putBoolean("Is White Line Detected", isWhiteLine);
@@ -243,11 +268,13 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Green", isGreenCP);
     SmartDashboard.putBoolean("Blue", isBlueCP);
     SmartDashboard.putNumber("LED", lightMode);
+    */
 
     SmartDashboard.putNumber("Intake power", Shooter.intake.getCurrentPower());
 
     SmartDashboard.putNumberArray("Chassis Encoders", Chassis.getEncoderReading());
     SmartDashboard.putNumber("Climb Encoder", Climb.getLocation());
+
 
   }
 

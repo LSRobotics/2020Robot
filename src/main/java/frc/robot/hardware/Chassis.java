@@ -20,6 +20,7 @@ public class Chassis {
                               maxbotix = new RangeSensor(Statics.US_MAXBOTIX, Type.ANALOG_US_MAXBOTIX);
 
     static SpeedCurve curve = SpeedCurve.LINEAR;
+    static boolean isInverted = false;
 
     static public void initialize() {
 
@@ -48,10 +49,11 @@ public class Chassis {
     }
     
     static public void filp() {
-        l1.flip();
-        l2.flip();
-        r1.flip();
-        r2.flip();
+        isInverted = !isInverted;
+    }
+
+    static public void setInverted(boolean value) {
+        isInverted = value;
     }
 
     static public void setSpeedCurve(SpeedCurve newCurve) {
@@ -82,8 +84,11 @@ public class Chassis {
     }
 
     static public void driveRaw(double y, double x) {
-        final double left = Utils.clipValue(y + x, -1.0, 1.0);
-        final double right = Utils.clipValue(y - x, -1.0, 1.0);
+
+        var invertFactor = (isInverted? 1 : -1);
+
+        final double left = Utils.clipValue(y + x, -1.0, 1.0) *invertFactor;
+        final double right = Utils.clipValue(y - x, -1.0, 1.0) *invertFactor;
 
         l1.move(left);
         l2.move(left);
@@ -110,5 +115,9 @@ public class Chassis {
 
     static public void stop() {
         drive(0, 0);
+    }
+
+    static public boolean isInverted() {
+        return isInverted;
     }
 }
