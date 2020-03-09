@@ -48,8 +48,7 @@ public class AutonEncoderForward extends AutonBase {
         pid.setSetpoint(target);
         
         if(isIntakeEnabled) {
-            Shooter.intake.move(1);
-            Shooter.intakeArm.move(true,false);
+            Shooter.setIntake(true);
         }
     }
 
@@ -65,8 +64,7 @@ public class AutonEncoderForward extends AutonBase {
     public void postRun() {
         Chassis.stop();
         if(isIntakeEnabled) {
-            Shooter.intake.move(0);
-            Shooter.intakeArm.move(false,true);
+            Shooter.setIntake(false);
         }
     }
 
