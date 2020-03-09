@@ -19,7 +19,8 @@ import frc.robot.components.Shooter;
 public class Robot extends TimedRobot {
 
   public Timer spitOutTimer = new Timer("Ball spit out");
-  public boolean isLinearAutonOK = false;
+  public boolean isLinearAutonOK = false,
+                 isRetract = true;
   public Gamepad gp1, gp2;
   public double driveSpeed = 1.0;
   public DriveMethod driveMethod = DriveMethod.R_STICK;
@@ -59,8 +60,13 @@ public class Robot extends TimedRobot {
     NavX.navx.zeroYaw();
 
     Chassis.initialize();
+    
+    /*
     Chassis.setSpeedCurve(SpeedCurve.HYBRID);
     Chassis.shift(true);
+    */
+    Chassis.shift(false);
+    Chassis.setSpeedFactor(0.8);
 
     Shooter.initialize();
 
@@ -113,11 +119,14 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
+    color = colorSensor.getColor();
+
     gp1.fetchData();
     gp2.fetchData();
 
-    updateBottom();
-    updateTop();
+    nextGenControl();
+    //updateBottom();
+    //updateTop();
 
     postData();
 
@@ -125,22 +134,55 @@ public class Robot extends TimedRobot {
 
   }
 
+  public void nextGenControl() {
+
+    Shooter.update();
+
+    //Drive
+    Chassis.drive(gp1.getValue(Key.RT) - gp1.getValue(Key.LT), Utils.mapAnalog(gp1.getValue(Key.J_LEFT_X)));
+
+    //Climb
+    if(gp1.isKeyToggled(Key.A)) {
+      isRetract = !isRetract;
+      new AutonClimb(isRetract).run();
+    }    
+
+    //Shoot
+    if(gp1.isKeyToggled(Key.B)) {
+      new AutonGroup(
+                     new AutonGyroTurn(0),
+                     new AutonPixyAlign(0),
+                     new AutonBall(false)).run();
+    }
+
+    //Ball pickup
+    if(gp1.isKeyToggled(Key.DPAD_UP)) {
+      Chassis.shift();
+      Shooter.actuateIntake();
+    }
+
+    //Reset
+    if(gp1.isKeyToggled(Key.Y)) {
+      Chassis.shift(false);
+      Shooter.setIntake(false);
+    }
+
+    //Spit out
+    if(gp1.isKeyToggled(Key.X)) {
+      Shooter.spitOut();
+    }
+  }
+
   // All code for driving
   public void updateBottom() {
 
-    /*
-    if (gp1.isKeyToggled(Key.Y)) {
-      Chassis.filp();
+    if (gp1.isKeyToggled(Key.B)) {
+      new AutonGyroTurn(0);
     }
-    */
 
     // Autonomous Rotation (Experimental)
     if (gp2.isKeyToggled(Key.B)) {
-      new AutonPixyAlign(0,gp2,Key.DPAD_DOWN).run();
-    }
-
-    if (gp1.isKeyToggled(Key.B)) {
-      new AutonGyroTurn(0);
+      new AutonPixyAlign(0).run();
     }
 
     if (gp1.isKeyToggled(Key.X)) {
@@ -163,8 +205,9 @@ public class Robot extends TimedRobot {
 
       Chassis.setSpeedFactor(driveSpeed);
     }
+
     // Drive control
-    else {
+    else if(gp1.isKeysChanged(xKey,yKey)) {
       Chassis.drive(Utils.mapAnalog(-gp1.getValue(yKey)), Utils.mapAnalog(gp1.getValue(xKey)));
     }
 
@@ -176,16 +219,17 @@ public class Robot extends TimedRobot {
 
     if(gp2.isKeyToggled(Key.DPAD_UP)) {
       new AutonGroup(
-      new AutonDetectLine(color),
-      new AutonPixyAlign(0,gp2,Key.DPAD_DOWN)).run();
+      
+        new AutonDetectLine(color),
+        new AutonPixyAlign(0)
+      
+      ).run();
 
     }
 
   }
 
   public void updateTop() {
-
-    color = colorSensor.getColor();
 
     Shooter.update();
 
@@ -196,11 +240,9 @@ public class Robot extends TimedRobot {
       Shooter.isSpitOut = false;
     }
 
-    // FIXME: Uncomment this when tweaking is done
-    /*
-     * // Experimental Climb.turnRoller(gp1.isKeyHeld(Key.X), gp1.isKeyHeld(Key.Y));
-     */
-    Climb.test(gp2.getValue(Key.RT) - gp2.getValue(Key.LT));
+    if(gp2.isKeysChanged(Key.RT,Key.LT)) {
+      Climb.run(gp2.getValue(Key.RT) - gp2.getValue(Key.LT));
+    }
 
     // Toggle intake (bringing it down & run and vice versa)
     if (gp2.isKeyToggled(Key.A)) {
@@ -210,8 +252,8 @@ public class Robot extends TimedRobot {
     // Ball Shooting
     if (gp2.isKeyToggled(Key.X) || gp2.isKeyToggled(Key.Y)) {
       new AutonGroup(
-          // new AutonPixyAlign(0),
-          new AutonBall((gp2.isKeyToggled(Key.X) ? false : true),gp2,Key.DPAD_DOWN)
+          new AutonPixyAlign(0),
+          new AutonBall((gp2.isKeyToggled(Key.X) ? false : true))
           ).run();
     }
 
@@ -222,7 +264,8 @@ public class Robot extends TimedRobot {
       Shooter.isSpitOut = true;
     }
 
-    if (gp2.isKeyToggled(Key.BACK)) {
+    // Start/Stop Recording
+    if (gp1.isKeyToggled(Key.BACK)) {
 
       Gamepad.toggleRecording();
 
@@ -231,7 +274,8 @@ public class Robot extends TimedRobot {
       }
     }
 
-    if (gp2.isKeyToggled(Key.START)) {
+    // Play Recording
+    if (gp1.isKeyToggled(Key.START)) {
       Gamepad.setRecording(false);
       new AutonRunRecord(Gamepad.getEvents()).run();
     }

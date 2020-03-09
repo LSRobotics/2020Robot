@@ -7,11 +7,15 @@ import frc.robot.software.*;
 
 public class AutonBase {
     
+    boolean isDefaultKey = true;
     Gamepad interruptGamepad;
     Gamepad.Key interruptKey;
     Robot robot;
 
     public AutonBase(Gamepad interruptGamepad, Gamepad.Key interruptKey) {
+        
+        isDefaultKey = false;
+
         this.interruptGamepad = interruptGamepad;
         this.interruptKey = interruptKey;
         //isAutonPeriod = false;
@@ -19,7 +23,7 @@ public class AutonBase {
     }
 
     public AutonBase() {
-        this(Core.robot.gp1, Key.DPAD_DOWN);
+        isDefaultKey = true;
         robot = Core.robot;
     }
 
@@ -76,7 +80,13 @@ public class AutonBase {
      * A function that determines whether the driver has interrupted this autonomous behavior. DO NOT OVERRIDE.
      */
     final public boolean isGamepadGood() {
-        return interruptGamepad.getRawReading(interruptKey) == 0;
+        if(isDefaultKey) {
+            return Core.robot.gp1.getRawReading(Key.DPAD_DOWN) == 0 &&
+                   Core.robot.gp2.getRawReading(Key.DPAD_DOWN) == 0;
+        }
+        else {
+            return interruptGamepad.getRawReading(interruptKey) == 0;
+        }
     }
  
     /**

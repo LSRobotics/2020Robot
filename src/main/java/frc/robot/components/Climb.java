@@ -15,9 +15,13 @@ public class Climb {
         lock = new Solenoid(Statics.MASTER_PCM, Statics.CLIMB_FORWARD, Statics.CLIMB_REVERSE, "Climb");
         roller = new MotorNG(Statics.CLIMB_ROLLER, Model.FALCON_500,true);
 
-        roller.setSpeed(0.6);
+        roller.setSpeed(0.85);
 
         lock.move(false, true);
+    }
+
+    public static void manualRun(double speed) {
+        roller.move(speed);
     }
 
     /**
@@ -25,30 +29,23 @@ public class Climb {
      * 
      * @param speed speed of the roller motor
      */
-    public static void test(double speed) {
+    public static void run(double speed) {
 
         new Thread(() -> {
             
             if (speed != 0) {    
                 if (isEngaged) {
-                    roller.move(-1);
-                    Utils.sleep(20);
                     lock(false);
+                    //roller.move(-1);
+                    Utils.sleep(300);
+
                 }
                 roller.move(speed);
             } 
             
             else {
-                
-                boolean isLastEngaged = isEngaged;
-                //roller.stop();
                 lock(true);
-
-                if(!isLastEngaged) {
-                    roller.move(1);
-                    Utils.sleep(10);
-                    roller.stop();
-                }
+                roller.stop();
             }
         }).start();
     }

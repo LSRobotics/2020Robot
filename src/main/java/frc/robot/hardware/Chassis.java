@@ -12,6 +12,7 @@ public class Chassis {
     static double speedFactor = 1;
     static Compressor compressor;
     public static Solenoid shifter;
+    private static double [] lastPower = {0,0};
 /*
     public static RangeSensor frontAligner = new RangeSensor(Statics.US_ALIGNER_F_PING, Statics.US_ALIGNER_F_ECHO,Type.DIO_US_HC_SR04),
                                    sideAligner  = new RangeSensor(Statics.US_ALIGNER_S_PING, Statics.US_ALIGNER_S_ECHO,Type.DIO_US_HC_SR04);
@@ -101,6 +102,9 @@ public class Chassis {
 
     static public void drive(double y, double x) {
 
+        lastPower[0] = y;
+        lastPower[1] = x;
+
         driveRaw(getCurvedSpeed(y,curve) * speedFactor, getCurvedSpeed(x,SpeedCurve.SQUARED) * speedFactor);
 
     }
@@ -141,5 +145,9 @@ public class Chassis {
 
     static public boolean isInverted() {
         return isInverted;
+    }
+
+    static public double [] getLastPower() {
+        return lastPower;
     }
 }

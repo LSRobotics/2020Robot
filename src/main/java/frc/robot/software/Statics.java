@@ -12,8 +12,8 @@ public class Statics {
     static final public double LOW_SPD = 0.6;
 
 //Controller
-    static final public double OFFSET_MIN = 0.1,
-                               OFFSET_MAX = 0.9;
+    static final public double OFFSET_MIN = 0.02,
+                               OFFSET_MAX = 1.0;
 
 //Chassis
    static final public int CHASSIS_L1 = 1,

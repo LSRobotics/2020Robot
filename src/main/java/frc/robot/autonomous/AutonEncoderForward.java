@@ -44,7 +44,7 @@ public class AutonEncoderForward extends AutonBase {
 
         target = Chassis.getEncoderReading()[0] + (distance * Statics.FALCON_UNITS_PER_INCH);
         
-        pid = new SmartPID(1.5, 0, 0);
+        pid = new SmartPID(0.5, 0, 0);
         pid.setSetpoint(target);
         
         if(isIntakeEnabled) {
@@ -58,7 +58,7 @@ public class AutonEncoderForward extends AutonBase {
 
         SmartDashboard.putNumber("Distance Left", distanceLeft());
         
-        Chassis.drive(pid.calculate(Chassis.getEncoderReading()[0]) * 0.5,0);
+        Chassis.drive(pid.calculate(Chassis.getEncoderReading()[0]),0);
     }
 
     @Override
