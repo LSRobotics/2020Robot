@@ -33,9 +33,9 @@ public class Climb {
 
         new Thread(() -> {
             
-            if (speed != 0) {    
+            if (speed != 0) {
+                lock(false);    
                 if (isEngaged) {
-                    lock(false);
                     //roller.move(-1);
                     Utils.sleep(300);
 
@@ -44,8 +44,11 @@ public class Climb {
             } 
             
             else {
-                lock(true);
                 roller.stop();
+                if (!isEngaged) {
+                    Utils.sleep(300);
+                }
+                lock(true);
             }
         }).start();
     }
