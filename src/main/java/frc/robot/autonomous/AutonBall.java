@@ -42,6 +42,7 @@ public class AutonBall extends AutonBase {
 
     @Override
     public void preRun() {
+        Chassis.shift(true);
         Chassis.stop();
 
         Shooter.shooter.move(1);
@@ -105,6 +106,7 @@ public class AutonBall extends AutonBase {
     @Override
     public void postRun() {
         
+        Chassis.shift(false);
         Shooter.numBalls = 0;
         Shooter.shooter.move(0);
         Shooter.index.move(0);

@@ -40,7 +40,7 @@ public class AutonBase {
         Utils.report("Looping " + toString());
         while(true) {
 
-            interruptGamepad.fetchData();
+            //interruptGamepad.fetchData();
 
             duringRun();
             robot.postData();

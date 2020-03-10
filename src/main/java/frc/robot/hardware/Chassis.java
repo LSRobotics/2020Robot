@@ -10,7 +10,6 @@ public class Chassis {
 
     static MotorNG l1, l2, r1, r2;
     static double speedFactor = 1;
-    static Compressor compressor;
     public static Solenoid shifter;
     private static double [] lastPower = {0,0};
 /*
@@ -18,7 +17,7 @@ public class Chassis {
                                    sideAligner  = new RangeSensor(Statics.US_ALIGNER_S_PING, Statics.US_ALIGNER_S_ECHO,Type.DIO_US_HC_SR04);
 */
     public static RangeSensor sensorIR = new RangeSensor(Statics.IR, Type.ANALOG_IR_GP2Y0A710K0F),
-                              maxbotix = new RangeSensor(Statics.US_MAXBOTIX, Type.ANALOG_US_MAXBOTIX);
+                              maxbotix = new RangeSensor(Statics.US_MAXBOTIX, Type.ANALOG_RAW);
 
     static SpeedCurve curve = SpeedCurve.HYBRID;
     static boolean isInverted = false;
@@ -36,8 +35,6 @@ public class Chassis {
         l2.setCurrentLimit(70);
         r1.setCurrentLimit(70);
         r2.setCurrentLimit(70);
-
-        compressor = new Compressor();
 
     }
 

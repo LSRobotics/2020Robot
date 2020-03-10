@@ -18,7 +18,6 @@ import frc.robot.components.Shooter;
 
 public class Robot extends TimedRobot {
 
-  public Timer spitOutTimer = new Timer("Ball spit out");
   public boolean isLinearAutonOK = false,
                  isRetract = true;
   public Gamepad gp1, gp2;
@@ -61,12 +60,12 @@ public class Robot extends TimedRobot {
 
     Chassis.initialize();
     
-    /*
+  
     Chassis.setSpeedCurve(SpeedCurve.HYBRID);
     Chassis.shift(true);
-    */
-    Chassis.shift(false);
-    Chassis.setSpeedFactor(0.8);
+    
+    //Chassis.shift(false);
+    //Chassis.setSpeedFactor(0.8);
 
     Shooter.initialize();
 
@@ -124,9 +123,9 @@ public class Robot extends TimedRobot {
     gp1.fetchData();
     gp2.fetchData();
 
-    nextGenControl();
-    //updateBottom();
-    //updateTop();
+    //nextGenControl();
+    updateBottom();
+    updateTop();
 
     postData();
 
@@ -233,15 +232,10 @@ public class Robot extends TimedRobot {
 
     Shooter.update();
 
-    if(spitOutTimer.isBusy() && spitOutTimer.getElaspedTimeInMs() > 2000) {
-      spitOutTimer.stop();
-      Shooter.index.stop();
-      Shooter.numBalls = 0;
-      Shooter.isSpitOut = false;
-    }
-
     if(gp2.isKeysChanged(Key.RT,Key.LT)) {
-      Climb.run(gp2.getValue(Key.RT) - gp2.getValue(Key.LT));
+
+      double value = (gp2.isKeyHeld(Key.RT) ? 1 : 0) - (gp2.isKeyHeld(Key.LT) ? 1 : 0);
+      Climb.run(value >= 0 ? value : -0.7);
     }
 
     // Toggle intake (bringing it down & run and vice versa)
@@ -259,9 +253,8 @@ public class Robot extends TimedRobot {
 
     // Spit balls out
     if (gp2.isKeyToggled(Key.DPAD_RIGHT)) {
-      Shooter.index.moveRaw(-1);
-      spitOutTimer.start();
-      Shooter.isSpitOut = true;
+        Shooter.setIntake(false);
+        Shooter.spitOut();
     }
 
     // Start/Stop Recording
@@ -322,7 +315,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Drive Inverted", Chassis.isInverted());
      SmartDashboard.putString("Color Sensor (R,G,B)", color[0] + ", " + color[1] + ", " + color[2]);
     SmartDashboard.putNumber("PIXY CAM", PixyCam.getTargetLocation());
-
+    SmartDashboard.putBoolean("Pressure Good", Core.isPressureGood());
     // color sensor booleans
     SmartDashboard.putBoolean("Blue Line Detected", isBlueLine);
     SmartDashboard.putBoolean("Red Line Detected", isRedLine);
@@ -338,7 +331,7 @@ public class Robot extends TimedRobot {
     //SmartDashboard.putNumber("LED", lightMode);
 
     SmartDashboard.putNumber("Intake power", Shooter.intake.getCurrentPower());
-
+    SmartDashboard.putNumber("Climb power",Climb.roller.getCurrentPower());
     SmartDashboard.putNumberArray("Chassis Encoders", Chassis.getEncoderReading());
     SmartDashboard.putNumber("Climb Encoder", Climb.getLocation());
     SmartDashboard.putNumber("Chassis Speed", Chassis.getSpeedFactor());

@@ -30,7 +30,8 @@ public class MotorNG {
     private double lastPower = 0;
     final public static Model DEFAULT_MODEL = Model.FALCON_500;
     private Model model = DEFAULT_MODEL;
-    private boolean isReverse = false;
+    private boolean isReverse = false,
+                    isSimulated = false;
     private ArrayList<MotorNG> slaves = new ArrayList<>();
 
     public MotorNG(int port) {
@@ -124,6 +125,16 @@ public class MotorNG {
     }
 
     public synchronized void moveRaw(double value, boolean isFromMove) {
+
+        if(!isFromMove) {
+            lastPower = value;
+        }
+
+        if(isSimulated) {
+            lastPower = value;
+            return;
+        }
+
         if (model == Model.FALCON_500) {
             falcon.set(value);
         }
@@ -210,5 +221,9 @@ public class MotorNG {
             move(1);
         else
             move(-1);
+    }
+
+    public void setEmulated(boolean isEmulated) {
+        this.isSimulated = isEmulated;
     }
 }

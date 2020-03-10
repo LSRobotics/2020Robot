@@ -7,17 +7,18 @@ import frc.robot.hardware.MotorNG.Model;
 public class Climb {
 
     private static Solenoid lock;
-    static MotorNG roller;
+    public static MotorNG roller;
     final public static double SLOW_PORTION = 0.3; // Head and Tail, out of 1
-    private static boolean isEngaged = false;
+    private static boolean isEngaged = false,
+                           isLockBusy = false;
 
     public static void initialize() {
         lock = new Solenoid(Statics.MASTER_PCM, Statics.CLIMB_FORWARD, Statics.CLIMB_REVERSE, "Climb");
         roller = new MotorNG(Statics.CLIMB_ROLLER, Model.FALCON_500,true);
-
+        roller.setEmulated(true);
         roller.setSpeed(0.85);
 
-        lock.move(false, true);
+        lock(true);
     }
 
     public static void manualRun(double speed) {
@@ -29,24 +30,37 @@ public class Climb {
      * 
      * @param speed speed of the roller motor
      */
+
     public static void run(double speed) {
 
         new Thread(() -> {
             
             if (speed != 0) {
-                lock(false);    
+                   
                 if (isEngaged) {
+                    lock(false); 
+                    isLockBusy = true;
                     //roller.move(-1);
                     Utils.sleep(300);
 
+                    isLockBusy = false;
                 }
-                roller.move(speed);
+                if(!isLockBusy) {
+                    if(speed < 0 && roller.getEncoderReading() > 0) {
+                        roller.move(speed);
+                    }
+                    else if(speed >= 0) {
+                        roller.move(speed);
+                    }
+                }
             } 
             
             else {
                 roller.stop();
                 if (!isEngaged) {
-                    Utils.sleep(300);
+                    isLockBusy = true;
+                    Utils.sleep(50);
+                    isLockBusy = false;
                 }
                 lock(true);
             }

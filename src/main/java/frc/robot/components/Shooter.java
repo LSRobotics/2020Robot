@@ -40,8 +40,8 @@ public class Shooter {
         intakeArm = new Solenoid(Statics.MASTER_PCM, Statics.ARM_FORWARD, Statics.ARM_REVERSE, "Intake");
 
         // Setting up motor speeds
-        index.setSpeed(0.7);
-        index2.setSpeed(0.7);
+        index.setSpeed(0.5);
+        index2.setSpeed(0.5);
         index3.setSpeed(0.4);
         // feeder.setSpeed(0.4);
 
@@ -68,7 +68,7 @@ public class Shooter {
     public static void update() {
 
         if (!isSpitOut) {
-            boolean ballStatus = indexSensor.getRangeInches() > 1.5;
+            boolean ballStatus = indexSensor.getRangeInches() > 1.2;
             // Indexer
 
             // Ball is in
@@ -81,6 +81,7 @@ public class Shooter {
                     numBalls += 1;
                     intakeTimer.start();
                     index.move(0.5);
+                    //intake.moveRaw(1);
                 }
                 /*
                  * else if(numBalls == 4) { numBalls = 5; }
@@ -90,20 +91,20 @@ public class Shooter {
             if (intakeTimer.getElaspedTimeInMs() > 250) {
                 index.stop();
                 intakeTimer.stop();
+                setIntake(isIntakeDown);
                 // intakeTimer.zero();
             }
-            else if(spitOutTimer.getElaspedTimeInMs() > 2000) {
-                index.stop();
-                spitOutTimer.stop();
-                isSpitOut = false;
-            }
-
             // lastBallStatus = ballStatus;
+        }
+        else if(spitOutTimer.isBusy() && spitOutTimer.getElaspedTimeInMs() > 2000) {
+            index.stop();
+            spitOutTimer.stop();
+            isSpitOut = false;
         }
     }
 
     public static void spitOut() {
-        index.move(-1);
+        index.moveRaw(-1);
         isSpitOut = true;
         spitOutTimer.start();
     }
