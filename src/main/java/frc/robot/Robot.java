@@ -61,11 +61,14 @@ public class Robot extends TimedRobot {
     Chassis.initialize();
     
   
+    /*
     Chassis.setSpeedCurve(SpeedCurve.HYBRID);
     Chassis.shift(true);
-    
-    //Chassis.shift(false);
-    //Chassis.setSpeedFactor(0.8);
+    */
+
+    Chassis.setSpeedCurve(SpeedCurve.LINEAR);
+    Chassis.shift(false);
+    Chassis.setSpeedFactor(0.8);
 
     Shooter.initialize();
 
@@ -123,9 +126,9 @@ public class Robot extends TimedRobot {
     gp1.fetchData();
     gp2.fetchData();
 
-    //nextGenControl();
-    updateBottom();
-    updateTop();
+    nextGenControl();
+    //updateBottom();
+    //updateTop();
 
     postData();
 
@@ -138,12 +141,14 @@ public class Robot extends TimedRobot {
     Shooter.update();
 
     //Drive
-    Chassis.drive(gp1.getValue(Key.RT) - gp1.getValue(Key.LT), Utils.mapAnalog(gp1.getValue(Key.J_LEFT_X)));
+    Chassis.drive(gp1.getValue(Key.RT) - gp1.getValue(Key.LT), Utils.mapAnalog(gp1.getValue(Key.J_RIGHT_X)));
+
 
     //Climb
     if(gp1.isKeyToggled(Key.A)) {
-      isRetract = !isRetract;
-      new AutonClimb(isRetract).run();
+      new AutonEncoderForward(50).run();
+      //isRetract = !isRetract;
+      //new AutonClimb(isRetract).run();
     }    
 
     //Shoot

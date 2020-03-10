@@ -41,8 +41,9 @@ public class AutonEncoderForward extends AutonBase {
     @Override
     public void preRun() {
         Chassis.stop();
+        Chassis.shift(false);
 
-        target = Chassis.getEncoderReading()[0] + (distance * Statics.FALCON_UNITS_PER_INCH);
+        target = Chassis.getEncoderReading()[0] - (distance * Statics.FALCON_UNITS_PER_INCH);
         
         pid = new SmartPID(0.5, 0, 0);
         pid.setSetpoint(target);
