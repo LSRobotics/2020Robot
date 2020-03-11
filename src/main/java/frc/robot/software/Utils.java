@@ -92,6 +92,22 @@ public class Utils {
         return mapAnalog(value, Statics.OFFSET_MIN, Statics.OFFSET_MAX);
     }
 
+    public static double cap(double value, double absMax) {
+        return cap(value, -Math.abs(absMax), Math.abs(absMax));
+    }
+
+    public static double cap(double value, double min, double max) {
+        if(value > max) {
+            return max;
+        }
+        else if (value < min) {
+            return min;
+        }
+        else {
+            return min;
+        }
+    }
+
     public static double mapAnalog(double value, double absMin, double absMax) {
 
         boolean isNegative = (value < 0);

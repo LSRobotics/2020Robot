@@ -16,10 +16,10 @@ public class Statics {
                                OFFSET_MAX = 1.0;
 
 //Chassis
-   static final public int CHASSIS_L1 = 1,
-                            CHASSIS_L2 = 2,
-                            CHASSIS_R1 = 3,
-                            CHASSIS_R2 = 4;
+   static final public int CHASSIS_L1 = 3,
+                            CHASSIS_L2 = 4,
+                            CHASSIS_R1 = 1,
+                            CHASSIS_R2 = 2;
 
 //Motors
     static final public int INDEX_1 = 5,

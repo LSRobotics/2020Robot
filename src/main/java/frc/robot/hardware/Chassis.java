@@ -26,10 +26,10 @@ public class Chassis {
 
         shifter = new Solenoid(Statics.MASTER_PCM, Statics.CHASSIS_FORWARD, Statics.CHASSIS_REVERSE, "Chassis");
 
-        l1 = new MotorNG(Statics.CHASSIS_L1, Model.FALCON_500,true);
-        l2 = new MotorNG(Statics.CHASSIS_L2, Model.FALCON_500,true);
-        r1 = new MotorNG(Statics.CHASSIS_R1, Model.FALCON_500);
-        r2 = new MotorNG(Statics.CHASSIS_R2, Model.FALCON_500);
+        l1 = new MotorNG(Statics.CHASSIS_L1, Model.FALCON_500);
+        l2 = new MotorNG(Statics.CHASSIS_L2, Model.FALCON_500);
+        r1 = new MotorNG(Statics.CHASSIS_R1, Model.FALCON_500,true);
+        r2 = new MotorNG(Statics.CHASSIS_R2, Model.FALCON_500,true);
 
         l1.setCurrentLimit(70);
         l2.setCurrentLimit(70);

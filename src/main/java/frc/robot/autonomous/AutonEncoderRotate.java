@@ -5,6 +5,7 @@ import frc.robot.hardware.Chassis;
 import frc.robot.hardware.Gamepad;
 import frc.robot.software.SmartPID;
 import frc.robot.software.Statics;
+import frc.robot.software.Utils;
 
 public class AutonEncoderRotate extends AutonBase {
 
@@ -39,7 +40,7 @@ public class AutonEncoderRotate extends AutonBase {
 
         SmartDashboard.putNumber("degreesCw Left", degreesCwLeft());
 
-        Chassis.drive(0, pid.calculate(Chassis.getEncoderReading()[0]) * 0.5);
+        Chassis.driveRaw(0, Utils.cap(pid.calculate(Chassis.getEncoderReading()[0]),0.5));
 
     }
 

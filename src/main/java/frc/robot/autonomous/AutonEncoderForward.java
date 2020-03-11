@@ -6,13 +6,14 @@ import frc.robot.hardware.Chassis;
 import frc.robot.hardware.Gamepad;
 import frc.robot.software.SmartPID;
 import frc.robot.software.Statics;
+import frc.robot.software.Utils;
 
 public class AutonEncoderForward extends AutonBase {
 
     //TODO: Tweak PID
 
     double distance = 0;
-    double target   = 0;
+    double finalTarget = 0;
     boolean isIntakeEnabled = false;
     SmartPID pid;
 
@@ -43,22 +44,23 @@ public class AutonEncoderForward extends AutonBase {
         Chassis.stop();
         Chassis.shift(false);
 
-        target = Chassis.getEncoderReading()[0] - (distance * Statics.FALCON_UNITS_PER_INCH);
+        pid = new SmartPID(0.005,0,0);
+
+        finalTarget = Chassis.getEncoderReading()[0] + distance * Statics.FALCON_UNITS_PER_INCH;
         
-        pid = new SmartPID(0.5, 0, 0);
-        pid.setSetpoint(target);
-        
+        pid.getSetpoint();
+
         if(isIntakeEnabled) {
             Shooter.setIntake(true);
+        }
+        else {
+            Shooter.setIntake(false);
         }
     }
 
     @Override 
-    public void duringRun() {
-
-        SmartDashboard.putNumber("Distance Left", distanceLeft());
-        
-        Chassis.drive(pid.calculate(Chassis.getEncoderReading()[0]),0);
+    public void duringRun() {  
+        Chassis.driveRaw(Utils.cap(pid.calculate(Chassis.getEncoderReading()[0]),0.5),0);
     }
 
     @Override
@@ -74,7 +76,4 @@ public class AutonEncoderForward extends AutonBase {
         return pid.isActionDone();
     }
 
-    private double distanceLeft() {
-        return Math.abs(Chassis.getEncoderReading()[0] - target) / Statics.FALCON_UNITS_PER_INCH;
-    }
 }

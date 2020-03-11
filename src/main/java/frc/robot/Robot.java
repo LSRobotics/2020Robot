@@ -237,11 +237,8 @@ public class Robot extends TimedRobot {
 
     Shooter.update();
 
-    if(gp2.isKeysChanged(Key.RT,Key.LT)) {
-
-      double value = (gp2.isKeyHeld(Key.RT) ? 1 : 0) - (gp2.isKeyHeld(Key.LT) ? 1 : 0);
-      Climb.run(value >= 0 ? value : -0.7);
-    }
+    double value = (gp2.isKeyHeld(Key.RT) ? 1 : 0) - (gp2.isKeyHeld(Key.LT) ? 1 : 0);
+    Climb.run(value >= 0 ? value : -0.7);
 
     // Toggle intake (bringing it down & run and vice versa)
     if (gp2.isKeyToggled(Key.A)) {

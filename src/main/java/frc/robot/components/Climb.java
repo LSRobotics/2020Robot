@@ -52,6 +52,9 @@ public class Climb {
                     else if(speed >= 0) {
                         roller.move(speed);
                     }
+                    else {
+                        roller.stop();
+                    }
                 }
             } 
             
