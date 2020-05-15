@@ -155,7 +155,7 @@ public class Robot extends TimedRobot {
     if(gp1.isKeyToggled(Key.B)) {
       new AutonGroup(
                      new AutonGyroTurn(0),
-                     new AutonPixyAlign(0),
+                     //new AutonPixyAlign(0),
                      new AutonBall(false)).run();
     }
 
@@ -224,8 +224,8 @@ public class Robot extends TimedRobot {
     if(gp2.isKeyToggled(Key.DPAD_UP)) {
       new AutonGroup(
       
-        new AutonDetectLine(color),
-        new AutonPixyAlign(0)
+        new AutonDetectLine(color)
+        //new AutonPixyAlign(0)
       
       ).run();
 
@@ -248,7 +248,7 @@ public class Robot extends TimedRobot {
     // Ball Shooting
     if (gp2.isKeyToggled(Key.X) || gp2.isKeyToggled(Key.Y)) {
       new AutonGroup(
-          new AutonPixyAlign(0),
+          //new AutonPixyAlign(0),
           new AutonBall((gp2.isKeyToggled(Key.X) ? false : true))
           ).run();
     }
